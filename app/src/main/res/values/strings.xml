@@ -15,4 +15,10 @@ Copyright: © 2023, Don Freddy. All rights reserved.
 
 <resources>
   <string name="app_name">Troona</string>
+  <string name="nav_home">Home</string>
+  <string name="nav_favorite">Favorites</string>
+  <string name="nav_playlist">Playlists</string>
+  <string name="nav_setting">Settings</string>
+  <string name="search">Search</string>
+  <string name="my_music">My Music</string>
 </resources>
