@@ -5,6 +5,22 @@
       <entry key="GreetingPreview">
         <State />
       </entry>
+      <entry key="SettingsScreenPreview">
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_6.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-01-08T20:42:37.376263Z" />
+        </State>
+      </entry>
       <entry key="app">
         <State />
       </entry>
