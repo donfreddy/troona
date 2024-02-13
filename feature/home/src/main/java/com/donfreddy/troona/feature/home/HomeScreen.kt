@@ -27,10 +27,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-internal fun HomeRoute(
+fun HomeRoute(
   onNavigateToPlayer: () -> Unit,
 ) {
-    HomeScreen()
+  HomeScreen()
 }
 
 @Composable

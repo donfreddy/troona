@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-// Lists all plugins used throughout the project without applying them.
-plugins {
-  alias(libs.plugins.android.application) apply false
-  alias(libs.plugins.jetbrains.kotlin.android) apply false
-  alias(libs.plugins.hilt.android) apply false
-  alias(libs.plugins.android.library) apply false
+package com.donfreddy.troona.ui
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.rememberNavController
+import com.donfreddy.troona.navigation.TroonaNavHost
+
+
+@Composable
+fun TroonaApp() {
+  TroonaNavHost(
+    navController = rememberNavController(),
+    onNavigateToPlayer = {},
+  )
 }

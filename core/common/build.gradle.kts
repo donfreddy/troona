@@ -20,7 +20,7 @@ plugins {
 }
 
 android {
-  namespace = "com.donfreddy.troona.feature.playlists"
+  namespace = "com.donfreddy.troona.core.common"
   compileSdk = 34
 
   defaultConfig {
@@ -52,12 +52,6 @@ android {
 }
 
 dependencies {
-  implementation(platform(libs.androidx.compose.bom))
-  implementation(libs.androidx.activity.compose)
-  implementation(libs.androidx.ui.graphics)
-  implementation(libs.androidx.material3)
-  implementation(libs.androidx.ui.tooling.preview)
-  implementation(libs.androidx.navigation.compose)
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)

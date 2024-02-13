@@ -36,5 +36,11 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Troona"
+
 include(":app")
- 
+include(":core:common")
+include(":feature:home")
+include(":feature:playlists")
+include(":feature:settings")
+include(":feature:favorites")
+include(":feature:player")

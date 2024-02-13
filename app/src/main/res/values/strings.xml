@@ -16,4 +16,22 @@
 -->
 <resources>
   <string name="app_name">Troona</string>
+  <string name="home_title">Home</string>
+  <string name="settings_title">Settings</string>
+  <string name="search_title">Search</string>
+  <string name="suggested_title">Suggested</string>
+  <string name="songs_title">Songs</string>
+  <string name="artists_title">Artists</string>
+  <string name="albums_title">Albums</string>
+  <string name="genres_title">Genres</string>
+  <string name="folders_title">Folders</string>
+  <string name="playlists_title">Playlists</string>
+  <string name="recent_title">Recent</string>
+  <string name="local_title">Local</string>
+  <string name="favorite_title">Favorites</string>
+  <string name="storage_access">Storage Access</string>
+  <string name="storage_access_permission_text">Troona needs permission to access your device storage for playing music.</string>
+  <string name="storage_settings_permission_text">You must grant permission to access storage to use this app because it needs to read music files from your device.</string>
+  <string name="storage_open_settings">Open Settings</string>
+  <string name="grant_access">Grant access</string>
 </resources>
