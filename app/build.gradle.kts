@@ -40,7 +40,7 @@ android {
 
   buildTypes {
     release {
-      isMinifyEnabled = false
+      isMinifyEnabled = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
@@ -71,6 +71,7 @@ kapt {
 
 dependencies {
   implementation(project(":core:common"))
+  implementation(project(":core:ui"))
 
   implementation(project(":feature:home"))
   implementation(project(":feature:favorites"))
@@ -84,6 +85,11 @@ dependencies {
   implementation(libs.timber)
   implementation(libs.constraintlayout.compose)
   implementation(libs.splashscreen)
+  implementation(libs.androidx.compose.material)
+  implementation(libs.google.android.material)
+  implementation(libs.tracing.ktx)
+  implementation(libs.accompanist.permissions)
+  implementation(libs.accompanist.navigation.material)
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -92,7 +98,6 @@ dependencies {
   implementation(libs.androidx.ui)
   implementation(libs.androidx.ui.graphics)
   implementation(libs.androidx.ui.tooling.preview)
-  implementation(libs.androidx.material3)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)

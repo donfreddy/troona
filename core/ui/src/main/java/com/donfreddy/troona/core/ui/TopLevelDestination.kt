@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.navigation
+package com.donfreddy.troona.core.ui
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.donfreddy.troona.R
 
 /**
  * Type for the top level destinations in the application. Each of these destinations
