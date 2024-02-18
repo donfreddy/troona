@@ -15,5 +15,10 @@
      limitations under the License.
 -->
 <resources>
-  <string name="app_name" translatable="false">Troona</string>
+  <string name="core_permission_app_name" translatable="false">Troona</string>
+  <string name="core_permission_storage_access">Storage Access</string>
+  <string name="core_permission_storage_access_permission_text">Troona needs permission to access your device storage for playing music.</string>
+  <string name="core_permission_storage_settings_permission_text">You must grant permission to access storage to use this app because it needs to read music files from your device.</string>
+  <string name="core_permission_storage_open_settings">Open Settings</string>
+  <string name="core_permission_grant_access">Grant access</string>
 </resources>
