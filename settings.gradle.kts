@@ -15,6 +15,7 @@
  */
 
 pluginManagement {
+  includeBuild("build-logic")
   repositories {
     google {
       content {
@@ -27,6 +28,8 @@ pluginManagement {
     gradlePluginPortal()
   }
 }
+
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
   repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
   repositories {
@@ -37,8 +40,20 @@ dependencyResolutionManagement {
 
 rootProject.name = "Troona"
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 include(":app")
 include(":core:common")
+include(":core:domain")
+include(":core:model")
+include(":core:database")
+include(":core:datastore")
+include(":core:mediastore")
+include(":core:designsystem")
+include(":feature:search")
+include(":core:permission")
+include(":core:data")
+include(":core:media")
 include(":core:ui")
 
 include(":feature:home")
@@ -46,12 +61,3 @@ include(":feature:playlists")
 include(":feature:settings")
 include(":feature:favorites")
 include(":feature:player")
-include(":core:domain")
-include(":core:model")
-include(":core:database")
-include(":core:datastore")
-include(":core:designsystem")
-include(":feature:search")
-include(":core:permission")
-include(":core:data")
-include(":core:media")

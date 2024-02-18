@@ -45,11 +45,11 @@ import com.donfreddy.troona.feature.favorites.navigation.navigateToFavorites
 import com.donfreddy.troona.feature.home.navigation.navigateToHome
 import com.donfreddy.troona.feature.playlists.navigation.navigateToPlaylists
 import com.donfreddy.troona.feature.settings.navigation.navigateToSettings
-import com.donfreddy.troona.core.ui.TopLevelDestination
-import com.donfreddy.troona.core.ui.TopLevelDestination.FAVORITES
-import com.donfreddy.troona.core.ui.TopLevelDestination.HOME
-import com.donfreddy.troona.core.ui.TopLevelDestination.PLAYLISTS
-import com.donfreddy.troona.core.ui.TopLevelDestination.SETTINGS
+import com.donfreddy.troona.navigation.TopLevelDestination
+import com.donfreddy.troona.navigation.TopLevelDestination.FAVORITES
+import com.donfreddy.troona.navigation.TopLevelDestination.HOME
+import com.donfreddy.troona.navigation.TopLevelDestination.PLAYLISTS
+import com.donfreddy.troona.navigation.TopLevelDestination.SETTINGS
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState

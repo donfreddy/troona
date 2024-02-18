@@ -15,27 +15,19 @@
  */
 
 plugins {
-  alias(libs.plugins.android.application)
-  alias(libs.plugins.jetbrains.kotlin.android)
-  alias(libs.plugins.hilt.android)
-  kotlin("kapt")
+  alias(libs.plugins.troona.android.application)
+  alias(libs.plugins.troona.android.application.compose)
+  alias(libs.plugins.troona.android.hilt)
+  alias(libs.plugins.troona.android.lint)
 }
 
 android {
   namespace = "com.donfreddy.troona"
-  compileSdk = 34
 
   defaultConfig {
     applicationId = "com.donfreddy.troona"
-    minSdk = 24
-    targetSdk = 34
     versionCode = 1
     versionName = "1.0.0" // X.Y.Z; X = Major, Y = minor, Z = Patch level
-
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    vectorDrawables {
-      useSupportLibrary = true
-    }
   }
 
   buildTypes {
@@ -44,19 +36,7 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-  buildFeatures {
-    compose = true
-  }
-  composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.1"
-  }
+
   packaging {
     resources {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -64,34 +44,34 @@ android {
   }
 }
 
-kapt {
-  correctErrorTypes = true
-  useBuildCache = true
-}
-
 dependencies {
-  implementation(project(":core:common"))
-  implementation(project(":core:ui"))
+  implementation(projects.core.common)
+  implementation(projects.core.data)
+  implementation(projects.core.datastore)
+  implementation(projects.core.domain)
+  implementation(projects.core.ui)
+  implementation(projects.core.designsystem)
+  implementation(projects.core.model)
+  implementation(projects.core.permission)
 
-  implementation(project(":feature:home"))
-  implementation(project(":feature:favorites"))
-  implementation(project(":feature:playlists"))
-  implementation(project(":feature:settings"))
-  implementation(project(":feature:player"))
+  implementation(projects.feature.home)
+  implementation(projects.feature.favorites)
+  implementation(projects.feature.playlists)
+  implementation(projects.feature.settings)
+  implementation(projects.feature.player)
+  implementation(projects.feature.search)
 
-  implementation(libs.hilt.android)
-  implementation(libs.hilt.nav.compose)
-  kapt(libs.hilt.android.compiler)
   implementation(libs.timber)
+  implementation(libs.androidx.activity.compose)
   implementation(libs.constraintlayout.compose)
   implementation(libs.splashscreen)
   implementation(libs.androidx.compose.material)
   implementation(libs.google.android.material)
   implementation(libs.tracing.ktx)
-  implementation(libs.accompanist.permissions)
   implementation(libs.accompanist.navigation.material)
+  implementation(libs.kotlinx.coroutines.guava)
 
-  implementation(libs.androidx.core.ktx)
+  /*implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.activity.compose)
   implementation(platform(libs.androidx.compose.bom))
@@ -104,5 +84,5 @@ dependencies {
   androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.ui.test.junit4)
   debugImplementation(libs.androidx.ui.tooling)
-  debugImplementation(libs.androidx.ui.test.manifest)
+  debugImplementation(libs.androidx.ui.test.manifest)*/
 }

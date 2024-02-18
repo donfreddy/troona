@@ -1,14 +1,19 @@
 [versions]
-agp = "8.2.2"
+android-compileSdk = "34"
+android-minSdk = "21"
+android-targetSdk = "34"
+
+androidGradlePlugin = "8.2.2"
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.7.0"
+androidxLifecycle = "2.7.0"
 activityCompose = "1.8.2"
 composeBom = "2024.02.00"
 material = "1.11.0"
+composeCompiler = "1.5.1"
 hilt = "2.50"
 hilt-nav-compose = "1.1.0"
 timber = "5.0.1"
@@ -18,13 +23,18 @@ appcompat = "1.6.1"
 navigation = "2.7.7"
 tracing-ktx = "1.2.0"
 accompanist = "0.32.0"
+androidTools = "31.2.2"
+ksp = "1.9.21-1.0.16"
+kotlinx-coroutines = "1.7.3"
+kotlinx-datetime = "0.5.0"
+androidDesugarJdkLibs = "2.0.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -34,8 +44,10 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 #androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-compose-material = { group = "androidx.compose.material", name = "material"}
+androidx-compose-material = { group = "androidx.compose.material", name = "material" }
 google-android-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
@@ -47,9 +59,41 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 tracing-ktx = { group = "androidx.tracing", name = "tracing-ktx", version.ref = "tracing-ktx" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 accompanist-navigation-material = { group = "com.google.accompanist", name = "accompanist-navigation-material", version.ref = "accompanist" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "kotlinx-coroutines" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
+
+# Dependencies of the included build-logic
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+#ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+#room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
+
+[bundles]
+androidx-compose = [
+    "androidx-ui",
+    "androidx-ui-tooling",
+    "androidx-ui-graphics",
+    "androidx-ui-tooling-preview",
+    "androidx-compose-material"
+]
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-android-library = { id = "com.android.library", version.ref = "agp" }
+
+# Plugins defined by this project
+troona-android-application = { id = "troona.android.application", version = "unspecified" }
+troona-android-application-compose = { id = "troona.android.application.compose", version = "unspecified" }
+troona-android-feature = { id = "troona.android.feature", version = "unspecified" }
+troona-android-hilt = { id = "troona.android.hilt", version = "unspecified" }
+troona-android-library = { id = "troona.android.library", version = "unspecified" }
+troona-android-library-compose = { id = "troona.android.library.compose", version = "unspecified" }
+troona-android-lint = { id = "troona.android.lint", version = "unspecified" }
+troona-android-room = { id = "troona.android.room", version = "unspecified" }
