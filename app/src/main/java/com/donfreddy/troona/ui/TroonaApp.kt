@@ -57,14 +57,28 @@ import com.donfreddy.troona.feature.player.FullPlayer
 import com.donfreddy.troona.feature.player.mini.MiniPlayer
 import com.donfreddy.troona.navigation.TopLevelDestination
 import com.donfreddy.troona.navigation.TroonaNavHost
+import com.donfreddy.troona.core.permission.PermissionContent
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun TroonaApp(
   appState: TroonaAppState = rememberTroonaAppState(),
 ) {
-  TroonaAppContent(appState = appState)
+  when (appState.permissionState.status) {
+    PermissionStatus.Granted -> {
+      TroonaAppContent(appState = appState)
+    }
+
+    is PermissionStatus.Denied -> {
+      PermissionContent(
+        permissionState = appState.permissionState,
+        isPermissionRequested = appState.isPermissionRequested
+      )
+    }
+  }
 }
 
 @OptIn(ExperimentalMotionApi::class, ExperimentalMaterialApi::class)
@@ -184,7 +198,7 @@ fun TroonaBottomBar(
   }
 }
 
-private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: com.donfreddy.troona.navigation.TopLevelDestination) =
+private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
   this?.hierarchy?.any { it.route?.contains(destination.name, true) ?: false } ?: false
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialApi::class)
