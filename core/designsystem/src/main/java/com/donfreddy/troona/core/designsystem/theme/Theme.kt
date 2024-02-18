@@ -61,6 +61,12 @@ private val TroonaShapes = Shapes(
   large = RoundedCornerShape(6.dp)
 )
 
+/**
+ * Now in Android theme.
+ *
+ * @param isDarkTheme Whether the theme should use a dark color scheme (follows system by default).
+ * @param useDynamicColor If true, the theme will use dynamic color scheme if the device supports it.
+ */
 @Composable
 fun TroonaTheme(
   isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -81,7 +87,7 @@ fun TroonaTheme(
   ) {
     MaterialTheme(
       colors = troonaColors,
-      typography = Typography,
+      typography = TroonaTypography,
       shapes = TroonaShapes,
       content = content
     )
