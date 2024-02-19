@@ -19,6 +19,7 @@ package com.donfreddy.troona.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,9 +27,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel : ViewModel() {
+class MainActivityViewModel @Inject constructor() : ViewModel() {
   private var userPreferencesStore: Flow<String> = flowOf("")
 
   @OptIn(ExperimentalCoroutinesApi::class)

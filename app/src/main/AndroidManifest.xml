@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
      Copyright 2024 Don Freddy
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +15,18 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools">
+
+  <!-- Storage -->
+  <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+  <uses-permission
+    android:name="android.permission.READ_EXTERNAL_STORAGE"
+    android:maxSdkVersion="32" />
+  <uses-permission
+    android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    android:maxSdkVersion="29"
+    tools:ignore="ScopedStorage" />
+
+  <!-- only for playlists via MediaStore -->
 
   <application
     android:name=".TroonaApplication"
