@@ -1,0 +1,45 @@
+/*
+ * Copyright 2024 Don Freddy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+
+option java_package = "com.donfreddy.troona.core.datastore";
+option java_multiple_files = true;
+
+enum SongSortByProto {
+  SONG_SORT_BY_TITLE = 0;
+  SONG_SORT_BY_ARTIST = 1;
+  SONG_SORT_BY_ALBUM = 2;
+  SONG_SORT_BY_DURATION = 3;
+  SONG_SORT_BY_DATE_ADDED = 4;
+  SONG_SORT_BY_SIZE = 5;
+}
+
+enum ArtistSortByProto {
+  ARTIST_SORT_BY_NAME = 0;
+  ARTIST_SORT_BY_NUMBER_OF_SONGS = 1;
+  ARTIST_SORT_BY_NUMBER_OF_ALBUMS = 2;
+}
+
+enum AlbumSortByProto {
+  ALBUM_SORT_BY_ALBUM = 0;
+  ALBUM_SORT_BY_ARTIST = 1;
+  ALBUM_SORT_BY_NUMBER_OF_SONGS = 2;
+}
+
+enum GenreSortByProto {
+  GENRE_SORT_BY_GENRE = 0;
+}
