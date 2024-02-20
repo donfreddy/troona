@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProtobufLanguageSettings">
+    <option name="importPathEntries">
+      <list>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/core/datastore-proto/src/main/proto/com/donfreddy/troona/data" />
+        </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/core/datastore-proto/src/main/proto/com/donfreddy/troona/data" />
+        </ImportPathEntry>
+      </list>
+    </option>
+  </component>
+</project>

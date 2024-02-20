@@ -1,0 +1,4 @@
+com.donfreddy.troona.core.datastore.proto.test.datastore-proto-mergeDebugAndroidTestResources-0 /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
+com.donfreddy.troona.core.datastore.proto.test.datastore-proto-mergeDebugAndroidTestResources-1 /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
+com.donfreddy.troona.core.datastore.proto.test.datastore-proto-merged_res-2 /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/merged_res/debugAndroidTest
+com.donfreddy.troona.core.datastore.proto.test.datastore-proto-packaged_res-3 /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/packaged_res/debug
