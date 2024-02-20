@@ -21,6 +21,8 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.dependencies
+import org.jetbrains.kotlin.gradle.dsl.KaptExtensionConfig
+import org.jetbrains.kotlin.gradle.dsl.KaptJavacOption
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
 /**
@@ -53,5 +55,9 @@ internal fun Project.configureKotlinAndroid(
   }
 }
 
+
 private fun CommonExtension<*, *, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) =
   (this as ExtensionAware).extensions.configure("kotlinOptions", block)
+
+private fun CommonExtension<*, *, *, *, *>.kapt(block: KaptExtensionConfig.() -> Unit) =
+  (this as ExtensionAware).extensions.configure("kapt", block)

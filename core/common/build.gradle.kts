@@ -16,8 +16,7 @@
 
 plugins {
   alias(libs.plugins.troona.android.library)
-//  alias(libs.plugins.kotlin.jvm)
-  // alias(libs.plugins.troona.android.hilt)
+  alias(libs.plugins.troona.android.hilt)
 }
 
 android {

@@ -23,5 +23,8 @@ android {
 }
 
 dependencies {
-  // No dependencies
+  implementation(project.projects.core.datastore)
+  implementation(project.projects.core.model)
+
+  implementation(libs.kotlinx.coroutines.core)
 }

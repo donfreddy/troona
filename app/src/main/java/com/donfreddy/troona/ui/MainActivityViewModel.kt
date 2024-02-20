@@ -18,32 +18,30 @@ package com.donfreddy.troona.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.donfreddy.troona.core.domain.repository.SettingsRepository
+import com.donfreddy.troona.core.model.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor() : ViewModel() {
-  private var userPreferencesStore: Flow<String> = flowOf("")
+class MainActivityViewModel @Inject constructor(
+  userDataRepository: SettingsRepository,
+) : ViewModel() {
 
-  @OptIn(ExperimentalCoroutinesApi::class)
-  val uiState: StateFlow<MainActivityUiState> = userPreferencesStore.flatMapLatest {
-    flowOf(MainActivityUiState.Success(""))
+  val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData.map {
+    MainActivityUiState.Success(it)
   }.stateIn(
     scope = viewModelScope,
-    started = SharingStarted.WhileSubscribed(5000),
-    initialValue = MainActivityUiState.Loading
+    initialValue = MainActivityUiState.Loading,
+    started = SharingStarted.WhileSubscribed(5_000),
   )
 }
 
 sealed interface MainActivityUiState {
   data object Loading : MainActivityUiState
-  data class Success(val userData: String) : MainActivityUiState
+  data class Success(val userData: UserData) : MainActivityUiState
 }
