@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-  alias(libs.plugins.troona.android.room)
-}
+package com.donfreddy.troona.core.database.util
 
-android {
-  namespace = "com.donfreddy.troona.core.database"
-}
+import androidx.room.TypeConverter
+import kotlinx.datetime.Instant
 
-dependencies {
-  implementation(libs.kotlinx.datetime)
+internal class InstantConverter {
+    @TypeConverter
+    fun longToInstant(value: Long?): Instant? =
+        value?.let(Instant::fromEpochMilliseconds)
+
+    @TypeConverter
+    fun instantToLong(instant: Instant?): Long? =
+        instant?.toEpochMilliseconds()
 }

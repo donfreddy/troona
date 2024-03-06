@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-  alias(libs.plugins.troona.android.room)
-}
+package com.donfreddy.troona.core.database.entity
 
-android {
-  namespace = "com.donfreddy.troona.core.database"
-}
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-dependencies {
-  implementation(libs.kotlinx.datetime)
-}
+@Entity(tableName = "playlists")
+data class PlaylistEntity(
+  @PrimaryKey(autoGenerate = true) val id: Int,
+
+  @ColumnInfo val name: String,
+
+  //@ColumnInfo val songs: List<SongEntity>,
+
+  //@ColumnInfo("date_added") val dateAdded: LocalDateTime,
+
+  //@ColumnInfo("date_modified") val dateModified: LocalDate
+)
