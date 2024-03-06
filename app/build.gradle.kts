@@ -18,7 +18,6 @@ plugins {
   alias(libs.plugins.troona.android.application)
   alias(libs.plugins.troona.android.application.compose)
   alias(libs.plugins.troona.android.hilt)
-  alias(libs.plugins.troona.android.lint)
 }
 
 android {
@@ -71,6 +70,8 @@ dependencies {
   implementation(libs.accompanist.navigation.material)
   implementation(libs.kotlinx.coroutines.guava)
 
+  testImplementation(libs.junit)
+  androidTestImplementation(libs.androidx.ui.test.junit4)
   /*implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.activity.compose)

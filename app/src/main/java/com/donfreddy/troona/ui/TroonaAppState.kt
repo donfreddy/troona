@@ -157,5 +157,4 @@ private val TroonaAudioPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_C
   Manifest.permission.READ_EXTERNAL_STORAGE
 }
 
-
 private const val SwipeAreaOffset = 400

@@ -21,8 +21,17 @@ plugins {
 
 android {
   namespace = "com.donfreddy.troona.core.datastore"
+  defaultConfig {
+    consumerProguardFiles("consumer-proguard-rules.pro")
+  }
 }
 
 dependencies {
-  // No dependencies
+  implementation(projects.core.datastoreProto)
+  implementation(projects.core.common)
+  implementation(projects.core.model)
+
+  implementation(libs.datastore)
+  implementation(libs.datastore.preferences)
+  implementation(libs.protobuf.kotlin.lite)
 }

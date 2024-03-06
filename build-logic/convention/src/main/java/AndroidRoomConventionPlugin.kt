@@ -18,7 +18,6 @@ import com.donfreddy.troona.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.kotlin
 
 class AndroidRoomConventionPlugin : Plugin<Project> {
   override fun apply(target: Project) {

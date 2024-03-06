@@ -12,13 +12,11 @@
         top: ['topBar', 'bottom'],
         start: ['parent', 'start'],
         end: ['parent', 'end'],
-        // bottom: ['miniPlayer', 'top'],
-        bottom: ['navigationBar', 'top'],
+        bottom: ['parent', 'bottom'],
       },
       miniPlayer: {
         width: 'spread',
         height: 'wrap',
-        top: ['content', 'bottom'],
         start: ['parent', 'start'],
         end: ['parent', 'end'],
         bottom: ['navigationBar', 'top'],
@@ -29,12 +27,10 @@
         top: ['navigationBar', 'top'],
         start: ['parent', 'start'],
         end: ['parent', 'end'],
-        // alpha: 0,
       },
       navigationBar: {
         width: 'spread',
         height: 'wrap',
-        top: ['miniPlayer', 'bottom'],
         start: ['parent', 'start'],
         end: ['parent', 'end'],
         bottom: ['parent', 'bottom'],
@@ -53,7 +49,6 @@
         start: ['parent', 'start'],
         end: ['parent', 'end'],
         bottom: ['navigationBar', 'top'],
-        // alpha: 0.5,
       },
       miniPlayer: {
         width: 'spread',
@@ -78,7 +73,6 @@
         top: ['parent', 'bottom'],
         start: ['parent', 'start'],
         end: ['parent', 'end'],
-        //bottom: ['parent', 'bottom'],
       },
     }
   }

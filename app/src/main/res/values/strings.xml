@@ -29,9 +29,4 @@
   <string name="recent_title">Recent</string>
   <string name="local_title">Local</string>
   <string name="favorite_title">Favorites</string>
-  <string name="storage_access">Storage Access</string>
-  <string name="storage_access_permission_text">Troona needs permission to access your device storage for playing music.</string>
-  <string name="storage_settings_permission_text">You must grant permission to access storage to use this app because it needs to read music files from your device.</string>
-  <string name="storage_open_settings">Open Settings</string>
-  <string name="grant_access">Grant access</string>
 </resources>

@@ -1,0 +1,13 @@
+#Tue Feb 20 02:02:08 WAT 2024
+base.0=/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/dex/debugAndroidTest/mergeExtDexDebugAndroidTest/classes.dex
+base.1=/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/dex/debugAndroidTest/mergeLibDexDebugAndroidTest/0/classes.dex
+base.2=/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/dex/debugAndroidTest/mergeProjectDexDebugAndroidTest/0/classes.dex
+base.3=/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/desugar_lib_dex/debugAndroidTest/classes1000.dex
+path.0=classes.dex
+path.1=0/classes.dex
+path.2=0/classes.dex
+path.3=classes1000.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex
+renamed.3=classes4.dex
