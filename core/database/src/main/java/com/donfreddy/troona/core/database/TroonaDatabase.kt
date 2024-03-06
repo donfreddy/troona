@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-  alias(libs.plugins.troona.android.room)
-}
+package com.donfreddy.troona.core.database
 
-android {
-  namespace = "com.donfreddy.troona.core.database"
-}
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.donfreddy.troona.core.database.dao.PlaylistDao
+import com.donfreddy.troona.core.database.entity.PlaylistEntity
+import com.donfreddy.troona.core.database.util.InstantConverter
 
-dependencies {
-  implementation(libs.kotlinx.datetime)
+@Database(
+  entities = [PlaylistEntity::class],
+  version = 1,
+  exportSchema = true
+)
+@TypeConverters(InstantConverter::class)
+internal abstract class TroonaDatabase : RoomDatabase() {
+  abstract fun playlistDao(): PlaylistDao
 }

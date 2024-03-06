@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-  alias(libs.plugins.troona.android.room)
-}
+package com.donfreddy.troona.core.database.di
 
-android {
-  namespace = "com.donfreddy.troona.core.database"
-}
+import com.donfreddy.troona.core.database.TroonaDatabase
+import com.donfreddy.troona.core.database.dao.PlaylistDao
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-dependencies {
-  implementation(libs.kotlinx.datetime)
+@Module
+@InstallIn(SingletonComponent::class)
+internal object DaoModule {
+  @Provides
+  fun providePlaylistDao(db: TroonaDatabase): PlaylistDao = db.playlistDao()
 }
