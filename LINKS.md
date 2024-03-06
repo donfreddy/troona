@@ -71,6 +71,8 @@ https://github.com/OxygenCobalt/Auxio
 https://github.com/harjot-oberai/MusicDNA
 https://github.com/timusus/Shuttle
 https://github.com/enricocid/Music-Player-GO
+https://github.com/sunny52525/JetSpotify
+https://github.com/Shabinder/SpotiFlyer
 
 https://medium.com/mindful-engineering/after-going-through-this-blog-youll-achieve-this-kind-of-polished-animation-using-motionlayout-6b76ec41c6ab
 https://www.valueof.io/blog/motionlayout-in-compose-motion-scene-json5

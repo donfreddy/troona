@@ -19,6 +19,7 @@ package com.donfreddy.troona.core.designsystem.component
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -53,12 +54,12 @@ fun TroonaTopBar(
           text = stringResource(id = R.string.core_designsystem_app_name), style = MaterialTheme.typography.h5.copy(
             fontWeight = FontWeight.W700
           )
-        )
+          )
       }
     },
     backgroundColor = MaterialTheme.colors.background,
     elevation = 0.dp,
-    modifier = modifier,
+    //modifier = modifier.statusBarsPadding(),
     actions = {
       IconButton(
         onClick = { searchWidgetState() },

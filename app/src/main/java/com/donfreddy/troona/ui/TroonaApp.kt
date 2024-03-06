@@ -24,8 +24,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -53,11 +52,11 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.donfreddy.troona.R
 import com.donfreddy.troona.core.designsystem.component.TroonaTopBar
+import com.donfreddy.troona.core.permission.PermissionContent
 import com.donfreddy.troona.feature.player.FullPlayer
 import com.donfreddy.troona.feature.player.mini.MiniPlayer
 import com.donfreddy.troona.navigation.TopLevelDestination
 import com.donfreddy.troona.navigation.TroonaNavHost
-import com.donfreddy.troona.core.permission.PermissionContent
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 
@@ -93,11 +92,11 @@ fun TroonaAppContent(
     context.resources.openRawResource(R.raw.motion_screne).readBytes().decodeToString()
   }
 
+  //Todo: fix player swipe issue
   MotionLayout(
     modifier = modifier
       .fillMaxSize()
-      .statusBarsPadding()
-      .systemBarsPadding(),
+      .safeContentPadding(),
     motionScene = MotionScene(content = motionSceneContent),
     progress = appState.motionProgress
   ) {
@@ -161,24 +160,25 @@ fun TroonaBottomBar(
   modifier: Modifier = Modifier,
 ) {
   AnimatedVisibility(
-    visible = currentDestination == null,
+    visible = currentDestination != null,
     enter = slideInVertically(initialOffsetY = { it }),
     exit = slideOutVertically(targetOffsetY = { it }),
+    modifier = modifier
   ) {
     BottomNavigation(
       backgroundColor = MaterialTheme.colors.background,
       contentColor = Color.White,
       elevation = 6.dp,
-      //modifier = modifier.systemBarsPadding()
     ) {
       destinations.forEach { destination ->
         val isSelected = currentDestination.isTopLevelDestinationInHierarchy(destination)
-        BottomNavigationItem(icon = {
-          Icon(
-            painter = painterResource(id = if (isSelected) destination.selectedIconRes else destination.unselectedIconRes),
-            contentDescription = null
-          )
-        },
+        BottomNavigationItem(
+          icon = {
+            Icon(
+              painter = painterResource(id = if (isSelected) destination.selectedIconRes else destination.unselectedIconRes),
+              contentDescription = null
+            )
+          },
           label = {
             Text(
               text = stringResource(id = destination.titleRes),
@@ -201,6 +201,10 @@ fun TroonaBottomBar(
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
   this?.hierarchy?.any { it.route?.contains(destination.name, true) ?: false } ?: false
 
+/**
+ * A [Modifier] that adds swipeable behavior to a player view.
+ * Todo: migrate deprecated swipeable to use new swipeable
+ */
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialApi::class)
 private fun Modifier.playerSwipe(
   swipeableState: SwipeableState<Int>, anchors: Map<Float, Int>
