@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-}
+package com.donfreddy.troona.core.domain.usecase.songs
 
-android {
-  namespace = "com.donfreddy.troona.core.data"
-}
+import com.donfreddy.troona.core.domain.repository.SongRepository
+import com.donfreddy.troona.core.domain.usecase.UseCase
+import com.donfreddy.troona.core.model.data.Song
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-dependencies {
-  implementation(project.projects.core.datastore)
-  implementation(project.projects.core.mediastore)
-  implementation(project.projects.core.domain)
-  implementation(project.projects.core.model)
+class GetSongsUseCase @Inject constructor(
+  private val songRepository: SongRepository,
+) : UseCase<List<Song>, UseCase.NoParams> {
 
-  implementation(libs.kotlinx.coroutines.core)
+  operator fun invoke(): Flow<List<Song>> = songRepository.songs
 }

@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-}
+package com.donfreddy.troona.core.domain.usecase.settings
 
-android {
-  namespace = "com.donfreddy.troona.core.data"
-}
+import com.donfreddy.troona.core.domain.repository.SettingsRepository
+import com.donfreddy.troona.core.domain.usecase.UseCase
+import com.donfreddy.troona.core.model.data.UserData
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-dependencies {
-  implementation(project.projects.core.datastore)
-  implementation(project.projects.core.mediastore)
-  implementation(project.projects.core.domain)
-  implementation(project.projects.core.model)
-
-  implementation(libs.kotlinx.coroutines.core)
+/**
+ * A use case which returns the user data.
+ */
+class GetUserDataUseCase @Inject constructor(
+  private val settingsRepository: SettingsRepository
+) : UseCase<UserData, UseCase.NoParams> {
+  operator fun invoke(): Flow<UserData> = settingsRepository.userData
 }

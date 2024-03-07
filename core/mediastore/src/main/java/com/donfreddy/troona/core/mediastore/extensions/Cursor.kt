@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-}
+package com.donfreddy.troona.core.mediastore.extensions
 
-android {
-  namespace = "com.donfreddy.troona.core.data"
-}
+import android.database.Cursor
 
-dependencies {
-  implementation(project.projects.core.datastore)
-  implementation(project.projects.core.mediastore)
-  implementation(project.projects.core.domain)
-  implementation(project.projects.core.model)
-
-  implementation(libs.kotlinx.coroutines.core)
-}
+internal fun Cursor.getLong(columnName: String) = getLong(getColumnIndexOrThrow(columnName))
+internal fun Cursor.getInt(columnName: String) = getInt(getColumnIndexOrThrow(columnName))
+internal fun Cursor.getString(columnName: String) = getString(getColumnIndexOrThrow(columnName))

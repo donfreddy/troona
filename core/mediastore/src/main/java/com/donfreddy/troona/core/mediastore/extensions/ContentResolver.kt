@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-}
+package com.donfreddy.troona.core.mediastore.extensions
 
-android {
-  namespace = "com.donfreddy.troona.core.data"
-}
+import android.content.ContentResolver
+import android.database.ContentObserver
+import android.net.Uri
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 
-dependencies {
-  implementation(project.projects.core.datastore)
-  implementation(project.projects.core.mediastore)
-  implementation(project.projects.core.domain)
-  implementation(project.projects.core.model)
-
-  implementation(libs.kotlinx.coroutines.core)
+internal fun ContentResolver.observe(uri: Uri) = callbackFlow {
+  val observer = object : ContentObserver(null) {
+    override fun onChange(selfChange: Boolean) {
+      trySend(selfChange)
+    }
+  }
+  registerContentObserver(uri, true, observer)
+  trySend(true)
+  awaitClose { unregisterContentObserver(observer) }
 }

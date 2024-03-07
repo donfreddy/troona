@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-}
+package com.donfreddy.troona.core.mediastore.di
 
-android {
-  namespace = "com.donfreddy.troona.core.data"
-}
+import android.content.ContentResolver
+import android.content.Context
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 
-dependencies {
-  implementation(project.projects.core.datastore)
-  implementation(project.projects.core.mediastore)
-  implementation(project.projects.core.domain)
-  implementation(project.projects.core.model)
-
-  implementation(libs.kotlinx.coroutines.core)
+@Module
+@InstallIn(SingletonComponent::class)
+object MediaStoreModule {
+  @Provides
+  fun provideContentResolver(@ApplicationContext context: Context): ContentResolver =
+    context.contentResolver
 }

@@ -46,7 +46,7 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
-class TroonaPreferencesDataSource @Inject constructor(
+class TroonaPrefsDataSource @Inject constructor(
   private val userPreferences: DataStore<UserPreferences>,
 ) {
   val userData = userPreferences.data.map {

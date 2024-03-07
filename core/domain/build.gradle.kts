@@ -27,4 +27,5 @@ dependencies {
   implementation(project.projects.core.model)
 
   implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.javax.inject)
 }

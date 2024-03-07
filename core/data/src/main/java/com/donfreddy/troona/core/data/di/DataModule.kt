@@ -25,10 +25,11 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule {
+internal interface DataModule {
 
   @Binds
-  internal abstract fun bindsSettingsRepository(
-    settingsRepository: SettingsRepositoryImpl,
-  ): SettingsRepository
+  fun bindsSongRepository(songRepository: SettingsRepositoryImpl): SettingsRepository
+
+  @Binds
+  fun bindsSettingsRepository(settingsRepository: SettingsRepositoryImpl): SettingsRepository
 }

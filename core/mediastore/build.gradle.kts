@@ -16,6 +16,7 @@
 
 plugins {
   alias(libs.plugins.troona.android.library)
+  alias(libs.plugins.troona.android.hilt)
 }
 
 android {
@@ -23,5 +24,7 @@ android {
 }
 
 dependencies {
-   // No dependencies
+  implementation(project.projects.core.model)
+
+  implementation(libs.kotlinx.datetime)
 }

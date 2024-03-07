@@ -23,5 +23,5 @@ android {
 }
 
 dependencies {
-  // No dependencies`
+  implementation(libs.kotlinx.datetime)
 }

@@ -32,6 +32,7 @@ protobuf = "3.25.1"
 protobuf-plugin = "0.9.4"
 preferences = "1.0.0"
 room = "2.6.1"
+javax-inject = "1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -75,6 +76,7 @@ datastore = { group = "androidx.datastore", name = "datastore", version.ref = "p
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javax-inject" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }

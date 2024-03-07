@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  alias(libs.plugins.troona.android.hilt)
-}
+package com.donfreddy.troona.core.data.util.sort_types
 
-android {
-  namespace = "com.donfreddy.troona.core.data"
-}
+import android.provider.MediaStore
+import com.donfreddy.troona.core.data.util.DataUtil.getOrderDetails
 
-dependencies {
-  implementation(project.projects.core.datastore)
-  implementation(project.projects.core.mediastore)
-  implementation(project.projects.core.domain)
-  implementation(project.projects.core.model)
+fun checkGenreSortType(sortType: Int, order: Int, ignoreCase: Boolean): String {
+  val (_, orderAndCase) = getOrderDetails(order, ignoreCase)
 
-  implementation(libs.kotlinx.coroutines.core)
+  return when (sortType) {
+    0 -> "${MediaStore.Audio.Genres.NAME} $orderAndCase"
+    else -> "${MediaStore.Audio.Genres.DEFAULT_SORT_ORDER} $orderAndCase"
+  }
 }
