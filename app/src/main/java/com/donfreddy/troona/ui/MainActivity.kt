@@ -18,6 +18,7 @@ package com.donfreddy.troona.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -61,7 +62,12 @@ class MainActivity : ComponentActivity() {
     // Turn off the decor fitting system windows, which allows us to handle insets,
     // including IME animations, and go edge-to-edge
     // This also sets up the initial system bar style based on the platform theme
-    enableEdgeToEdge()
+    enableEdgeToEdge(
+      navigationBarStyle = SystemBarStyle.auto(
+        lightScrim = lightScrim,
+        darkScrim = darkScrim
+      )
+    )
 
     WindowCompat.setDecorFitsSystemWindows(window, false)
 

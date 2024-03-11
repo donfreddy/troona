@@ -33,6 +33,6 @@ fun NavGraphBuilder.homeScreen(
   //onNavigateToAlbum: (albumId: Long) -> Unit,
 ) {
   composable(route = HOME_ROUTE) {
-    HomeRoute(onNavigateToPlayer = onNavigateToPlayer)
+    HomeRoute()
   }
 }

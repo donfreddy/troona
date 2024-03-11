@@ -83,9 +83,7 @@ fun TroonaApp(
 @OptIn(ExperimentalMotionApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun TroonaAppContent(
-  appState: TroonaAppState,
-  modifier: Modifier = Modifier,
-  context: Context = LocalContext.current
+  appState: TroonaAppState, modifier: Modifier = Modifier, context: Context = LocalContext.current
 ) {
   // Initialize motion scene content from json5 file
   val motionSceneContent = remember {
@@ -106,7 +104,11 @@ fun TroonaAppContent(
     }
 
     // Main content
-    Box(modifier = Modifier.layoutId("content")) {
+    Box(
+      modifier = Modifier
+        .background(MaterialTheme.colors.background)
+        .layoutId("content")
+    ) {
       TroonaNavHost(
         navController = appState.navController,
         onNavigateToPlayer = appState::openPlayer,
@@ -114,11 +116,9 @@ fun TroonaAppContent(
     }
 
     // Mini player
-    Box(
-      modifier = Modifier
-        .background(color = Color.Blue)
-        .layoutId("miniPlayer")
-    ) {
+    Box(modifier = Modifier
+      .background(MaterialTheme.colors.background)
+      .layoutId("miniPlayer")) {
       MiniPlayer(
         modifier = Modifier.playerSwipe(
           swipeableState = appState.swipeableState,
@@ -130,7 +130,7 @@ fun TroonaAppContent(
     // Full player
     Box(
       modifier = Modifier
-        .background(color = Color.Blue)
+        .background(MaterialTheme.colors.background)
         .layoutId("fullPlayer")
     ) {
       FullPlayer(
@@ -168,20 +168,19 @@ fun TroonaBottomBar(
     BottomNavigation(
       backgroundColor = MaterialTheme.colors.background,
       contentColor = Color.White,
-      elevation = 6.dp,
+      elevation = 0.dp, // Todo: add elevation if mini player is not visible
     ) {
       destinations.forEach { destination ->
         val isSelected = currentDestination.isTopLevelDestinationInHierarchy(destination)
-        BottomNavigationItem(
-          icon = {
-            Icon(
-              painter = painterResource(id = if (isSelected) destination.selectedIconRes else destination.unselectedIconRes),
-              contentDescription = null
-            )
-          },
+        BottomNavigationItem(icon = {
+          Icon(
+            painter = painterResource(id = if (isSelected) destination.selectedIcon.resourceId else destination.unselectedIcon.resourceId),
+            contentDescription = stringResource(id = destination.titleResource)
+          )
+        },
           label = {
             Text(
-              text = stringResource(id = destination.titleRes),
+              text = stringResource(id = destination.titleResource),
               fontSize = 14.sp,
               fontWeight = FontWeight.SemiBold,
               softWrap = false
@@ -191,8 +190,7 @@ fun TroonaBottomBar(
           unselectedContentColor = MaterialTheme.colors.onBackground,
           alwaysShowLabel = false,
           selected = isSelected,
-          onClick = { onNavigateToDestination(destination) }
-        )
+          onClick = { onNavigateToDestination(destination) })
       }
     }
   }

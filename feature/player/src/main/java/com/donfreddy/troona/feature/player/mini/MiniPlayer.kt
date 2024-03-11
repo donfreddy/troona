@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,39 +48,38 @@ fun MiniPlayer(
     enter = slideInVertically(initialOffsetY = { it }),
     exit = slideOutVertically(targetOffsetY = { it }),
   ) {
-    Column(
-      modifier = modifier
-        //.background(color = Color.Red)
-        .clickable { onNavigateToPlayer() }
-    ) {
-      Row(
-        modifier = Modifier
-          .padding(4.dp)
-          .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-       horizontalArrangement = Arrangement.spacedBy(6.dp)
+    Surface(elevation = 4.dp) {
+      Column(
+        modifier = modifier
+          //.background(color = Color.Red)
+          .clickable { onNavigateToPlayer() }
       ) {
-        Box {
-          Text(
-            text = "Artwork",
-            textAlign = TextAlign.Center,
-            color = Color.White,
-          )
+        Row(
+          modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+          Box {
+            Text(
+              text = "Artwork",
+              textAlign = TextAlign.Center,
+            )
+          }
+          Column {
+            Text(
+              text = "Song Title",
+              textAlign = TextAlign.Center,
+            )
+            Text(
+              text = "Artist Name",
+              textAlign = TextAlign.Center,
+            )
+          }
         }
-        Column {
-          Text(
-            text = "Song Title",
-            textAlign = TextAlign.Center,
-            color = Color.White,
-          )
-          Text(
-            text = "Artist Name",
-            textAlign = TextAlign.Center,
-            color = Color.White,
-          )
-        }
+        //Todo: Add mini player controls
       }
-      //Todo: Add mini player controls
     }
   }
 }

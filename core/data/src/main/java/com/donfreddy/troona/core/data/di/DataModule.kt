@@ -17,7 +17,9 @@
 package com.donfreddy.troona.core.data.di
 
 import com.donfreddy.troona.core.data.repository.SettingsRepositoryImpl
+import com.donfreddy.troona.core.data.repository.SongRepositoryImpl
 import com.donfreddy.troona.core.domain.repository.SettingsRepository
+import com.donfreddy.troona.core.domain.repository.SongRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -28,7 +30,7 @@ import dagger.hilt.components.SingletonComponent
 internal interface DataModule {
 
   @Binds
-  fun bindsSongRepository(songRepository: SettingsRepositoryImpl): SettingsRepository
+  fun bindsSongRepository(songRepository: SongRepositoryImpl): SongRepository
 
   @Binds
   fun bindsSettingsRepository(settingsRepository: SettingsRepositoryImpl): SettingsRepository

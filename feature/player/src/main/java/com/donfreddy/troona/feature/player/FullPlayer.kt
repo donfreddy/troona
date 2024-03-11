@@ -43,7 +43,6 @@ fun FullPlayer(
       text = "FullPlayer Screen",
       modifier = Modifier.align(Alignment.CenterHorizontally),
       textAlign = TextAlign.Center,
-      color = Color.White,
       style = MaterialTheme.typography.h5,
     )
   }

@@ -28,8 +28,7 @@ dependencies {
   api(libs.bundles.androidx.compose)
 
   implementation(libs.androidx.core.ktx)
-
-  // implementation(libs.coil.compose)
+  implementation(libs.coil.compose)
 
   debugApi(libs.androidx.ui.tooling)
   debugApi(libs.androidx.ui.test.manifest)

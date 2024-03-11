@@ -16,9 +16,13 @@
 
 package com.donfreddy.troona.navigation
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.donfreddy.troona.R
+import com.donfreddy.troona.feature.home.R as HomeR
+import com.donfreddy.troona.feature.favorites.R as FavoriteR
+import com.donfreddy.troona.feature.playlists.R as PlaylistR
+import com.donfreddy.troona.feature.settings.R as SettingsR
+import com.donfreddy.troona.core.designsystem.icon.Icon.DrawableResourceIcon
+import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 
 /**
  * Type for the top level destinations in the application. Each of these destinations
@@ -26,28 +30,28 @@ import com.donfreddy.troona.R
  * next within a single destination will be handled directly in composable.
  */
 enum class TopLevelDestination(
-  @StringRes val titleRes: Int,
-  @DrawableRes val selectedIconRes: Int,
-  @DrawableRes val unselectedIconRes: Int,
+  val selectedIcon: DrawableResourceIcon,
+  val unselectedIcon: DrawableResourceIcon,
+  @StringRes val titleResource: Int
 ) {
   HOME(
-    titleRes = R.string.home_title,
-    selectedIconRes = R.drawable.ic_home,
-    unselectedIconRes = R.drawable.ic_outline_home,
+    selectedIcon = TroonaIcons.Home,
+    unselectedIcon = TroonaIcons.HomeBorder,
+    titleResource = HomeR.string.feature_home_title
   ),
   FAVORITES(
-    titleRes = R.string.favorite_title,
-    selectedIconRes = R.drawable.ic_favorite,
-    unselectedIconRes = R.drawable.ic_outline_favorite,
+    selectedIcon = TroonaIcons.Favorite,
+    unselectedIcon = TroonaIcons.FavoriteBorder,
+    titleResource = FavoriteR.string.feature_favorites_title
   ),
   PLAYLISTS(
-    titleRes = R.string.playlists_title,
-    selectedIconRes = R.drawable.ic_playlist,
-    unselectedIconRes = R.drawable.ic_playlist,
+    selectedIcon = TroonaIcons.Playlist,
+    unselectedIcon = TroonaIcons.Playlist,
+    titleResource = PlaylistR.string.feature_playlists_title
   ),
   SETTINGS(
-    titleRes = R.string.settings_title,
-    selectedIconRes = R.drawable.ic_settings,
-    unselectedIconRes = R.drawable.ic_outline_settings,
+    selectedIcon = TroonaIcons.Settings,
+    unselectedIcon = TroonaIcons.SettingsBorder,
+    titleResource = SettingsR.string.feature_settings_title
   )
 }

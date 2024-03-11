@@ -16,16 +16,16 @@
 
 package com.donfreddy.troona.core.data.repository
 
-import com.donfreddy.troona.core.datastore.TroonaPreferencesDataSource
+import com.donfreddy.troona.core.datastore.TroonaPrefsDataSource
 import com.donfreddy.troona.core.domain.repository.SettingsRepository
 import com.donfreddy.troona.core.model.data.UserData
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SettingsRepositoryImpl @Inject constructor(
-  private val troonaPreferencesDataSource: TroonaPreferencesDataSource,
+  private val troonaPrefsDataSource: TroonaPrefsDataSource
 ) : SettingsRepository {
 
-  override val userData: Flow<UserData> = troonaPreferencesDataSource.userData
+  override val userData: Flow<UserData> = troonaPrefsDataSource.userData
 
 }

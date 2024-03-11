@@ -56,7 +56,7 @@
         top: ['fullPlayer', 'top'],
         start: ['parent', 'start'],
         end: ['parent', 'end'],
-        alpha: 0,
+        //alpha: 0,
       },
       fullPlayer: {
         width: 'spread',

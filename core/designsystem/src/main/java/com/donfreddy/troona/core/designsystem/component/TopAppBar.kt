@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.donfreddy.troona.core.designsystem.R
+import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 
 @Composable
 fun TroonaTopBar(
@@ -48,13 +49,17 @@ fun TroonaTopBar(
         modifier = modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically
       ) {
-        Icon(Icons.Default.Star, contentDescription = null)
+        Icon(
+          imageVector = TroonaIcons.Star.imageVector,
+          contentDescription = null
+        )
         Spacer(modifier = modifier.width(4.dp))
         Text(
-          text = stringResource(id = R.string.core_designsystem_app_name), style = MaterialTheme.typography.h5.copy(
+          text = stringResource(id = R.string.core_designsystem_app_name),
+          style = MaterialTheme.typography.h5.copy(
             fontWeight = FontWeight.W700
           )
-          )
+        )
       }
     },
     backgroundColor = MaterialTheme.colors.background,
@@ -65,7 +70,10 @@ fun TroonaTopBar(
         onClick = { searchWidgetState() },
         modifier = Modifier
       ) {
-        Icon(Icons.Default.Search, contentDescription = null)
+        Icon(
+          imageVector = TroonaIcons.Search.imageVector,
+          contentDescription = null
+        )
       }
     },
   )
