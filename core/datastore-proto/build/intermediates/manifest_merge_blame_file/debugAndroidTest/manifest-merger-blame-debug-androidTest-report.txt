@@ -3,32 +3,32 @@
 3    package="com.donfreddy.troona.core.datastore.proto.test" >
 4
 5    <uses-sdk
-5-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:5:5-74
+5-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:5:5-74
 6        android:minSdkVersion="21"
-6-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:5:15-41
+6-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:5:15-41
 7        android:targetSdkVersion="21" />
-7-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:5:42-71
+7-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:5:42-71
 8
 9    <instrumentation
-9-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:11:5-15:96
+9-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:11:5-15:96
 10        android:name="androidx.test.runner.AndroidJUnitRunner"
-10-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:11:22-76
+10-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:11:22-76
 11        android:functionalTest="false"
-11-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:14:22-52
+11-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:14:22-52
 12        android:handleProfiling="false"
-12-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:13:22-53
+12-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:13:22-53
 13        android:label="Tests for com.donfreddy.troona.core.datastore.proto.test"
-13-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:15:22-94
+13-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:15:22-94
 14        android:targetPackage="com.donfreddy.troona.core.datastore.proto.test" />
-14-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:12:22-92
+14-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:12:22-92
 15
 16    <application
-16-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:7:5-9:19
+16-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:7:5-9:19
 17        android:debuggable="true"
 18        android:extractNativeLibs="true" >
 19        <uses-library android:name="android.test.runner" />
-19-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:8:9-60
-19-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest8180355964393130253.xml:8:23-57
+19-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:8:9-60
+19-->/Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest16397633891636292.xml:8:23-57
 20    </application>
 21
 22</manifest>

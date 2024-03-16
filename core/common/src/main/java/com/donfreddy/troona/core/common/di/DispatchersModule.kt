@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.common.network.di
+package com.donfreddy.troona.core.common.di
 
 import com.donfreddy.troona.core.common.network.Dispatcher
 import com.donfreddy.troona.core.common.network.TroonaDispatchers.Default
+import com.donfreddy.troona.core.common.network.TroonaDispatchers.IO
+import com.donfreddy.troona.core.common.network.TroonaDispatchers.Main
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Qualifier
-import javax.inject.Singleton
-
-@Retention(AnnotationRetention.RUNTIME)
-@Qualifier
-annotation class ApplicationScope
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object CoroutineScopesModule {
-  @Provides
-  @Singleton
-  @ApplicationScope
-  fun providesCoroutineScope(
-    @Dispatcher(Default) dispatcher: CoroutineDispatcher,
-  ): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
+object DispatchersModule {
+    @Provides
+    @Dispatcher(IO)
+    fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+    @Provides
+    @Dispatcher(Main)
+    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+
+    @Provides
+    @Dispatcher(Default)
+    fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 }

@@ -23,4 +23,4 @@ import kotlin.annotation.AnnotationRetention.RUNTIME
 @Retention(RUNTIME)
 annotation class Dispatcher(val troonaDispatcher: TroonaDispatchers)
 
-enum class TroonaDispatchers { Default, IO }
+enum class TroonaDispatchers { Default, Main, IO }

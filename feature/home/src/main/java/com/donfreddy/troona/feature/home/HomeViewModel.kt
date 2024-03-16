@@ -16,19 +16,24 @@
 
 package com.donfreddy.troona.feature.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.donfreddy.troona.core.domain.usecase.songs.GetSongsUseCase
+import com.donfreddy.troona.core.media.PlayerEvent
+import com.donfreddy.troona.core.media.TroonaServiceHandler
 import com.donfreddy.troona.core.model.data.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+  private val audioServiceHandler: TroonaServiceHandler,
   getSongsUseCase: GetSongsUseCase
 ) : ViewModel() {
 
@@ -41,6 +46,23 @@ class HomeViewModel @Inject constructor(
   }.stateIn(
     scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = HomeUiState.Loading
   )
+
+  val audioState = audioServiceHandler.audioState
+
+  fun onHomeUiEvents(uiEvent: HomeUiEvent) = viewModelScope.launch {
+    Log.d("HomeViewModel", "onHomeUiEvents: $uiEvent")
+    when (uiEvent) {
+      is HomeUiEvent.Play -> {
+        audioServiceHandler.onPlayerEvents(
+          PlayerEvent.Play(songs = uiEvent.songs, startIndex = uiEvent.startIndex)
+        )
+      }
+    }
+  }
+}
+
+sealed class HomeUiEvent {
+  data class Play(val songs: List<Song>, val startIndex: Int = 0) : HomeUiEvent()
 }
 
 sealed interface HomeUiState {

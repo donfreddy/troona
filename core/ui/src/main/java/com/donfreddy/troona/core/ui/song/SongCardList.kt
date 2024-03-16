@@ -16,6 +16,7 @@
 
 package com.donfreddy.troona.core.ui.song
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,6 +53,7 @@ fun SongCardItems(
   if (songs.isNotEmpty()) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
       itemsIndexed(items = songs, key = { _, song -> song.id }) { index, song ->
+        Log.d("SongCardItems", "Song Index: $index")
         SongCard(
           modifier = modifier.animateItemPlacement(),
           song = song,

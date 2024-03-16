@@ -23,7 +23,7 @@ import androidx.datastore.dataStoreFile
 import com.donfreddy.troona.UserPreferences
 import com.donfreddy.troona.core.common.network.Dispatcher
 import com.donfreddy.troona.core.common.network.TroonaDispatchers.IO
-import com.donfreddy.troona.core.common.network.di.ApplicationScope
+import com.donfreddy.troona.core.common.di.ApplicationScope
 import com.donfreddy.troona.core.datastore.serializer.UserPreferencesSerializer
 import dagger.Module
 import dagger.Provides

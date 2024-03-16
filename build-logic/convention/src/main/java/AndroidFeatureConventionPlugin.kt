@@ -32,6 +32,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
         add("implementation", project(":core:ui"))
         add("implementation", project(":core:designsystem"))
 
+        add("implementation", libs.findBundle("androidx.media3").get())
+
         add("implementation", libs.findLibrary("hilt.nav.compose").get())
         add("implementation", libs.findLibrary("androidx.lifecycle.runtimeCompose").get())
         add("implementation", libs.findLibrary("androidx.lifecycle.viewModelCompose").get())

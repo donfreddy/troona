@@ -30,6 +30,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,10 +54,10 @@ fun SongCard(
   modifier: Modifier = Modifier,
 ) {
   Card(
-    Modifier
+    modifier = Modifier
       .fillMaxWidth()
       .clip(RoundedCornerShape(CardShapeSize))
-      .clickable {},
+      .clickable(onClick = onClick),
     //backgroundColor = Color.Transparent,
     shape = RoundedCornerShape(CardShapeSize)
   ) {

@@ -68,5 +68,30 @@ data class Song(
       dateAdded = null,
       dateModified = null,
     )
+
+    val EXAMPLE = Song(
+      id = 416,
+      title = "2 Lit 2 Late Interlude",
+      displayName = "14 - Nicki Minaj -  2 Lit 2 Late Interlude (Explicit).mp3",
+      trackNumber = 1014,
+      duration = 55301,
+      size = 2325989,
+      year = 2018,
+      albumId = 66,
+      albumName = "Queen (Deluxe)",
+      albumArt = Uri.parse("content://media/external/audio/albumart/66"),
+      albumArtist = "Nicki Minaj",
+      artistId = 69,
+      artistName = "Nicki Minaj",
+      genreId = null,
+      genreName = null,
+      data = "/storage/5BA9-364A/Collection/Nicki Minaj/nicki-minaj---queen-deluxe-explicit-2018/14 - Nicki Minaj -  2 Lit 2 Late Interlude (Explicit).mp3",
+      uri = Uri.parse("content://media/external/audio/media/416"),
+      // folder = "",
+      mineType = "audio/mpeg",
+      composer = null,
+      dateAdded = LocalDateTime.parse("2022-06-13T20:45:44"),
+      dateModified = LocalDateTime.parse("2022-03-17T15:35:18")
+    )
   }
 }

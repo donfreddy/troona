@@ -4,6 +4,7 @@ android-minSdk = "21"
 android-targetSdk = "34"
 
 androidGradlePlugin = "8.2.2"
+#noinspection GradleDependency
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
 junit = "4.13.2"
@@ -11,11 +12,11 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 androidxLifecycle = "2.7.0"
 activityCompose = "1.8.2"
-composeBom = "2024.02.00"
+composeBom = "2024.02.01"
 material = "1.11.0"
 composeCompiler = "1.5.1"
 hilt = "2.50"
-hilt-nav-compose = "1.1.0"
+hilt-nav-compose = "1.2.0"
 timber = "5.0.1"
 constraintlayout = "1.0.1"
 splashscreen = "1.0.1"
@@ -23,7 +24,7 @@ appcompat = "1.6.1"
 navigation = "2.7.7"
 tracing-ktx = "1.2.0"
 accompanist = "0.32.0"
-androidTools = "31.2.2"
+androidTools = "31.3.0"
 ksp = "1.9.21-1.0.16"
 kotlinx-coroutines = "1.7.3"
 kotlinx-datetime = "0.5.0"
@@ -34,6 +35,7 @@ preferences = "1.0.0"
 room = "2.6.1"
 javax-inject = "1"
 coil = "2.5.0"
+media3 = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -79,6 +81,9 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javax-inject" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
+media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -95,6 +100,8 @@ androidx-compose = [
     "androidx-ui-tooling-preview",
     "androidx-compose-material"
 ]
+androidx-room = ["room-ktx", "room-runtime"]
+androidx-media3 = ["media3-session", "media3-exoplayer", "media3-ui"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

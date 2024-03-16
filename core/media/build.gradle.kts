@@ -16,6 +16,7 @@
 
 plugins {
   alias(libs.plugins.troona.android.library)
+  alias(libs.plugins.troona.android.hilt)
 }
 
 android {
@@ -23,5 +24,12 @@ android {
 }
 
 dependencies {
-  // No dependencies
+  implementation(projects.core.common)
+  implementation(projects.core.model)
+  implementation(projects.core.domain)
+  implementation(projects.core.designsystem)
+
+  implementation(libs.coil.compose)
+  implementation(libs.bundles.androidx.media3)
+  implementation(libs.kotlinx.coroutines.android)
 }

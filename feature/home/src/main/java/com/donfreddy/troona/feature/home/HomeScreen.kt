@@ -16,6 +16,7 @@
 
 package com.donfreddy.troona.feature.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +30,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.donfreddy.troona.core.media.TroonaState
 import com.donfreddy.troona.core.ui.MediaPager
+import com.donfreddy.troona.feature.player.PlayerViewModel
+import com.donfreddy.troona.feature.player.UIEvents
+import com.donfreddy.troona.feature.player.UIState
 
 @Composable
 fun HomeRoute(
@@ -37,6 +42,7 @@ fun HomeRoute(
   viewModel: HomeViewModel = hiltViewModel(),
 ) {
   val state by viewModel.uiState.collectAsStateWithLifecycle()
+  val audioState by viewModel.audioState.collectAsStateWithLifecycle()
 
   when (val uiState = state) {
     HomeUiState.Loading -> {
@@ -52,7 +58,11 @@ fun HomeRoute(
     is HomeUiState.Success -> {
       HomeScreen(
         uiState = uiState,
-        onSongClick = {},
+        onSongClick = {startIndex->
+          Log.d("HomeRoute", "onSongClick: $startIndex")
+
+          viewModel.onHomeUiEvents(HomeUiEvent.Play(uiState.songs, startIndex))
+        },
         modifier = modifier,
       )
     }

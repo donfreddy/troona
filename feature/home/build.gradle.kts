@@ -23,5 +23,6 @@ android {
 }
 
 dependencies {
- // No dependencies
+  implementation(projects.feature.player)
+  implementation(projects.core.media)
 }
