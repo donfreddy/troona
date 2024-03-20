@@ -16,6 +16,8 @@
 
 package com.donfreddy.troona.feature.player
 
+import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -45,11 +47,10 @@ class PlayerViewModel @Inject constructor(
   val audioState = audioServiceHandler.audioState
 
   private var duration by savableStateHandle.saveable { mutableLongStateOf(0L) }
-  private var progress by savableStateHandle.saveable { mutableFloatStateOf(0f) }
+  var progress by savableStateHandle.saveable { mutableFloatStateOf(0.5f) }
   private var progressString by savableStateHandle.saveable { mutableStateOf("00:00") }
-  private var isPlaying by savableStateHandle.saveable { mutableStateOf(false) }
-  private var currentSelectedAudio by savableStateHandle.saveable { mutableStateOf(Song.EMPTY) }
-  private var audioList by savableStateHandle.saveable { mutableStateOf(listOf<Song>()) }
+  var isPlaying by savableStateHandle.saveable { mutableStateOf(false) }
+  var currentPlayingSong by savableStateHandle.saveable { mutableStateOf(Song.EXAMPLE) }
 
   private val _uiState: MutableStateFlow<UIState> = MutableStateFlow(UIState.Initial)
   val uiState: StateFlow<UIState> = _uiState.asStateFlow()
@@ -64,7 +65,8 @@ class PlayerViewModel @Inject constructor(
           is TroonaState.Playing -> isPlaying = mediaState.isPlaying
           is TroonaState.Progress -> calculateProgressValue(mediaState.progress)
           is TroonaState.CurrentPlaying -> {
-            currentSelectedAudio = audioList[mediaState.mediaItemIndex]
+            Log.d("PlayerViewModel", "CurrentPlaying: ${mediaState.mediaItemIndex}")
+            currentPlayingSong = audioServiceHandler.playingQueue[mediaState.mediaItemIndex]
           }
 
           is TroonaState.Ready -> {
@@ -79,14 +81,11 @@ class PlayerViewModel @Inject constructor(
   fun onUiEvent(uiEvent: UIEvents) = viewModelScope.launch {
     when (uiEvent) {
       is UIEvents.SeekToNext -> audioServiceHandler.onPlayerEvents(PlayerEvent.SeekToNext)
+      is UIEvents.SeekToPrevious -> audioServiceHandler.onPlayerEvents(PlayerEvent.SeekToPrevious)
       is UIEvents.Backward -> audioServiceHandler.onPlayerEvents(PlayerEvent.Backward)
       is UIEvents.Forward -> audioServiceHandler.onPlayerEvents(PlayerEvent.Forward)
       is UIEvents.Repeat -> audioServiceHandler.onPlayerEvents(PlayerEvent.Forward)
       is UIEvents.PlayPause -> audioServiceHandler.onPlayerEvents(PlayerEvent.PlayPause)
-      //is UIEvents.SelectedAudioChange -> audioServiceHandler.onPlayerEvents(
-        //PlayerEvent.SelectedAudioChange,
-       // selectedAudioIndex = uiEvent.index
-       //)
 
       is UIEvents.SeekTo -> {
         audioServiceHandler.onPlayerEvents(
@@ -109,16 +108,15 @@ class PlayerViewModel @Inject constructor(
   }
 
   private fun calculateProgressValue(currentPosition: Long) {
-    progress =
-      if (currentPosition > 0) ((currentPosition.toFloat() / duration.toFloat()) * 100) else 0f
+    progress = if (currentPosition > 0) ((currentPosition.toFloat() / duration.toFloat()) * 100) else 0f
   }
 }
 
 sealed class UIEvents {
   data object PlayPause : UIEvents()
-  //data class SelectedAudioChange(val index: Int) : UIEvents()
   data class SeekTo(val position: Float) : UIEvents()
   data object SeekToNext : UIEvents()
+  data object SeekToPrevious : UIEvents()
   data object Backward : UIEvents()
   data object Forward : UIEvents()
   data object Repeat : UIEvents()

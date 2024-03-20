@@ -60,7 +60,6 @@ fun HomeRoute(
         uiState = uiState,
         onSongClick = {startIndex->
           Log.d("HomeRoute", "onSongClick: $startIndex")
-
           viewModel.onHomeUiEvents(HomeUiEvent.Play(uiState.songs, startIndex))
         },
         modifier = modifier,
@@ -74,7 +73,7 @@ fun HomeRoute(
 }
 
 @Composable
-internal fun HomeScreen(
+private fun HomeScreen(
   uiState: HomeUiState.Success,
   onSongClick: (Int) -> Unit,
   modifier: Modifier = Modifier,

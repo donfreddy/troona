@@ -24,7 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 
 /**
  * Single Line Text. Wraps Material [Text]
@@ -43,14 +46,20 @@ fun SingleLineText(
   modifier: Modifier = Modifier,
   shouldUseMarquee: Boolean = false,
   color: Color = Color.Unspecified,
-  style: TextStyle = LocalTextStyle.current
-){
+  style: TextStyle = LocalTextStyle.current,
+  fontSize: TextUnit = 12.sp,
+  fontWeight: FontWeight = FontWeight.Bold,
+) {
   Text(
     modifier = modifier.then(if (shouldUseMarquee) Modifier.basicMarquee() else Modifier),
     text = text,
     color = color,
     overflow = TextOverflow.Ellipsis,
     maxLines = 1,
-    style = style
+    style = style,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = 1.sp,
+    letterSpacing = 0.sp,
   )
 }

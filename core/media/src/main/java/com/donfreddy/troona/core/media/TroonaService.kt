@@ -21,17 +21,19 @@ import android.app.TaskStackBuilder
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.donfreddy.troona.core.common.util.SDKVersionUtil
 import com.donfreddy.troona.core.media.notification.TroonaNotificationManager
+import com.donfreddy.troona.core.media.util.QueueState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TroonaService : MediaSessionService() {
+class TroonaService : MediaSessionService(), QueueState {
   @Inject
   lateinit var mediaSession: MediaSession
 
@@ -82,6 +84,9 @@ class TroonaService : MediaSessionService() {
       }
     }
   }
+
+  override val queue: List<MediaItem>
+    get() = TODO("Not yet implemented")
 }
 
 private const val TROONA_ACTIVITY_PACKAGE_NAME = "com.donfreddy.troona.ui.MainActivity"

@@ -19,67 +19,138 @@ package com.donfreddy.troona.feature.player.mini
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.donfreddy.troona.core.designsystem.component.SingleLineText
+import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
+import com.donfreddy.troona.core.designsystem.images.TroonaArtwork
+import com.donfreddy.troona.core.designsystem.theme.TroonaColor
+import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.model.data.Song
+import com.donfreddy.troona.core.ui.song.asDuration
+import com.donfreddy.troona.feature.player.PlayerViewModel
+import com.donfreddy.troona.feature.player.UIEvents
 
 @Composable
 fun MiniPlayer(
+  onNavigateToPlayer: () -> Unit,
   modifier: Modifier = Modifier,
-  onNavigateToPlayer: () -> Unit = {},
+  viewModel: PlayerViewModel = hiltViewModel(),
+) {
+
+  MiniPlayerContent(
+    currentSong = viewModel.currentPlayingSong,
+    isPlaying = viewModel.isPlaying,
+    progress = viewModel.progress,
+    onNavigateToPlayer = onNavigateToPlayer,
+    onSkipNext = { viewModel.onUiEvent(UIEvents.SeekToNext) },
+    onPlayPause = { viewModel.onUiEvent(UIEvents.PlayPause) },
+    modifier = modifier
+  )
+}
+
+@Composable
+private fun MiniPlayerContent(
+  currentSong: Song,
+  isPlaying: Boolean,
+  progress: Float,
+  onNavigateToPlayer: () -> Unit,
+  onSkipNext: () -> Unit,
+  onPlayPause: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
   AnimatedVisibility(
     visible = true,
     enter = slideInVertically(initialOffsetY = { it }),
     exit = slideOutVertically(targetOffsetY = { it }),
   ) {
-    Surface(elevation = 4.dp) {
+    Surface(elevation = MaterialTheme.spacing.extraSmall) {
       Column(
-        modifier = modifier
-          //.background(color = Color.Red)
-          .clickable { onNavigateToPlayer() }
+        modifier =
+        modifier
+          .clickable(onClick = onNavigateToPlayer)
+
       ) {
         Row(
           modifier = Modifier
-            .padding(4.dp)
+            .padding(
+              horizontal = MaterialTheme.spacing.small,
+              vertical = MaterialTheme.spacing.extraSmall
+            )
             .fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.spacedBy(6.dp)
+          horizontalArrangement = Arrangement.SpaceBetween
         ) {
-          Box {
-            Text(
-              text = "Artwork",
-              textAlign = TextAlign.Center,
-            )
+          Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+          ) {
+            Box {
+              TroonaArtwork(
+                modifier = Modifier.size(MaterialTheme.spacing.extraLarge),
+                artworkUri = currentSong.albumArt,
+                contentDescription = currentSong.title
+              )
+            }
+            Column(verticalArrangement = Arrangement.Center) {
+              SingleLineText(
+                text = currentSong.title,
+                shouldUseMarquee = isPlaying,
+                fontSize = 14.sp,
+              )
+              SingleLineText(
+                text = "${currentSong.artistName} • ${currentSong.duration.asDuration()}",
+                shouldUseMarquee = isPlaying,
+                fontSize = 12.sp,
+                color = TroonaColor.Grey
+              )
+            }
           }
-          Column {
-            Text(
-              text = Song.EMPTY.title,
-              textAlign = TextAlign.Center,
-            )
-            Text(
-              text = Song.EMPTY.artistName,
-              textAlign = TextAlign.Center,
-            )
+
+          Row {
+            IconButton(onClick = onPlayPause) {
+              Icon(
+                painter = painterResource(id = if (isPlaying) TroonaIcons.Pause.resourceId else TroonaIcons.Play.resourceId),
+                contentDescription = "Play/Pause",
+                modifier = Modifier.size(30.dp)
+              )
+            }
+            IconButton(onClick = onSkipNext) {
+              Icon(
+                painter = painterResource(id = TroonaIcons.FastForward.resourceId),
+                contentDescription = "Skip Next",
+                modifier = Modifier.size(30.dp)
+              )
+            }
           }
         }
-        //Todo: Add mini player controls
+        LinearProgressIndicator(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(3.dp),
+          progress = progress
+        )
       }
     }
   }
@@ -87,6 +158,14 @@ fun MiniPlayer(
 
 @Preview(showBackground = true)
 @Composable
-fun MiniPlayerPreview() {
-  MiniPlayer(modifier = Modifier.fillMaxWidth())
+fun MiniPlayerContentPreview() {
+  MiniPlayerContent(
+    currentSong = Song.EXAMPLE,
+    isPlaying = true,
+    progress = 0.5f,
+    modifier = Modifier.fillMaxWidth(),
+    onNavigateToPlayer = {},
+    onSkipNext = {},
+    onPlayPause = {}
+  )
 }

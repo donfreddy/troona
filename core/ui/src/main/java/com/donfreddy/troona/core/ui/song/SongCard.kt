@@ -23,21 +23,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.donfreddy.troona.core.designsystem.component.SingleLineText
+import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 import com.donfreddy.troona.core.designsystem.images.TroonaArtwork
 import com.donfreddy.troona.core.designsystem.theme.TroonaColor
 import com.donfreddy.troona.core.designsystem.theme.spacing
@@ -51,66 +49,58 @@ fun SongCard(
   song: Song,
   isPlaying: Boolean,
   onClick: () -> Unit,
+  onMoreClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxWidth()
-      .clip(RoundedCornerShape(CardShapeSize))
+      .padding(horizontal = MaterialTheme.spacing.small)
+      .clip(MaterialTheme.shapes.large)
       .clickable(onClick = onClick),
-    //backgroundColor = Color.Transparent,
-    shape = RoundedCornerShape(CardShapeSize)
+    shape = MaterialTheme.shapes.large,
+    elevation = 0.dp,
   ) {
     Row(
-      modifier = Modifier
-        .padding(
-          //horizontal = MaterialTheme.spacing.small,
-          //vertical = MaterialTheme.spacing.extraSmall
-        )
-        .fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth(),
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
     ) {
       Row(
         modifier = Modifier.weight(0.9f),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.smallMedium),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
         verticalAlignment = Alignment.CenterVertically
       ) {
         TroonaArtwork(
-          modifier = Modifier.size(45.dp),
+          modifier = Modifier.size(MaterialTheme.spacing.extraLarge),
           artworkUri = song.albumArt,
-          contentDescription = ""
+          contentDescription = song.title
         )
-        Column {
+        Column(verticalArrangement = Arrangement.Center) {
           SingleLineText(
             text = song.title,
-            style = MaterialTheme.typography.subtitle1.copy(
-              fontWeight = FontWeight.SemiBold
-            ),
-            shouldUseMarquee = isPlaying
-
+            shouldUseMarquee = isPlaying,
+            fontSize = 14.sp,
           )
           SingleLineText(
             text = "${song.artistName} • ${song.duration.asDuration()}",
-            style = MaterialTheme.typography.body2,
             shouldUseMarquee = isPlaying,
+            fontSize = 12.sp,
             color = TroonaColor.Grey
           )
         }
       }
-      IconButton(
-        onClick = { },
-        modifier = Modifier
-      ) {
-        Icon(Icons.Default.MoreVert, contentDescription = null)
+      IconButton(onClick = onMoreClick) {
+        Icon(
+          painter = painterResource(id = TroonaIcons.MoreHorizontal.resourceId),
+          contentDescription = "More",
+        )
       }
     }
   }
 }
 
-private val CardShapeSize = 12.dp
-
-internal fun Long.asDuration(): String {
+fun Long.asDuration(): String {
   val hours = this / (1000 * 60 * 60)
   val minutes = (this % (1000 * 60 * 60)) / (1000 * 60)
   val seconds = (this % (1000 * 60)) / 1000

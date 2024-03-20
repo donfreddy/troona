@@ -46,7 +46,7 @@ fun TroonaImage(
   shape: Shape = MaterialTheme.shapes.medium,
   backgroundColor: Color = MaterialTheme.colors.surface,
   loading: @Composable (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Loading) -> Unit)? = null,
-  //error: @Composable (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Error) -> Unit)? = null,
+  error: @Composable (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Error) -> Unit)? = null,
   contentScale: ContentScale = ContentScale.Crop
 ) {
   Card(
@@ -60,7 +60,7 @@ fun TroonaImage(
       model = model,
       contentDescription = contentDescription,
       loading = loading,
-     // error = error,
+      error = error,
       contentScale = contentScale
     )
   }
@@ -96,7 +96,7 @@ fun TroonaArtwork(
     shape = shape,
     backgroundColor = backgroundColor,
     loading = { placeholder() },
-    //error = { placeholder() },
+    error = { placeholder() },
     contentScale = contentScale
   )
 }

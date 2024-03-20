@@ -16,17 +16,20 @@
 
 package com.donfreddy.troona.core.ui.song
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,6 +39,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.model.data.Song
 
 /**
@@ -51,14 +55,18 @@ fun SongCardItems(
   modifier: Modifier = Modifier,
 ) {
   if (songs.isNotEmpty()) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
+    LazyColumn(
+      modifier = modifier
+        .fillMaxSize()
+        .padding(horizontal = MaterialTheme.spacing.small)
+    ) {
       itemsIndexed(items = songs, key = { _, song -> song.id }) { index, song ->
-        Log.d("SongCardItems", "Song Index: $index")
         SongCard(
           modifier = modifier.animateItemPlacement(),
           song = song,
           isPlaying = song.id.toString() == currentPlayingSongId,
           onClick = { onClick(index) },
+          onMoreClick = { },
         )
       }
     }
@@ -85,6 +93,14 @@ fun LazyListScope.songCardItems(
         song = song,
         isPlaying = song.id.toString() == currentPlayingSongId,
         onClick = { onClick(index) },
+        onMoreClick = { },
+      )
+      Spacer(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = MaterialTheme.spacing.small)
+          .background(Color.DarkGray.copy(alpha = 0.08f))
+          .height(1.dp)
       )
     }
   } else {
