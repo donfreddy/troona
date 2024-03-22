@@ -82,3 +82,9 @@ https://stackoverflow.com/questions/73361340/animate-transition-between-column-a
 [//]: # (Simple tool to backup and restore your room database in Android)
 https://github.com/rafi0101/Android-Room-Database-Backup
 https://github.com/amitshekhariitbhu/Android-Debug-Database
+
+https://www.paleblueapps.com/rockandnull/fastlane-android
+https://www.paleblueapps.com/rockandnull/github-actions-android
+https://www.paleblueapps.com/rockandnull/github-actions-android-version
+https://www.paleblueapps.com/rockandnull/fix-gradle-sync-error-kotlin-multiplatform-gradle-version-catalog
+https://proandroiddev.com/ci-cd-pipeline-for-flavoured-android-apps-using-fastlane-and-github-actions-51667b7175af
