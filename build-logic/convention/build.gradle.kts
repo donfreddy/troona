@@ -23,6 +23,8 @@ group = "com.donfreddy.troona.buildlogic"
 dependencies {
   compileOnly(libs.android.gradlePlugin)
   compileOnly(libs.android.tools.common)
+  compileOnly(libs.firebase.crashlytics.gradlePlugin)
+  compileOnly(libs.firebase.performance.gradlePlugin)
   compileOnly(libs.kotlin.gradlePlugin)
   compileOnly(libs.ksp.gradlePlugin)
   compileOnly(libs.room.gradlePlugin)
@@ -58,6 +60,10 @@ gradlePlugin {
     register("androidRoom") {
       id = "troona.android.room"
       implementationClass = "AndroidRoomConventionPlugin"
+    }
+    register("androidFirebase") {
+      id = "troona.android.application.firebase"
+      implementationClass = "AndroidApplicationFirebaseConventionPlugin"
     }
     register("androidLint") {
       id = "troona.android.lint"

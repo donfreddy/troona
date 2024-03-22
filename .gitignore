@@ -43,3 +43,7 @@ _sandbox
 
 # Android Studio captures folder
 captures/
+
+# Local config file
+google-services.json
+troona.properties

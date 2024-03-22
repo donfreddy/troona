@@ -1,16 +1,16 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest9844364258740515389.xml:2:13-83
-INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest9844364258740515389.xml:2:13-83
+ADDED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest2256592095326469071.xml:2:13-83
+INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest2256592095326469071.xml:2:13-83
 	package
-		INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest9844364258740515389.xml
+		INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest2256592095326469071.xml
 	xmlns:android
-		ADDED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest9844364258740515389.xml:2:23-81
+		ADDED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest2256592095326469071.xml:2:23-81
 uses-sdk
-INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest9844364258740515389.xml reason: use-sdk injection requested
-INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest9844364258740515389.xml
-INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest9844364258740515389.xml
+INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest2256592095326469071.xml reason: use-sdk injection requested
+INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest2256592095326469071.xml
+INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest2256592095326469071.xml
 	android:targetSdkVersion
-		INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest9844364258740515389.xml
+		INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest2256592095326469071.xml
 	android:minSdkVersion
-		INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest9844364258740515389.xml
+		INJECTED from /Users/user/AndroidStudioProjects/Troona/core/datastore-proto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest2256592095326469071.xml
