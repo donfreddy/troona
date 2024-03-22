@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "troona-app",
+  "private_key_id": "776236e4f9adee09a18486eb80862f01a3e44a2f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCb8iRr58yl9S4H\n/JP2ZWIivt2FfNTixpmhRhi+5WRo/fny5IuiSK1sc3d9aC3DUPaxHppUY8hQ152X\nJsRhEJk+fO6jaM1rooTko4BHSGbhwyiWpAuxh6f8NnNDJBZ0VTjxlArbJm/DFHB2\nFnfVMom0CNBv6SDgWN8dRpcnI6L93d/YcgPLkuWFhKAnkTccYoJ9HUkVoNuI92Nt\njEzlpLL2pQq99Cay9bBSG/0xjF5BYcMBuwD1U+wuHMIpem3A12ULksVhI64LwmEq\nAfrADYiCvRCOd3NIFP4HmTI+dgCP8aeTQt4Bb3AJ2bIM5o54XkV09yhbtNj9+fFX\nhFzTcgx9AgMBAAECggEANVjvC7jm4ekPf6zwowxIt5Eqr9Ul8JQ3DxwvL/LCWEZ2\nAJkdiX0qUpznhg+jBBuI4MuSyQa/iqRQJVqeOIRYoC9V5bHfABC/PIYQRpJmm5nL\nI0loNKmvFlE8Of447kAPNFlMI28xMX+m/0atZNIemGehgn8yf3z3iojRAZMn2YdJ\nsVXZ6KEZvPyTD+RHm72K8Tmx6XnndTagYRR00dU4TffMQvTymCQXRDgfJfH+vYsY\nJMvgpBgUptn6eR2hruGOEeVwQDo1lrCeVUC/a6xqcBCOR1R6KIGl70tom9/oiYij\n2zA/1VT55MOVGtBr29Iu0wm+d4Ngl2ZBv3Ih0NnQcwKBgQDZWfpEHHXMJdTpoTUs\ns67PEe/jliKSjyBJjgvVN0oLoTOXEnaOJU5HJwRk5i8ecw7wt3xcmM919NVKXNgu\nyixqrygl7h1MgVDnUM6Uf5A3+PYKLBoCVBL4u4tHe2iOq+wTY73g8AOlAjnT/ilm\nx1aCiU+hSjthrh2QkjaI3fe1nwKBgQC3rO3/UIh1Zrd4rRxHbg+v8EnYLGKIZ7Qh\nZURrBqMF+wvhZ935aqRufdghtJdMqD0SkRXshZIR7Fsn2z+Y0/mxX6jHSvC15x1Q\nj2VBw7s+BepIINkCESf6FatReZilC/2dmLZhLJxqsCQS5gIiDbzagNCxFIZoaz0e\n5PJIJMcwYwKBgQDAlKzetKjbHZos95154is9ZhM7f8daPF7LTYTGgpqk+0wOy1ko\nUX2uJbALBrkxLZlLSAh0syD+ztQ9c05JBvGcBV55XSWwp9PbYQnpIa3TKlA2ayUQ\ncxXsNaAO0hWudD5UX8faCk/wYKyEXWqpmm3Yc3mO24sJ3ZBsjGCtnJ7i2QKBgGPc\n8clOz+KE5lwGQsnTXVQbIQsXlrrzJ0zA8mH+ScSGqf7zqgxhnuU0Jr6soVZcYlgl\n6fWe6bw09ZrF6d394lQ93lX8uMMt1RJn5HXNJZCjRq3Qriwhh8rA3VR++C9ERa/Z\nx88toh2fhv1/cMlzDqr+PnkI38sGA0U41UHEPUhhAoGAP1W7yWWbTQ+FORGMSU/n\nuspE78WKox0mE9C1xG3L6r4qm1Z3e6zcSg8KdE56wLNasqqfSPrvb/qNOr+SRfkQ\n6Fx5HeHegskLqX8dPrXdbdAFT4rYk6cJ48jUreQbmhSMegCgYJPlHQCPBbAdq+W/\n3BaYAbFP+Qm/WghFgOcHn1A=\n-----END PRIVATE KEY-----\n",
+  "client_email": "fastlane-supply@troona-app.iam.gserviceaccount.com",
+  "client_id": "100674845794294492775",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/fastlane-supply%40troona-app.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
