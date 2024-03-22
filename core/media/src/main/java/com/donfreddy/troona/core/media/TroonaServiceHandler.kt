@@ -16,14 +16,17 @@
 
 package com.donfreddy.troona.core.media
 
-import android.util.Log
+import android.content.Context
+import android.widget.Toast
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
+import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
 import com.donfreddy.troona.core.media.common.MediaConstants
 import com.donfreddy.troona.core.media.mapper.asMediaItem
 import com.donfreddy.troona.core.model.data.Song
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -32,99 +35,102 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.ArrayList
 import javax.inject.Inject
+
 
 const val TAG = "TroonaServiceHandler"
 
 class TroonaServiceHandler @Inject constructor(
-  private val exoPlayer: ExoPlayer
+  private val exoPlayer: ExoPlayer,
 ) : Player.Listener {
+  @Inject
+  @ApplicationContext
+  lateinit var context: Context
+
   private val _audioState: MutableStateFlow<TroonaState> = MutableStateFlow(TroonaState.Initial)
   val audioState: StateFlow<TroonaState> = _audioState.asStateFlow()
 
   private var job: Job? = null
-  private var originalPlayingQueue = ArrayList<Song>()
+  private val queueHandler = QueueHandler()
 
   @JvmField
   var playingQueue = ArrayList<Song>()
 
   fun setSong(song: Song) {
     exoPlayer.setMediaItem(song.asMediaItem())
-    exoPlayer.prepare()
   }
+
+  // set volume
+  fun setVolume(value: Float) {
+    exoPlayer.volume = value
+  }
+
+  val queue get() = queueHandler.getQueue()
+  val currentSong get() = if (queue.isNotEmpty()) queue[queueHandler.getCurrentIndex()] else Song.EXAMPLE
+  val currentMediaItemIndex = queueHandler.getCurrentIndex()
 
   fun setSongs(songs: List<Song>) {
     exoPlayer.setMediaItems(songs.map(Song::asMediaItem))
+    queueHandler.addQueueItems(songs)
     exoPlayer.prepare()
   }
 
-  fun getCurrentMediaItem(): MediaItem? {
-    return exoPlayer.currentMediaItem;
-  }
-
+  /**
+   * This function is used to handle the player events
+   * @param playerEvent The event to be handled
+   * @param startIndex The index of the song to start playing
+   * @param seekPosition The position to seek to in the song
+   */
   suspend fun onPlayerEvents(
-    playerEvent: PlayerEvent, startIndex: Int = -1, seekPosition: Long = 0
+    playerEvent: PlayerEvent,
+    startIndex: Int = -1,
+    seekPosition: Long = 0
   ) {
-    Log.d(TAG, "onPlayerEvents: $playerEvent")
-
     when (playerEvent) {
       is PlayerEvent.PlayPause -> playOrPause()
 
       is PlayerEvent.Play -> {
-        Log.d(TAG, "onPlayerEvents: $startIndex")
-
-        // log the songs
-        Log.d(TAG, "onPlayerEventsSongs: ${playerEvent.songs}")
-
         setMediaItems(playerEvent.songs)
+        queueHandler.addQueueItems(playerEvent.songs)
         // originalPlayingQueue = ArrayList(playerEvent.songs)
-        playingQueue = ArrayList(playerEvent.songs)
-
-        //Log.d(TAG, "onPlayerEventsMediaItems: $mediaItems")
-
-        //exoPlayer.setMediaItems(mediaItems, startIndex, 0)
-        Log.d(TAG, "onPlayerEvents: $startIndex")
+        playingQueue.clear()
+        playingQueue.addAll(playerEvent.songs)
 
         exoPlayer.prepare()
 
-        Log.d(TAG, "ExoPlayer Prepared")
-        exoPlayer.seekToDefaultPosition(0)
-        _audioState.value = TroonaState.Playing(isPlaying = true)
-        exoPlayer.playWhenReady = true
+        when (startIndex) {
+          exoPlayer.currentMediaItemIndex -> {
+            playOrPause()
+          }
 
-        /* when (startIndex) {
-           exoPlayer.currentMediaItemIndex -> {
-             playOrPause()
-           }
-
-           else -> {
-             exoPlayer.seekToDefaultPosition(startIndex)
-             _audioState.value = TroonaState.Playing(isPlaying = true)
-             exoPlayer.playWhenReady = true
-             startProgressTracker()
-           }
-         }*/
+          else -> {
+            exoPlayer.seekToDefaultPosition(startIndex)
+            startPlayback()
+          }
+        }
       }
 
       is PlayerEvent.Backward -> exoPlayer.seekBack()
 
       is PlayerEvent.Forward -> exoPlayer.seekForward()
 
-      is PlayerEvent.SeekToNext -> exoPlayer.seekToNext()
+      is PlayerEvent.SeekToNext -> {
+        if (exoPlayer.isPlaying) {
+          exoPlayer.seekToNext()
+        } else {
+          exoPlayer.seekToNext()
+          startPlayback()
+        }
+      }
 
       is PlayerEvent.SeekToPrevious -> exoPlayer.seekToPrevious()
 
       is PlayerEvent.SeekTo -> exoPlayer.seekTo(seekPosition)
 
-      is PlayerEvent.Stop -> stopProgressTracker()
+      is PlayerEvent.Stop -> stopProgressUpdate()
 
       is PlayerEvent.UpdateProgress -> {
         exoPlayer.seekTo((exoPlayer.duration * playerEvent.newProgress).toLong())
-      }
-
-      is PlayerEvent.GetCurrentPlayingSongId -> {
-        _audioState.value = TroonaState.CurrentPlaying(exoPlayer.currentMediaItemIndex)
       }
     }
   }
@@ -154,36 +160,60 @@ class TroonaServiceHandler @Inject constructor(
     _audioState.value = TroonaState.Playing(isPlaying)
     _audioState.value = TroonaState.CurrentPlaying(exoPlayer.currentMediaItemIndex)
     if (isPlaying) {
-      GlobalScope.launch {
-        startProgressTracker()
-      }
+      GlobalScope.launch { startProgressUpdate() }
     } else {
-      stopProgressTracker()
+      stopProgressUpdate()
+    }
+  }
+
+  override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+    super.onShuffleModeEnabledChanged(shuffleModeEnabled)
+  }
+
+  override fun onRepeatModeChanged(repeatMode: Int) {
+    super.onRepeatModeChanged(repeatMode)
+  }
+
+  override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+    super.onMediaItemTransition(mediaItem, reason)
+    Toast.makeText(context, "Now playing: " + mediaItem?.mediaMetadata?.title, Toast.LENGTH_SHORT)
+      .show();
+    queueHandler.setCurrentIndex(exoPlayer.currentMediaItemIndex)
+  }
+
+  override fun onTimelineChanged(timeline: Timeline, @Player.TimelineChangeReason reason: Int) {
+    if (reason == Player.TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED) {
+      // Update the UI according to the modified playlist (add, move or remove).
+      // updateUiForPlaylist(timeline)
+      TODO()
     }
   }
 
   private suspend fun playOrPause() {
-    Log.d(TAG, "playOrPause: ${exoPlayer.isPlaying}")
     if (exoPlayer.isPlaying) {
       exoPlayer.pause()
-      stopProgressTracker()
+      stopProgressUpdate()
     } else {
-      exoPlayer.play()
-      _audioState.value = TroonaState.Playing(isPlaying = true)
-      startProgressTracker()
+      startPlayback()
     }
   }
 
-  private suspend fun startProgressTracker() = job.run {
+  private suspend fun startProgressUpdate() = job.run {
     while (true) {
       delay(MediaConstants.PROGRESS_UPDATE_INTERVAL)
       _audioState.value = TroonaState.Progress(exoPlayer.currentPosition)
     }
   }
 
-  private fun stopProgressTracker() {
+  private fun stopProgressUpdate() {
     job?.cancel()
     _audioState.value = TroonaState.Playing(isPlaying = false)
+  }
+
+  private suspend fun startPlayback() {
+    exoPlayer.playWhenReady = true
+    _audioState.value = TroonaState.Playing(isPlaying = true)
+    startProgressUpdate()
   }
 
   private fun setMediaItems(audioList: List<Song>) {
@@ -208,18 +238,15 @@ class TroonaServiceHandler @Inject constructor(
 }
 
 sealed class PlayerEvent {
-  data class Play(val songs: List<Song>, val startIndex: Int = 0) : PlayerEvent()
+  data class Play(val songs: List<Song>) : PlayerEvent()
   data object PlayPause : PlayerEvent()
   data object Backward : PlayerEvent()
   data object Forward : PlayerEvent()
   data object SeekToNext : PlayerEvent()
   data object SeekToPrevious : PlayerEvent()
-
-  // data class SeekTo(val position: Long) : PlayerEvent()
   data object SeekTo : PlayerEvent()
   data object Stop : PlayerEvent()
   data class UpdateProgress(val newProgress: Float) : PlayerEvent()
-  data class GetCurrentPlayingSongId(val index: Int) : PlayerEvent()
 }
 
 sealed class TroonaState {

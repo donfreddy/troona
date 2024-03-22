@@ -35,7 +35,7 @@ import com.donfreddy.troona.core.media.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-@UnstableApi
+
 class TroonaNotificationManager @Inject constructor(
   @ApplicationContext private val context: Context,
   private val exoPlayer: ExoPlayer,
@@ -49,6 +49,7 @@ class TroonaNotificationManager @Inject constructor(
   }
 
   @RequiresApi(Build.VERSION_CODES.O)
+  @UnstableApi
   fun startNotificationService(
     mediaSessionService: MediaSessionService,
     mediaSession: MediaSession,
@@ -66,6 +67,7 @@ class TroonaNotificationManager @Inject constructor(
     mediaSessionService.startForeground(NOTIFICATION_ID, notification)
   }
 
+  @UnstableApi
   private fun buildNotification(mediaSession: MediaSession) {
     PlayerNotificationManager.Builder(
       context,
@@ -75,7 +77,7 @@ class TroonaNotificationManager @Inject constructor(
       TroonaNotificationAdapter(context, mediaSession.sessionActivity)
     ).setSmallIconResourceId(TroonaIcons.Music.resourceId)
       .build().also {
-        /// it.setMediaSessionToken(mediaSession.sessionCompatToken)
+        //it.setMediaSessionToken(mediaSession.sessionCompatToken)
         it.setUseFastForwardActionInCompactView(true)
         it.setUseRewindActionInCompactView(true)
         it.setUseNextActionInCompactView(true)

@@ -17,6 +17,7 @@
 package com.donfreddy.troona.feature.home
 
 import android.util.Log
+import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,12 +31,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.donfreddy.troona.core.media.TroonaState
 import com.donfreddy.troona.core.ui.MediaPager
-import com.donfreddy.troona.feature.player.PlayerViewModel
-import com.donfreddy.troona.feature.player.UIEvents
-import com.donfreddy.troona.feature.player.UIState
+import dagger.hilt.android.UnstableApi
 
+@OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
 fun HomeRoute(
   modifier: Modifier = Modifier,
@@ -61,7 +60,9 @@ fun HomeRoute(
         onSongClick = {startIndex->
           Log.d("HomeRoute", "onSongClick: $startIndex")
           viewModel.onHomeUiEvents(HomeUiEvent.Play(uiState.songs, startIndex))
+          viewModel.onHomeUiEvents(HomeUiEvent.SelectedSongChange(startIndex))
         },
+        currentPlayingSong = viewModel.currentPlayingSong.id,
         modifier = modifier,
       )
     }
@@ -76,11 +77,12 @@ fun HomeRoute(
 private fun HomeScreen(
   uiState: HomeUiState.Success,
   onSongClick: (Int) -> Unit,
+  currentPlayingSong: Long,
   modifier: Modifier = Modifier,
 ) {
   MediaPager(
     songs = uiState.songs,
-    currentPlayingSongId = "",
+    currentPlayingSongId = currentPlayingSong,
     onSongClick = onSongClick,
     modifier = modifier,
   )
@@ -94,6 +96,7 @@ fun HomeScreenPreview() {
       songs = emptyList(),
       artists = emptyList(),
     ),
+    currentPlayingSong = 0,
     onSongClick = {},
   )
 }
