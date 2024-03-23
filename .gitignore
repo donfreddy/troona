@@ -45,5 +45,5 @@ _sandbox
 captures/
 
 # Local config file
-google-services.json
+app/google-services.json
 troona.properties
