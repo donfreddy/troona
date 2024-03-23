@@ -36,22 +36,28 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+@UnstableApi
 @Module
 @InstallIn(SingletonComponent::class)
 object MediaModule {
   @Provides
   @Singleton
   fun provideAudioAttributes(): AudioAttributes =
-    AudioAttributes.Builder().setContentType(C.AUDIO_CONTENT_TYPE_MUSIC).setUsage(C.USAGE_MEDIA)
+    AudioAttributes.Builder()
+      .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+      .setUsage(C.USAGE_MEDIA)
       .build()
 
   @Provides
   @Singleton
-  @UnstableApi
   fun provideExoPlayer(
-    @ApplicationContext context: Context, audioAttributes: AudioAttributes
-  ): ExoPlayer = ExoPlayer.Builder(context).setAudioAttributes(audioAttributes, true)
-    .setHandleAudioBecomingNoisy(true).setTrackSelector(DefaultTrackSelector(context)).build()
+    @ApplicationContext context: Context,
+    audioAttributes: AudioAttributes
+  ): ExoPlayer = ExoPlayer.Builder(context)
+    .setAudioAttributes(audioAttributes, true)
+    .setHandleAudioBecomingNoisy(true)
+    .setDeviceVolumeControlEnabled(true)
+    .build()
 
   @Provides
   @Singleton
@@ -68,9 +74,14 @@ object MediaModule {
   fun provideMediaSession(
     @ApplicationContext context: Context,
     player: ExoPlayer,
+    troonaServiceHandler: TroonaServiceHandler,
     sessionActivityPendingIntent: PendingIntent
   ): MediaSession = MediaSession.Builder(context, player)
-    .setSessionActivity(sessionActivityPendingIntent).build()
+    .setSessionActivity(sessionActivityPendingIntent)
+    .build().apply {
+      setPlayer(player)
+      player.addListener(troonaServiceHandler)
+    }
 
   @Provides
   @Singleton

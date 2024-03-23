@@ -73,7 +73,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MediaPager(
   songs: List<Song>,
-  currentPlayingSongId: String,
+  currentPlayingSongId: Long,
   onSongClick: (Int) -> Unit,
   modifier: Modifier = Modifier,
   coroutineScope: CoroutineScope = rememberCoroutineScope()

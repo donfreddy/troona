@@ -17,33 +17,36 @@
 package com.donfreddy.troona.core.media
 
 import android.app.PendingIntent
-import android.app.TaskStackBuilder
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import androidx.media3.common.MediaItem
+import androidx.annotation.ChecksSdkIntAtLeast
+import androidx.annotation.OptIn
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.donfreddy.troona.core.common.util.SDKVersionUtil
 import com.donfreddy.troona.core.media.notification.TroonaNotificationManager
-import com.donfreddy.troona.core.media.util.QueueState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class TroonaService : MediaSessionService(), QueueState {
+@OptIn(UnstableApi::class) @AndroidEntryPoint
+class TroonaService : MediaSessionService() {
   @Inject
   lateinit var mediaSession: MediaSession
 
   @Inject
   lateinit var notificationManager: TroonaNotificationManager
 
-  override fun onCreate() {
-    super.onCreate()
+  // check if the device is running on Android Oreo or higher
+  @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.O)
+  fun isOreoOrHigher(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+  }
 
-    Log.d("TroonaService", "onCreate: ")
+  init {
+   Log.d("TroonaService", "onStartCommand: ")
     if (SDKVersionUtil.isOreoOrHigher) {
       Log.d("TroonaService", "onCreate: startForegroundService")
       notificationManager.startNotificationService(
@@ -51,21 +54,26 @@ class TroonaService : MediaSessionService(), QueueState {
         mediaSession = mediaSession
       )
     }
-
-    val sessionActivityPendingIntent = TaskStackBuilder.create(this).run {
-      val imFlag = if (SDKVersionUtil.isMarshmallowOrHigher) PendingIntent.FLAG_IMMUTABLE else 0
-      addNextIntent(Intent(this@TroonaService, Class.forName(TROONA_ACTIVITY_PACKAGE_NAME)))
-      getPendingIntent(0, imFlag or PendingIntent.FLAG_UPDATE_CURRENT)
-    }
-
-    mediaSession.also {
-      it.setSessionActivity(sessionActivityPendingIntent)
-    }
   }
 
 
-  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
+   @UnstableApi
+  override fun onCreate() {
+    super.onCreate()
+     Log.d("TroonaService", "onStartCommand: ")
+     if (SDKVersionUtil.isOreoOrHigher) {
+       Log.d("TroonaService", "onCreate: startForegroundService")
+       notificationManager.startNotificationService(
+         mediaSessionService = this,
+         mediaSession = mediaSession
+       )
+     }
+  }
+
+
+  @UnstableApi
+  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
     return super.onStartCommand(intent, flags, startId)
   }
@@ -84,9 +92,6 @@ class TroonaService : MediaSessionService(), QueueState {
       }
     }
   }
-
-  override val queue: List<MediaItem>
-    get() = TODO("Not yet implemented")
 }
 
 private const val TROONA_ACTIVITY_PACKAGE_NAME = "com.donfreddy.troona.ui.MainActivity"

@@ -117,7 +117,7 @@ private fun MiniPlayerContent(
               SingleLineText(
                 text = currentSong.title,
                 shouldUseMarquee = isPlaying,
-                fontSize = 14.sp,
+                fontSize = 15.sp,
               )
               SingleLineText(
                 text = "${currentSong.artistName} • ${currentSong.duration.asDuration()}",

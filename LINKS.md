@@ -78,3 +78,13 @@ https://medium.com/mindful-engineering/after-going-through-this-blog-youll-achie
 https://www.valueof.io/blog/motionlayout-in-compose-motion-scene-json5
 https://iamgideon.medium.com/motion-layout-appbar-in-jetpack-compose-441d882ff2a8
 https://stackoverflow.com/questions/73361340/animate-transition-between-column-and-row-while-scrolling-in-jetpack-compose
+
+[//]: # (Simple tool to backup and restore your room database in Android)
+https://github.com/rafi0101/Android-Room-Database-Backup
+https://github.com/amitshekhariitbhu/Android-Debug-Database
+
+https://www.paleblueapps.com/rockandnull/fastlane-android
+https://www.paleblueapps.com/rockandnull/github-actions-android
+https://www.paleblueapps.com/rockandnull/github-actions-android-version
+https://www.paleblueapps.com/rockandnull/fix-gradle-sync-error-kotlin-multiplatform-gradle-version-catalog
+https://proandroiddev.com/ci-cd-pipeline-for-flavoured-android-apps-using-fastlane-and-github-actions-51667b7175af

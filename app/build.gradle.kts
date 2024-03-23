@@ -18,6 +18,7 @@ plugins {
   alias(libs.plugins.troona.android.application)
   alias(libs.plugins.troona.android.application.compose)
   alias(libs.plugins.troona.android.hilt)
+  alias(libs.plugins.troona.android.application.firebase)
 }
 
 android {
@@ -30,7 +31,7 @@ android {
   }
 
   buildTypes {
-    release {
+    getByName("release") {
       isMinifyEnabled = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }

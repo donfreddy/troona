@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.donfreddy.troona" />
+                  <option name="mobileSdkAppId" value="1:801584390063:android:43a494541a1b0fbb52d95a" />
+                  <option name="projectId" value="troona-app" />
+                  <option name="projectNumber" value="801584390063" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

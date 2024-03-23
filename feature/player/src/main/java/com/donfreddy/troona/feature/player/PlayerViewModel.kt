@@ -42,15 +42,16 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
   private val audioServiceHandler: TroonaServiceHandler,
-  savableStateHandle: SavedStateHandle
+  savedStateHandle: SavedStateHandle
 ) : ViewModel() {
   val audioState = audioServiceHandler.audioState
 
-  private var duration by savableStateHandle.saveable { mutableLongStateOf(0L) }
-  var progress by savableStateHandle.saveable { mutableFloatStateOf(0.5f) }
-  private var progressString by savableStateHandle.saveable { mutableStateOf("00:00") }
-  var isPlaying by savableStateHandle.saveable { mutableStateOf(false) }
-  var currentPlayingSong by savableStateHandle.saveable { mutableStateOf(Song.EXAMPLE) }
+  private var duration by savedStateHandle.saveable { mutableLongStateOf(0L) }
+  var progress by savedStateHandle.saveable { mutableFloatStateOf(0.5f) }
+  private var progressString by savedStateHandle.saveable { mutableStateOf("00:00") }
+  var isPlaying by savedStateHandle.saveable { mutableStateOf(false) }
+  //var currentPlayingSong by savedStateHandle.saveable { mutableStateOf(Song.EXAMPLE) }
+  var currentPlayingSong = audioServiceHandler.currentSong
 
   private val _uiState: MutableStateFlow<UIState> = MutableStateFlow(UIState.Initial)
   val uiState: StateFlow<UIState> = _uiState.asStateFlow()
@@ -60,15 +61,13 @@ class PlayerViewModel @Inject constructor(
       audioServiceHandler.audioState.collectLatest { mediaState ->
         when (mediaState) {
           TroonaState.Initial -> _uiState.value = UIState.Initial
-
           is TroonaState.Buffering -> calculateProgressValue(mediaState.progress)
           is TroonaState.Playing -> isPlaying = mediaState.isPlaying
           is TroonaState.Progress -> calculateProgressValue(mediaState.progress)
           is TroonaState.CurrentPlaying -> {
             Log.d("PlayerViewModel", "CurrentPlaying: ${mediaState.mediaItemIndex}")
-            currentPlayingSong = audioServiceHandler.playingQueue[mediaState.mediaItemIndex]
+            currentPlayingSong = audioServiceHandler.queue[mediaState.mediaItemIndex]
           }
-
           is TroonaState.Ready -> {
             duration = mediaState.duration
             _uiState.value = UIState.Ready
@@ -99,10 +98,8 @@ class PlayerViewModel @Inject constructor(
           PlayerEvent.UpdateProgress(uiEvent.newProgress)
         )
       }
-      is UIEvents.GetCurrentPlayingSongId -> {
-        audioServiceHandler.onPlayerEvents(
-          PlayerEvent.GetCurrentPlayingSongId(uiEvent.index)
-        )
+      is UIEvents.SelectedAudioChange -> {
+        currentPlayingSong = audioServiceHandler.queue[uiEvent.index]
       }
     }
   }
@@ -121,7 +118,7 @@ sealed class UIEvents {
   data object Forward : UIEvents()
   data object Repeat : UIEvents()
   data class UpdateProgress(val newProgress: Float) : UIEvents()
-  data class GetCurrentPlayingSongId(val index: Int) : UIEvents()
+  data class SelectedAudioChange(val index: Int) : UIEvents()
 }
 
 sealed class UIState {
