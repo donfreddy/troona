@@ -55,6 +55,7 @@ include(":core:permission")
 include(":core:data")
 include(":core:media")
 include(":core:ui")
+include(":core:analytics")
 
 include(":feature:home")
 include(":feature:playlists")
