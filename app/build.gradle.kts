@@ -52,6 +52,7 @@ dependencies {
   implementation(projects.core.ui)
   implementation(projects.core.designsystem)
   implementation(projects.core.model)
+  implementation(projects.core.media)
   implementation(projects.core.permission)
 
   implementation(projects.feature.home)

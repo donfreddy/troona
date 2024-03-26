@@ -31,6 +31,9 @@ import com.donfreddy.troona.core.common.network.TroonaDispatchers.Main
 import com.donfreddy.troona.core.media.util.unsafeLazy
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -41,15 +44,6 @@ class TroonaNotificationAdapter(
   private val context: Context,
   private val pendingIntent: PendingIntent?,
 ) : PlayerNotificationManager.MediaDescriptionAdapter {
-  @Inject
-  @Dispatcher(IO)
-  lateinit var ioDispatcher: CoroutineDispatcher
-  private val coroutineScope by unsafeLazy { CoroutineScope(ioDispatcher + SupervisorJob()) }
-
-  @Inject
-  @Dispatcher(Main)
-  lateinit var mainDispatcher: CoroutineDispatcher
-  private val mainScope by unsafeLazy { CoroutineScope(mainDispatcher + SupervisorJob()) }
 
   override fun getCurrentContentTitle(player: Player) = player.mediaMetadata.albumTitle ?: "Unknown"
 
@@ -59,18 +53,21 @@ class TroonaNotificationAdapter(
     player.mediaMetadata.displayTitle ?: "Unknown"
 
 
+  @OptIn(DelicateCoroutinesApi::class)
   override fun getCurrentLargeIcon(
-    player: Player, callback: PlayerNotificationManager.BitmapCallback
+    player: Player,
+    callback: PlayerNotificationManager.BitmapCallback
   ): Bitmap? {
     // Assuming you want to load an image from a URL stored in player.mediaMetadata.artworkUri
     val request = ImageRequest.Builder(context).data(player.mediaMetadata.artworkUri).build()
-
-    coroutineScope.launch {
-      val result = (Coil.imageLoader(context).execute(request).drawable as BitmapDrawable).bitmap
-      withContext(mainScope.coroutineContext) {
-        callback.onBitmap(result)
+    GlobalScope.launch {
+      val result = (Coil.imageLoader(context).execute(request).drawable as BitmapDrawable?)?.bitmap
+      withContext(Dispatchers.Main) {
+        if (result != null) {
+          callback.onBitmap(result)
+        }
       }
     }
     return null
   }
-}
+} 

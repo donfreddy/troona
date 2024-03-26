@@ -28,6 +28,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import androidx.media3.session.SessionToken
 import androidx.media3.ui.PlayerNotificationManager
 import com.donfreddy.troona.core.common.util.SDKVersionUtil
 import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
@@ -77,7 +78,7 @@ class TroonaNotificationManager @Inject constructor(
       TroonaNotificationAdapter(context, mediaSession.sessionActivity)
     ).setSmallIconResourceId(TroonaIcons.Music.resourceId)
       .build().also {
-        //it.setMediaSessionToken(mediaSession.sessionCompatToken)
+       // it.setMediaSessionToken(SessionToken())
         it.setUseFastForwardActionInCompactView(true)
         it.setUseRewindActionInCompactView(true)
         it.setUseNextActionInCompactView(true)

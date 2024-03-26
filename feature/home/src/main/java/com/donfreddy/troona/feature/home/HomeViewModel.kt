@@ -27,6 +27,7 @@ import androidx.media3.common.util.UnstableApi
 import com.donfreddy.troona.core.domain.usecase.songs.GetSongsUseCase
 import com.donfreddy.troona.core.media.PlayerEvent
 import com.donfreddy.troona.core.media.TroonaServiceHandler
+import com.donfreddy.troona.core.media.core.AudioServiceConnection
 import com.donfreddy.troona.core.model.data.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,10 +42,18 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
   private val audioServiceHandler: TroonaServiceHandler,
+  private val audioServiceConnection: AudioServiceConnection,
   getSongsUseCase: GetSongsUseCase,
   savedStateHandle: SavedStateHandle
 ) : ViewModel() {
   val audioState = audioServiceHandler.audioState
+
+  init {
+    val nowPlaying = audioServiceConnection.nowPlaying.value
+    if (nowPlaying != null) {
+      Log.d("HomeViewModel", nowPlaying.mediaId)
+    }
+  }
 
   var isPlaying by savedStateHandle.saveable { mutableStateOf(false) }
   var currentPlayingSong by savedStateHandle.saveable { mutableStateOf(Song.EXAMPLE) }

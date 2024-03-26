@@ -310,6 +310,10 @@ public object UserPreferencesKt {
     }
 
     /**
+     * <pre>
+     * info about the user's playing queue
+     * </pre>
+     *
      * <code>int32 playing_queue_index = 13;</code>
      */
     public var playingQueueIndex: kotlin.Int
@@ -320,10 +324,31 @@ public object UserPreferencesKt {
         _builder.setPlayingQueueIndex(value)
       }
     /**
+     * ```
+     * info about the user's playing queue
+     * ```
+     *
      * `int32 playing_queue_index = 13;`
      */
     public fun clearPlayingQueueIndex() {
       _builder.clearPlayingQueueIndex()
+    }
+
+    /**
+     * <code>int32 playing_queue_position = 14;</code>
+     */
+    public var playingQueuePosition: kotlin.Int
+      @JvmName("getPlayingQueuePosition")
+      get() = _builder.getPlayingQueuePosition()
+      @JvmName("setPlayingQueuePosition")
+      set(value) {
+        _builder.setPlayingQueuePosition(value)
+      }
+    /**
+     * `int32 playing_queue_position = 14;`
+     */
+    public fun clearPlayingQueuePosition() {
+      _builder.clearPlayingQueuePosition()
     }
 
     /**
@@ -333,7 +358,7 @@ public object UserPreferencesKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     public class PlayingQueueIdsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
-     * `repeated string playing_queue_ids = 14;`
+     * `repeated string playing_queue_ids = 15;`
      * @return A list containing the playingQueueIds.
      */
     public val playingQueueIds: com.google.protobuf.kotlin.DslList<kotlin.String, PlayingQueueIdsProxy>
@@ -342,7 +367,7 @@ public object UserPreferencesKt {
         _builder.getPlayingQueueIdsList()
       )
     /**
-     * `repeated string playing_queue_ids = 14;`
+     * `repeated string playing_queue_ids = 15;`
      * @param value The playingQueueIds to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -351,7 +376,7 @@ public object UserPreferencesKt {
       _builder.addPlayingQueueIds(value)
     }
     /**
-     * `repeated string playing_queue_ids = 14;`
+     * `repeated string playing_queue_ids = 15;`
      * @param value The playingQueueIds to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -361,7 +386,7 @@ public object UserPreferencesKt {
       add(value)
     }
     /**
-     * `repeated string playing_queue_ids = 14;`
+     * `repeated string playing_queue_ids = 15;`
      * @param values The playingQueueIds to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -370,7 +395,7 @@ public object UserPreferencesKt {
       _builder.addAllPlayingQueueIds(values)
     }
     /**
-     * `repeated string playing_queue_ids = 14;`
+     * `repeated string playing_queue_ids = 15;`
      * @param values The playingQueueIds to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -380,7 +405,7 @@ public object UserPreferencesKt {
       addAll(values)
     }
     /**
-     * `repeated string playing_queue_ids = 14;`
+     * `repeated string playing_queue_ids = 15;`
      * @param index The index to set the value at.
      * @param value The playingQueueIds to set.
      */
@@ -389,7 +414,7 @@ public object UserPreferencesKt {
     public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PlayingQueueIdsProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setPlayingQueueIds(index, value)
     }/**
-     * `repeated string playing_queue_ids = 14;`
+     * `repeated string playing_queue_ids = 15;`
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearPlayingQueueIds")

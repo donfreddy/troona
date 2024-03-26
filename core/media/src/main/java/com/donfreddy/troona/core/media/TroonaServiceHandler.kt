@@ -36,10 +36,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
 const val TAG = "TroonaServiceHandler"
 
+@Singleton
 class TroonaServiceHandler @Inject constructor(
   private val exoPlayer: ExoPlayer,
 ) : Player.Listener {

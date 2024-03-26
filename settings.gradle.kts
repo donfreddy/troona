@@ -43,6 +43,7 @@ rootProject.name = "Troona"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
+include(":core:analytics")
 include(":core:common")
 include(":core:domain")
 include(":core:model")
@@ -55,7 +56,6 @@ include(":core:permission")
 include(":core:data")
 include(":core:media")
 include(":core:ui")
-include(":core:analytics")
 
 include(":feature:home")
 include(":feature:playlists")

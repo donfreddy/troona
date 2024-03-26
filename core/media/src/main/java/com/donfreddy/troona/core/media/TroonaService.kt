@@ -31,7 +31,7 @@ import com.donfreddy.troona.core.media.notification.TroonaNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@OptIn(UnstableApi::class) @AndroidEntryPoint
+@OptIn(UnstableApi::class)
 class TroonaService : MediaSessionService() {
   @Inject
   lateinit var mediaSession: MediaSession
@@ -46,7 +46,7 @@ class TroonaService : MediaSessionService() {
   }
 
   init {
-   Log.d("TroonaService", "onStartCommand: ")
+    Log.d("TroonaService", "onCreate: init")
     if (SDKVersionUtil.isOreoOrHigher) {
       Log.d("TroonaService", "onCreate: startForegroundService")
       notificationManager.startNotificationService(
@@ -56,25 +56,29 @@ class TroonaService : MediaSessionService() {
     }
   }
 
-
-
-   @UnstableApi
+  @UnstableApi
   override fun onCreate() {
-    super.onCreate()
-     Log.d("TroonaService", "onStartCommand: ")
-     if (SDKVersionUtil.isOreoOrHigher) {
-       Log.d("TroonaService", "onCreate: startForegroundService")
-       notificationManager.startNotificationService(
-         mediaSessionService = this,
-         mediaSession = mediaSession
-       )
-     }
-  }
+    Log.d("TroonaService", "onCreate")
 
+    mediaSession.apply {
+      packageManager?.getLaunchIntentForPackage(packageName)?.let { intent ->
+        setSessionActivity(
+          PendingIntent.getActivity(
+            this@TroonaService,
+            0,
+            intent,
+            if (Build.VERSION.SDK_INT >= 23) PendingIntent.FLAG_IMMUTABLE
+            else PendingIntent.FLAG_UPDATE_CURRENT
+          )
+        )
+      }
+    }
+    super.onCreate()
+  }
 
   @UnstableApi
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
+    Log.d("TroonaService", "onStartCommand")
     return super.onStartCommand(intent, flags, startId)
   }
 

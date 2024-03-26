@@ -64,6 +64,7 @@ class TroonaPrefsDataSource @Inject constructor(
       useDynamicColor = it.useDynamicColor,
       playbackMode = it.playbackMode.asPlaybackMode(),
       playingQueueIndex = it.playingQueueIndex,
+      playingQueuePosition = it.playingQueuePosition,
       playingQueueIds = it.playingQueueIdsList,
     )
   }
@@ -143,6 +144,12 @@ class TroonaPrefsDataSource @Inject constructor(
   suspend fun setPlayingQueueIndex(playingQueueIndex: Int) {
     userPreferences.updateData {
       it.copy { this.playingQueueIndex = playingQueueIndex }
+    }
+  }
+
+  suspend fun setPlayingQueuePosition(currentPosition: Int) {
+    userPreferences.updateData {
+      it.copy { this.playingQueueIndex = currentPosition }
     }
   }
 
