@@ -28,4 +28,17 @@ class SettingsRepositoryImpl @Inject constructor(
 
   override val userData: Flow<UserData> = troonaPrefsDataSource.userData
 
+  override suspend fun setPlayingQueueIds(queueIds: List<String>) {
+    if (queueIds.isEmpty()) return
+    troonaPrefsDataSource.setPlayingQueueIds(queueIds)
+  }
+
+  override suspend fun setPlayingQueueIndex(queueIndex: Int) {
+    troonaPrefsDataSource.setPlayingQueueIndex(queueIndex)
+  }
+
+  override suspend fun setPlayingQueuePosition(queuePosition: Long) {
+    troonaPrefsDataSource.setPlayingQueuePosition(queuePosition)
+  }
+
 }

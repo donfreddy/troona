@@ -23,7 +23,10 @@ android {
 }
 
 dependencies {
+  implementation(projects.core.common)
   implementation(projects.core.media)
   implementation(libs.androidx.lifecycle.viewModelCompose)
+  implementation(libs.palette)
+  implementation(libs.coil.compose)
   implementation(libs.kotlinx.coroutines.android)
 }

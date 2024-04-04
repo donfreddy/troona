@@ -32,4 +32,5 @@ dependencies {
   implementation(libs.coil.compose)
   implementation(libs.bundles.androidx.media3)
   implementation(libs.kotlinx.coroutines.android)
+  implementation(libs.kotlinx.coroutines.guava)
 }

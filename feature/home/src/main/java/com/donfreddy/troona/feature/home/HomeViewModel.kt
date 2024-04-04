@@ -16,39 +16,26 @@
 
 package com.donfreddy.troona.feature.home
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
-import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import com.donfreddy.troona.core.domain.usecase.songs.GetSongsUseCase
-import com.donfreddy.troona.core.media.PlayerEvent
-import com.donfreddy.troona.core.media.TroonaServiceHandler
+import com.donfreddy.troona.core.media.AudioServiceConnection
 import com.donfreddy.troona.core.model.data.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @UnstableApi
-@OptIn(SavedStateHandleSaveableApi::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-  private val audioServiceHandler: TroonaServiceHandler,
+  private val audioServiceConnection: AudioServiceConnection,
   getSongsUseCase: GetSongsUseCase,
-  savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-  val audioState = audioServiceHandler.audioState
-
-  var isPlaying by savedStateHandle.saveable { mutableStateOf(false) }
-  var currentPlayingSong by savedStateHandle.saveable { mutableStateOf(Song.EXAMPLE) }
-  val currentMediaItemIndex = audioServiceHandler.currentMediaItemIndex
+  val audioState = audioServiceConnection.audioState
 
   private val songs = getSongsUseCase().stateIn(
     scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = emptyList()
@@ -60,19 +47,10 @@ class HomeViewModel @Inject constructor(
     scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = HomeUiState.Loading
   )
 
-  fun onHomeUiEvents(uiEvent: HomeUiEvent) = viewModelScope.launch {
-    when (uiEvent) {
+  fun onEvent(event: HomeUiEvent) {
+    when (event) {
       is HomeUiEvent.Play -> {
-        audioServiceHandler.onPlayerEvents(
-          PlayerEvent.Play(songs = uiEvent.songs),
-          startIndex = uiEvent.startIndex
-        )
-      }
-
-      is HomeUiEvent.SelectedSongChange -> {
-        Log.d("HomeRoute", "onSongClick: ${uiEvent.index}")
-        Log.d("HomeRoute", "Queue: ${audioServiceHandler.queue}")
-        currentPlayingSong = audioServiceHandler.queue[uiEvent.index]
+        audioServiceConnection.play(event.songs, event.startIndex)
       }
     }
   }
@@ -80,16 +58,16 @@ class HomeViewModel @Inject constructor(
 
 sealed class HomeUiEvent {
   data class Play(val songs: List<Song>, val startIndex: Int = 0) : HomeUiEvent()
-  data class SelectedSongChange(val index: Int) : HomeUiEvent()
 }
 
 sealed interface HomeUiState {
   data object Loading : HomeUiState
 
   data class Success(
-    val songs: List<Song>,
-    val artists: List<Song>
+    val songs: List<Song>, val artists: List<Song>
   ) : HomeUiState
 
   data object Empty : HomeUiState
 }
+
+private const val TAG = "HomeViewModel"

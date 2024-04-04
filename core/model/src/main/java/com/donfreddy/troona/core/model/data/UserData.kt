@@ -38,5 +38,6 @@ data class UserData(
   val useDynamicColor: Boolean,
   val playbackMode: PlaybackMode,
   val playingQueueIndex: Int,
+  val playingQueuePosition: Long,
   val playingQueueIds: List<String>,
 )

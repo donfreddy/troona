@@ -46,8 +46,10 @@ message UserPreferences {
 
   PlaybackModeProto playback_mode = 12;
 
+  // info about the user's playing queue
   int32 playing_queue_index = 13;
-  repeated string playing_queue_ids = 14;
+  int64 playing_queue_position = 14;
+  repeated string playing_queue_ids = 15;
 
-  // Next available id: 15
+  // Next available id: 16
 }

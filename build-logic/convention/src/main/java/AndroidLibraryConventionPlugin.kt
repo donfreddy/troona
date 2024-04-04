@@ -19,6 +19,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import com.donfreddy.troona.configureKotlinAndroid
+import com.donfreddy.troona.libs
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.kotlin
 
@@ -51,6 +52,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
     }
 
     dependencies {
+      add("implementation", libs.findLibrary("timber").get())
       add("testImplementation", kotlin("test"))
     }
   }

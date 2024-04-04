@@ -16,7 +16,9 @@
 
 package com.donfreddy.troona.feature.player.mini
 
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
@@ -34,6 +36,7 @@ import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -41,6 +44,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.media3.common.util.UnstableApi
 import com.donfreddy.troona.core.designsystem.component.SingleLineText
 import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 import com.donfreddy.troona.core.designsystem.images.TroonaArtwork
@@ -50,21 +55,42 @@ import com.donfreddy.troona.core.model.data.Song
 import com.donfreddy.troona.core.ui.song.asDuration
 import com.donfreddy.troona.feature.player.PlayerViewModel
 import com.donfreddy.troona.feature.player.UIEvents
+import com.donfreddy.troona.feature.player.util.convertToProgress
 
+@OptIn(UnstableApi::class)
 @Composable
 fun MiniPlayer(
   onNavigateToPlayer: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: PlayerViewModel = hiltViewModel(),
 ) {
+  val audioState by viewModel.audioState.collectAsStateWithLifecycle()
+  val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
+
+  val progress by animateFloatAsState(
+    targetValue = convertToProgress(count = currentPosition, total = audioState.duration),
+    label = "ProgressAnimation"
+  )
+
+  val currentSong = if (viewModel.playingQueue.isEmpty()) {
+    Song.EXAMPLE
+  } else {
+    viewModel.playingQueue[audioState.currentMediaIndex]
+  }
 
   MiniPlayerContent(
-    currentSong = viewModel.currentPlayingSong,
-    isPlaying = viewModel.isPlaying,
-    progress = viewModel.progress,
+    currentSong = currentSong,
+    isPlaying = audioState.isPlaying,
+    progress = progress,
     onNavigateToPlayer = onNavigateToPlayer,
-    onSkipNext = { viewModel.onUiEvent(UIEvents.SeekToNext) },
-    onPlayPause = { viewModel.onUiEvent(UIEvents.PlayPause) },
+    onSkipNext = { viewModel.onEvent(UIEvents.SeekToNext) },
+    onPlayPause = {
+      if (audioState.isPlaying) {
+        viewModel.onEvent(UIEvents.Pause)
+      } else {
+        viewModel.onEvent(UIEvents.Play)
+      }
+    },
     modifier = modifier
   )
 }
@@ -86,16 +112,13 @@ private fun MiniPlayerContent(
   ) {
     Surface(elevation = MaterialTheme.spacing.extraSmall) {
       Column(
-        modifier =
-        modifier
-          .clickable(onClick = onNavigateToPlayer)
+        modifier = modifier.clickable(onClick = onNavigateToPlayer)
 
       ) {
         Row(
           modifier = Modifier
             .padding(
-              horizontal = MaterialTheme.spacing.small,
-              vertical = MaterialTheme.spacing.extraSmall
+              horizontal = MaterialTheme.spacing.small, vertical = MaterialTheme.spacing.extraSmall
             )
             .fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically,
@@ -148,8 +171,7 @@ private fun MiniPlayerContent(
         LinearProgressIndicator(
           modifier = Modifier
             .fillMaxWidth()
-            .height(3.dp),
-          progress = progress
+            .height(3.dp), progress = progress
         )
       }
     }
@@ -159,13 +181,11 @@ private fun MiniPlayerContent(
 @Preview(showBackground = true)
 @Composable
 fun MiniPlayerContentPreview() {
-  MiniPlayerContent(
-    currentSong = Song.EXAMPLE,
+  MiniPlayerContent(currentSong = Song.EXAMPLE,
     isPlaying = true,
     progress = 0.5f,
     modifier = Modifier.fillMaxWidth(),
     onNavigateToPlayer = {},
     onSkipNext = {},
-    onPlayPause = {}
-  )
+    onPlayPause = {})
 }

@@ -135,30 +135,40 @@ public interface UserPreferencesOrBuilder extends
   com.donfreddy.troona.core.datastore.PlaybackModeProto getPlaybackMode();
 
   /**
+   * <pre>
+   * info about the user's playing queue
+   * </pre>
+   *
    * <code>int32 playing_queue_index = 13;</code>
    * @return The playingQueueIndex.
    */
   int getPlayingQueueIndex();
 
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>int64 playing_queue_position = 14;</code>
+   * @return The playingQueuePosition.
+   */
+  long getPlayingQueuePosition();
+
+  /**
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @return A list containing the playingQueueIds.
    */
   java.util.List<java.lang.String>
       getPlayingQueueIdsList();
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @return The count of playingQueueIds.
    */
   int getPlayingQueueIdsCount();
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @param index The index of the element to return.
    * @return The playingQueueIds at the given index.
    */
   java.lang.String getPlayingQueueIds(int index);
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @param index The index of the element to return.
    * @return The playingQueueIds at the given index.
    */

@@ -502,6 +502,10 @@ public  final class UserPreferences extends
   public static final int PLAYING_QUEUE_INDEX_FIELD_NUMBER = 13;
   private int playingQueueIndex_;
   /**
+   * <pre>
+   * info about the user's playing queue
+   * </pre>
+   *
    * <code>int32 playing_queue_index = 13;</code>
    * @return The playingQueueIndex.
    */
@@ -510,6 +514,10 @@ public  final class UserPreferences extends
     return playingQueueIndex_;
   }
   /**
+   * <pre>
+   * info about the user's playing queue
+   * </pre>
+   *
    * <code>int32 playing_queue_index = 13;</code>
    * @param value The playingQueueIndex to set.
    */
@@ -518,6 +526,10 @@ public  final class UserPreferences extends
     playingQueueIndex_ = value;
   }
   /**
+   * <pre>
+   * info about the user's playing queue
+   * </pre>
+   *
    * <code>int32 playing_queue_index = 13;</code>
    */
   private void clearPlayingQueueIndex() {
@@ -525,10 +537,36 @@ public  final class UserPreferences extends
     playingQueueIndex_ = 0;
   }
 
-  public static final int PLAYING_QUEUE_IDS_FIELD_NUMBER = 14;
+  public static final int PLAYING_QUEUE_POSITION_FIELD_NUMBER = 14;
+  private long playingQueuePosition_;
+  /**
+   * <code>int64 playing_queue_position = 14;</code>
+   * @return The playingQueuePosition.
+   */
+  @java.lang.Override
+  public long getPlayingQueuePosition() {
+    return playingQueuePosition_;
+  }
+  /**
+   * <code>int64 playing_queue_position = 14;</code>
+   * @param value The playingQueuePosition to set.
+   */
+  private void setPlayingQueuePosition(long value) {
+    
+    playingQueuePosition_ = value;
+  }
+  /**
+   * <code>int64 playing_queue_position = 14;</code>
+   */
+  private void clearPlayingQueuePosition() {
+
+    playingQueuePosition_ = 0L;
+  }
+
+  public static final int PLAYING_QUEUE_IDS_FIELD_NUMBER = 15;
   private com.google.protobuf.Internal.ProtobufList<java.lang.String> playingQueueIds_;
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @return A list containing the playingQueueIds.
    */
   @java.lang.Override
@@ -536,7 +574,7 @@ public  final class UserPreferences extends
     return playingQueueIds_;
   }
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @return The count of playingQueueIds.
    */
   @java.lang.Override
@@ -544,7 +582,7 @@ public  final class UserPreferences extends
     return playingQueueIds_.size();
   }
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @param index The index of the element to return.
    * @return The playingQueueIds at the given index.
    */
@@ -553,7 +591,7 @@ public  final class UserPreferences extends
     return playingQueueIds_.get(index);
   }
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @param index The index of the value to return.
    * @return The bytes of the playingQueueIds at the given index.
    */
@@ -571,7 +609,7 @@ public  final class UserPreferences extends
      }
   }
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @param index The index to set the value at.
    * @param value The playingQueueIds to set.
    */
@@ -582,7 +620,7 @@ public  final class UserPreferences extends
     playingQueueIds_.set(index, value);
   }
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @param value The playingQueueIds to add.
    */
   private void addPlayingQueueIds(
@@ -592,7 +630,7 @@ public  final class UserPreferences extends
     playingQueueIds_.add(value);
   }
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @param values The playingQueueIds to add.
    */
   private void addAllPlayingQueueIds(
@@ -602,13 +640,13 @@ public  final class UserPreferences extends
         values, playingQueueIds_);
   }
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    */
   private void clearPlayingQueueIds() {
     playingQueueIds_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
   }
   /**
-   * <code>repeated string playing_queue_ids = 14;</code>
+   * <code>repeated string playing_queue_ids = 15;</code>
    * @param value The bytes of the playingQueueIds to add.
    */
   private void addPlayingQueueIdsBytes(
@@ -1244,6 +1282,10 @@ public  final class UserPreferences extends
     }
 
     /**
+     * <pre>
+     * info about the user's playing queue
+     * </pre>
+     *
      * <code>int32 playing_queue_index = 13;</code>
      * @return The playingQueueIndex.
      */
@@ -1252,6 +1294,10 @@ public  final class UserPreferences extends
       return instance.getPlayingQueueIndex();
     }
     /**
+     * <pre>
+     * info about the user's playing queue
+     * </pre>
+     *
      * <code>int32 playing_queue_index = 13;</code>
      * @param value The playingQueueIndex to set.
      * @return This builder for chaining.
@@ -1262,6 +1308,10 @@ public  final class UserPreferences extends
       return this;
     }
     /**
+     * <pre>
+     * info about the user's playing queue
+     * </pre>
+     *
      * <code>int32 playing_queue_index = 13;</code>
      * @return This builder for chaining.
      */
@@ -1272,7 +1322,35 @@ public  final class UserPreferences extends
     }
 
     /**
-     * <code>repeated string playing_queue_ids = 14;</code>
+     * <code>int64 playing_queue_position = 14;</code>
+     * @return The playingQueuePosition.
+     */
+    @java.lang.Override
+    public long getPlayingQueuePosition() {
+      return instance.getPlayingQueuePosition();
+    }
+    /**
+     * <code>int64 playing_queue_position = 14;</code>
+     * @param value The playingQueuePosition to set.
+     * @return This builder for chaining.
+     */
+    public Builder setPlayingQueuePosition(long value) {
+      copyOnWrite();
+      instance.setPlayingQueuePosition(value);
+      return this;
+    }
+    /**
+     * <code>int64 playing_queue_position = 14;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearPlayingQueuePosition() {
+      copyOnWrite();
+      instance.clearPlayingQueuePosition();
+      return this;
+    }
+
+    /**
+     * <code>repeated string playing_queue_ids = 15;</code>
      * @return A list containing the playingQueueIds.
      */
     @java.lang.Override
@@ -1282,7 +1360,7 @@ public  final class UserPreferences extends
           instance.getPlayingQueueIdsList());
     }
     /**
-     * <code>repeated string playing_queue_ids = 14;</code>
+     * <code>repeated string playing_queue_ids = 15;</code>
      * @return The count of playingQueueIds.
      */
     @java.lang.Override
@@ -1290,7 +1368,7 @@ public  final class UserPreferences extends
       return instance.getPlayingQueueIdsCount();
     }
     /**
-     * <code>repeated string playing_queue_ids = 14;</code>
+     * <code>repeated string playing_queue_ids = 15;</code>
      * @param index The index of the element to return.
      * @return The playingQueueIds at the given index.
      */
@@ -1299,7 +1377,7 @@ public  final class UserPreferences extends
       return instance.getPlayingQueueIds(index);
     }
     /**
-     * <code>repeated string playing_queue_ids = 14;</code>
+     * <code>repeated string playing_queue_ids = 15;</code>
      * @param index The index of the value to return.
      * @return The bytes of the playingQueueIds at the given index.
      */
@@ -1309,7 +1387,7 @@ public  final class UserPreferences extends
       return instance.getPlayingQueueIdsBytes(index);
     }
     /**
-     * <code>repeated string playing_queue_ids = 14;</code>
+     * <code>repeated string playing_queue_ids = 15;</code>
      * @param index The index to set the value at.
      * @param value The playingQueueIds to set.
      * @return This builder for chaining.
@@ -1321,7 +1399,7 @@ public  final class UserPreferences extends
       return this;
     }
     /**
-     * <code>repeated string playing_queue_ids = 14;</code>
+     * <code>repeated string playing_queue_ids = 15;</code>
      * @param value The playingQueueIds to add.
      * @return This builder for chaining.
      */
@@ -1332,7 +1410,7 @@ public  final class UserPreferences extends
       return this;
     }
     /**
-     * <code>repeated string playing_queue_ids = 14;</code>
+     * <code>repeated string playing_queue_ids = 15;</code>
      * @param values The playingQueueIds to add.
      * @return This builder for chaining.
      */
@@ -1343,7 +1421,7 @@ public  final class UserPreferences extends
       return this;
     }
     /**
-     * <code>repeated string playing_queue_ids = 14;</code>
+     * <code>repeated string playing_queue_ids = 15;</code>
      * @return This builder for chaining.
      */
     public Builder clearPlayingQueueIds() {
@@ -1352,7 +1430,7 @@ public  final class UserPreferences extends
       return this;
     }
     /**
-     * <code>repeated string playing_queue_ids = 14;</code>
+     * <code>repeated string playing_queue_ids = 15;</code>
      * @param value The bytes of the playingQueueIds to add.
      * @return This builder for chaining.
      */
@@ -1392,12 +1470,13 @@ public  final class UserPreferences extends
             "useDynamicColor_",
             "playbackMode_",
             "playingQueueIndex_",
+            "playingQueuePosition_",
             "playingQueueIds_",
           };
           java.lang.String info =
-              "\u0000\u000e\u0000\u0000\u0001\u000e\u000e\u0000\u0001\u0000\u0001\f\u0002\f\u0003" +
+              "\u0000\u000f\u0000\u0000\u0001\u000f\u000f\u0000\u0001\u0000\u0001\f\u0002\f\u0003" +
               "\f\u0004\f\u0005\f\u0006\f\u0007\f\b\f\t\u0007\n\f\u000b\u0007\f\f\r\u0004\u000e" +
-              "\u021a";
+              "\u0002\u000f\u021a";
           return newMessageInfo(DEFAULT_INSTANCE, info, objects);
       }
       // fall through

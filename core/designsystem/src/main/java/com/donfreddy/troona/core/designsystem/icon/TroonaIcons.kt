@@ -68,3 +68,7 @@ sealed interface Icon {
   data class ImageVectorIcon(val imageVector: ImageVector) : Icon
   data class DrawableResourceIcon(@DrawableRes val resourceId: Int) : Icon
 }
+
+// https://www.youtube.com/watch?v=pYF_Ma5bOOA
+// https://www.youtube.com/watch?v=fEJeVIOBepA
+// https://shapeshifter.design
