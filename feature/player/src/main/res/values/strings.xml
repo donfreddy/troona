@@ -15,15 +15,5 @@
   ~ limitations under the License.
   -->
 <resources>
-  <!--<string name="app_name">Troona</string>
-  <string name="home_title">Home</string>
-  <string name="settings_title">Settings</string>
-  <string name="playlists_title">Playlists</string>
-  <string name="favorite_title">Favorites</string>-->
-  <string name="core_ui_suggested_title">Suggested</string>
-  <string name="core_ui_songs_title">Songs</string>
-  <string name="core_ui_artists_title">Artists</string>
-  <string name="core_ui_albums_title">Albums</string>
-  <string name="core_ui_genres_title">Genres</string>
-  <string name="core_ui_folders_title">Folders</string>
+  <string name="feature_player_timestamp_format" translatable="false">>%1$s:%2$</string>
 </resources>

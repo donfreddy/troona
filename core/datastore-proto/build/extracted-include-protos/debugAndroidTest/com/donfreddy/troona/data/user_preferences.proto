@@ -48,7 +48,7 @@ message UserPreferences {
 
   // info about the user's playing queue
   int32 playing_queue_index = 13;
-  int32 playing_queue_position = 14;
+  int64 playing_queue_position = 14;
   repeated string playing_queue_ids = 15;
 
   // Next available id: 16

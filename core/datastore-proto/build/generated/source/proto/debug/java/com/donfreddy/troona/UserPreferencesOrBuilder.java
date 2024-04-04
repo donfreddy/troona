@@ -145,10 +145,10 @@ public interface UserPreferencesOrBuilder extends
   int getPlayingQueueIndex();
 
   /**
-   * <code>int32 playing_queue_position = 14;</code>
+   * <code>int64 playing_queue_position = 14;</code>
    * @return The playingQueuePosition.
    */
-  int getPlayingQueuePosition();
+  long getPlayingQueuePosition();
 
   /**
    * <code>repeated string playing_queue_ids = 15;</code>

@@ -335,9 +335,9 @@ public object UserPreferencesKt {
     }
 
     /**
-     * <code>int32 playing_queue_position = 14;</code>
+     * <code>int64 playing_queue_position = 14;</code>
      */
-    public var playingQueuePosition: kotlin.Int
+    public var playingQueuePosition: kotlin.Long
       @JvmName("getPlayingQueuePosition")
       get() = _builder.getPlayingQueuePosition()
       @JvmName("setPlayingQueuePosition")
@@ -345,7 +345,7 @@ public object UserPreferencesKt {
         _builder.setPlayingQueuePosition(value)
       }
     /**
-     * `int32 playing_queue_position = 14;`
+     * `int64 playing_queue_position = 14;`
      */
     public fun clearPlayingQueuePosition() {
       _builder.clearPlayingQueuePosition()

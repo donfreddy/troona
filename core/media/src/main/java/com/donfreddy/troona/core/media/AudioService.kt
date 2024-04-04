@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.media.core
+package com.donfreddy.troona.core.media
 
 import android.content.Intent
 import android.util.Log
@@ -26,13 +26,15 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.donfreddy.troona.core.common.network.Dispatcher
 import com.donfreddy.troona.core.common.network.TroonaDispatchers.Main
-import com.donfreddy.troona.core.media.R
+import com.donfreddy.troona.core.media.notification.TroonaNotificationProvider
 import com.donfreddy.troona.core.media.util.unsafeLazy
+import com.donfreddy.troona.core.model.data.Song
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @UnstableApi
@@ -64,6 +66,19 @@ class AudioService : MediaSessionService() {
 
   @UnstableApi
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    if (intent != null && intent.action != null) {
+      Log.d(TAG, "Received intent with action: ${intent.action}")
+      serviceScope.launch {
+        // TODO: restore the queue with the current media item if needed
+
+        /** Handle the intent action here */
+        when (intent.action) {
+          ACTION_PLAY -> {
+            Log.d(TAG, "Play action")
+          }
+        }
+      }
+    }
     return super.onStartCommand(intent, flags, startId)
   }
 
@@ -106,6 +121,26 @@ class AudioService : MediaSessionService() {
     serviceScope.cancel()
   }
 
+  /**
+   * Send a public intent to notify other apps of the change.
+   * e.g. musixmatch, last.fm, etc.
+   * @param what The change that occurred.
+   */
+  fun sendPublicIntent(what: String) {
+    val intent = Intent(what.replace(TROONA_PACKAGE_NAME, "com.android.music."))
+    val song = Song.EXAMPLE
+    intent.putExtra("id", song.id)
+    intent.putExtra("artist", song.artistName)
+    intent.putExtra("album", song.albumName)
+    intent.putExtra("track", song.title)
+    intent.putExtra("duration", song.duration)
+    intent.putExtra("position", 0L)
+    intent.putExtra("playing", false)
+    intent.putExtra("scrabbling_source", TROONA_PACKAGE_NAME)
+    @Suppress("Deprecation")
+    sendStickyBroadcast(intent)
+  }
+
   /** Listener for player events from [Player]. */
   private inner class PlayerEventListener : Player.Listener {
     override fun onEvents(player: Player, events: Player.Events) {
@@ -139,8 +174,8 @@ class AudioService : MediaSessionService() {
   }
 
   companion object {
-
+    val TAG: String = AudioService::class.java.simpleName
+    private const val TROONA_PACKAGE_NAME = "com.donfreddy.troona"
+    const val ACTION_PLAY = "$TROONA_PACKAGE_NAME.play"
   }
 }
-
-private const val TAG = "AudioService"

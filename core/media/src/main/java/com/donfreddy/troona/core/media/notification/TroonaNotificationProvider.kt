@@ -1,4 +1,4 @@
-package com.donfreddy.troona.core.media.core
+package com.donfreddy.troona.core.media.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

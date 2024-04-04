@@ -26,7 +26,7 @@ import javax.inject.Inject
  * A use case which returns the user data.
  */
 class GetUserDataUseCase @Inject constructor(
-  private val settingsRepository: SettingsRepository
-) : UseCase<UserData, UseCase.NoParams> {
-  operator fun invoke(): Flow<UserData> = settingsRepository.userData
+  private val repository: SettingsRepository
+) : UseCase<Flow<UserData>, UseCase.NoParams> {
+  operator fun invoke() = repository.userData
 }

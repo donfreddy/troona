@@ -40,6 +40,7 @@ firebaseBom = "32.8.0"
 firebaseCrashlyticsPlugin = "2.9.9"
 firebasePerfPlugin = "1.4.2"
 gmsPlugin = "4.4.1"
+palette = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +52,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+androidx-compose-animation-graphics = { group = "androidx.compose.animation", name = "animation-graphics" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -94,6 +96,8 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 
+palette = { group = "androidx.palette", name = "palette", version.ref = "palette" }
+
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
@@ -109,7 +113,8 @@ androidx-compose = [
     "androidx-ui-tooling",
     "androidx-ui-graphics",
     "androidx-ui-tooling-preview",
-    "androidx-compose-material"
+    "androidx-compose-material",
+    "androidx-compose-animation-graphics",
 ]
 androidx-room = ["room-ktx", "room-runtime"]
 androidx-media3 = ["media3-session", "media3-exoplayer", "media3-ui"]

@@ -16,12 +16,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools">
 
+  <uses-permission android:name="android.permission.BROADCAST_STICKY" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
   <application>
     <service
-      android:name=".core.AudioService"
+      android:name=".AudioService"
       android:exported="true"
       android:foregroundServiceType="mediaPlayback"
       android:permission="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"

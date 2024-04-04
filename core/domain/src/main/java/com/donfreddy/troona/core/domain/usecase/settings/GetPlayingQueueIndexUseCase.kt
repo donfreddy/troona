@@ -14,31 +14,20 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.data.repository
+package com.donfreddy.troona.core.domain.usecase.settings
 
-import com.donfreddy.troona.core.datastore.TroonaPrefsDataSource
 import com.donfreddy.troona.core.domain.repository.SettingsRepository
+import com.donfreddy.troona.core.domain.usecase.UseCase
 import com.donfreddy.troona.core.model.data.UserData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class SettingsRepositoryImpl @Inject constructor(
-  private val troonaPrefsDataSource: TroonaPrefsDataSource
-) : SettingsRepository {
-
-  override val userData: Flow<UserData> = troonaPrefsDataSource.userData
-
-  override suspend fun setPlayingQueueIds(queueIds: List<String>) {
-    if (queueIds.isEmpty()) return
-    troonaPrefsDataSource.setPlayingQueueIds(queueIds)
-  }
-
-  override suspend fun setPlayingQueueIndex(queueIndex: Int) {
-    troonaPrefsDataSource.setPlayingQueueIndex(queueIndex)
-  }
-
-  override suspend fun setPlayingQueuePosition(queuePosition: Long) {
-    troonaPrefsDataSource.setPlayingQueuePosition(queuePosition)
-  }
-
+/**
+ * A use case which return the playing queue index.
+ */
+class GetPlayingQueueIndexUseCase @Inject constructor(
+  private val repository: SettingsRepository
+) : UseCase<Flow<Int>, UseCase.NoParams> {
+  operator fun invoke() = repository.userData.map { it.playingQueueIndex }
 }

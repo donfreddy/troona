@@ -23,8 +23,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetSongsUseCase @Inject constructor(
-  private val songRepository: SongRepository,
+  private val repository: SongRepository,
 ) : UseCase<List<Song>, UseCase.NoParams> {
 
-  operator fun invoke(): Flow<List<Song>> = songRepository.songs
+  operator fun invoke(): Flow<List<Song>> = repository.songs
 }

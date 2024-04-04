@@ -25,4 +25,8 @@ interface SettingsRepository {
    * Stream of [UserData]
    */
   val userData: Flow<UserData>
+
+  suspend fun setPlayingQueueIds(queueIds: List<String>)
+  suspend fun setPlayingQueueIndex(queueIndex: Int)
+  suspend fun setPlayingQueuePosition(queuePosition: Long)
 }

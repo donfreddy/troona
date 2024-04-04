@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.feature)
-}
+package com.donfreddy.troona.core.domain.usecase.settings
 
-android {
-  namespace = "com.donfreddy.troona.feature.player"
-}
+import com.donfreddy.troona.core.domain.repository.SettingsRepository
+import com.donfreddy.troona.core.domain.usecase.UseCase
+import com.donfreddy.troona.core.model.data.UserData
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-dependencies {
-  implementation(projects.core.common)
-  implementation(projects.core.media)
-  implementation(libs.androidx.lifecycle.viewModelCompose)
-  implementation(libs.palette)
-  implementation(libs.coil.compose)
-  implementation(libs.kotlinx.coroutines.android)
+/**
+ * A use case which sets the playing queue position.
+ */
+class SetPlayingQueuePositionUseCase @Inject constructor(
+  private val repository: SettingsRepository
+) : UseCase<Unit, Long> {
+  suspend operator fun invoke(queuePosition: Long) =
+    repository.setPlayingQueuePosition(queuePosition)
 }

@@ -82,7 +82,7 @@ fun SongCardItems(
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.songCardItems(
   songs: List<Song>,
-  currentPlayingSongId: Long,
+  currentPlayingSongId: String,
   onClick: (Int) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -91,7 +91,7 @@ fun LazyListScope.songCardItems(
       SongCard(
         modifier = modifier.animateItemPlacement(),
         song = song,
-        isPlaying = song.id == currentPlayingSongId,
+        isPlaying = song.id.toString() == currentPlayingSongId,
         onClick = { onClick(index) },
         onMoreClick = { },
       )

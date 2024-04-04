@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.media.common
+package com.donfreddy.troona.core.domain.usecase.settings
 
-object MediaConstants {
-  const val DEFAULT_MEDIA_ID = ""
-  const val DEFAULT_INDEX = 0
-  const val DEFAULT_POSITION_MS = 0L
-  const val DEFAULT_DURATION_MS = 0L
-  const val PROGRESS_UPDATE_INTERVAL = 500L // we will update the progress bar every 500ms
+import com.donfreddy.troona.core.domain.repository.SettingsRepository
+import com.donfreddy.troona.core.domain.usecase.UseCase
+import com.donfreddy.troona.core.model.data.UserData
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+/**
+ * A use case which sets the playing queue index.
+ */
+class SetPlayingQueueIndexUseCase @Inject constructor(
+  private val repository: SettingsRepository
+) : UseCase<Unit, Int> {
+  suspend operator fun invoke(queueIndex: Int) = repository.setPlayingQueueIndex(queueIndex)
 }

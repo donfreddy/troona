@@ -147,9 +147,9 @@ class TroonaPrefsDataSource @Inject constructor(
     }
   }
 
-  suspend fun setPlayingQueuePosition(currentPosition: Int) {
+  suspend fun setPlayingQueuePosition(currentPosition: Long) {
     userPreferences.updateData {
-      it.copy { this.playingQueueIndex = currentPosition }
+      it.copy { this.playingQueuePosition = currentPosition }
     }
   }
 
