@@ -29,14 +29,17 @@ import androidx.compose.animation.core.StartOffset
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,6 +56,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Slider
 import androidx.compose.material.SliderDefaults
 import androidx.compose.material.Text
+import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -60,12 +64,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -73,7 +75,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,14 +86,12 @@ import androidx.palette.graphics.Palette
 import coil.ImageLoader
 import coil.request.ImageRequest
 import com.donfreddy.troona.core.designsystem.component.SingleLineText
+import com.donfreddy.troona.core.designsystem.component.TroonaIconButton
 import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 import com.donfreddy.troona.core.designsystem.images.TroonaArtwork
-import com.donfreddy.troona.core.designsystem.theme.TroonaColor
 import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.media.AudioState
 import com.donfreddy.troona.core.model.data.Song
-import com.donfreddy.troona.core.ui.song.asDuration
-import com.donfreddy.troona.feature.player.util.asFormattedString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
@@ -121,8 +120,6 @@ fun FullPlayer(
   }
 
   var dominantColor: Int by remember { mutableIntStateOf(Color.Black.toArgb()) }
-  var textColor: Int by remember { mutableIntStateOf(Color.White.toArgb()) }
-  var textColor2: Int by remember { mutableIntStateOf(Color.White.toArgb()) }
 
   val blendedColor = remember { Animatable(Color(dominantColor)) }
 
@@ -145,9 +142,7 @@ fun FullPlayer(
     // Create a gradient from the dominant colors
     gradientColors = run {
       dominantColor = palette!!.dominantSwatch?.rgb ?: Color.Black.toArgb()
-      textColor = palette!!.dominantSwatch?.bodyTextColor ?: Color.White.toArgb()
-      textColor2 = palette!!.dominantSwatch?.titleTextColor ?: Color.White.toArgb()
-      return@run listOf(Color(dominantColor), Color(textColor))
+      return@run listOf(Color(dominantColor), Color(Color.Black.toArgb()))
     }
   }
 
@@ -157,9 +152,16 @@ fun FullPlayer(
     playingQueue = playingQueue,
     gradientColors = gradientColors,
     dominantColor = dominantColor,
-    textColor = textColor,
-    textColor2 = textColor2,
     currentPosition = audioState.duration,
+    onSkipPrevious = { viewModel.onEvent(UIEvents.SeekToPrevious) },
+    onPlayPause = {
+      if (audioState.isPlaying) {
+        viewModel.onEvent(UIEvents.Pause)
+      } else {
+        viewModel.onEvent(UIEvents.Play)
+      }
+    },
+    onSkipNext = { viewModel.onEvent(UIEvents.SeekToNext) },
     modifier = modifier
   )
 }
@@ -172,9 +174,13 @@ private fun FullPlayerContent(
   playingQueue: List<Song>,
   gradientColors: List<Color>,
   dominantColor: Int,
-  textColor: Int,
-  textColor2: Int,
   currentPosition: Long,
+  onLike: () -> Unit = {},
+  onShuffle: () -> Unit = {},
+  onRepeat: () -> Unit = {},
+  onSkipPrevious: () -> Unit,
+  onPlayPause: () -> Unit,
+  onSkipNext: () -> Unit,
   isFavorite: Boolean = false,
   modifier: Modifier = Modifier,
 ) {
@@ -182,7 +188,7 @@ private fun FullPlayerContent(
     modifier = modifier
       .fillMaxSize()
       //.background(brush = Brush.verticalGradient(gradientColors))
-      .background(Color(dominantColor).copy(alpha = 0.8f))
+      .background(Color(dominantColor).copy(alpha = DefaultTextAlpha))
   ) {
     Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraLarge))
     Box(
@@ -191,7 +197,7 @@ private fun FullPlayerContent(
         .height(4.dp)
         .clip(RoundedCornerShape(4.dp))
         //.shadow(elevation = 0.dp, shape = RoundedCornerShape(8.dp))
-        .background(Color.White.copy(alpha = 0.15f))
+        .background(Color.White.copy(alpha = DefaultAlpha))
         .align(Alignment.CenterHorizontally)
     )
     Box(
@@ -226,7 +232,7 @@ private fun FullPlayerContent(
           text = currentSong.artistName,
           shouldUseMarquee = audioState.isPlaying,
           fontSize = 18.sp,
-          color = Color.White.copy(0.8f),
+          color = Color.White.copy(DefaultTextAlpha),
           fontWeight = FontWeight.SemiBold,
         )
       }
@@ -240,7 +246,7 @@ private fun FullPlayerContent(
         IconButton(modifier = Modifier.size(35.dp), onClick = {}) {
           Icon(
             painter = painterResource(id = if (isFavorite) TroonaIcons.Favorite.resourceId else TroonaIcons.FavoriteBorder.resourceId),
-            contentDescription = "Play/Pause",
+            contentDescription = "Favorite",
             tint = Color.White
             // modifier = Modifier.size(30.dp)
           )
@@ -261,23 +267,22 @@ private fun FullPlayerContent(
         .padding(horizontal = PlayerScreenPadding)
         .fillMaxWidth()
     ) {
-      CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+
         Slider(
           modifier = Modifier
-            .fillMaxWidth()
             .padding(0.dp)
-            .background(Color.Black),
-          value = 0.5f,
+            .then(Modifier.background(Color.Black)),
+          value = DefaultSliderAlpha,
           onValueChange = {},
           colors = SliderDefaults.colors(
             thumbColor = Color.White,
             activeTrackColor = Color.White,
-            inactiveTrackColor = Color.White.copy(alpha = 0.5f),
+            inactiveTrackColor = Color.White.copy(alpha = DefaultSliderAlpha),
             activeTickColor = Color.White,
-            inactiveTickColor = Color.White.copy(alpha = 0.5f)
+            inactiveTickColor = Color.White.copy(alpha = DefaultSliderAlpha)
           )
         )
-      }
+
 
       Row(
         modifier = Modifier.fillMaxWidth(),
@@ -287,11 +292,13 @@ private fun FullPlayerContent(
           text = "0:00",
           style = MaterialTheme.typography.body2,
           fontWeight = FontWeight.SemiBold,
+          color = Color.White,
         )
         Text(
           text = "3:00",
           style = MaterialTheme.typography.body2,
           fontWeight = FontWeight.SemiBold,
+          color = Color.White,
         )
       }
 
@@ -300,56 +307,63 @@ private fun FullPlayerContent(
       Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        IconButton(
-          onClick = {},
-          modifier = Modifier.size(20.dp)
+        TroonaIconButton(
+          onClick = onShuffle,
+          modifier = Modifier.size(24.dp)
         ) {
           Icon(
+            modifier = Modifier.size(24.dp),
             painter = painterResource(id = TroonaIcons.Shuffle.resourceId),
             contentDescription = "Shuffle",
             tint = Color.White
           )
         }
-        IconButton(
-          onClick = {},
-          modifier = Modifier.size(40.dp)
+        TroonaIconButton(
+          onClick = onSkipPrevious,
+          modifier = Modifier.size(55.dp),
+          rippleRadius = 32.dp,
         ) {
           Icon(
-            painter = painterResource(id = TroonaIcons.SkipPrevious.resourceId),
+            modifier = Modifier.size(55.dp),
+            painter = painterResource(id = TroonaIcons.FastRewind.resourceId),
             contentDescription = "Skip Previous",
             tint = Color.White
           )
         }
-        IconButton(
-          onClick = {},
+        TroonaIconButton(
+          onClick = onPlayPause,
           modifier = Modifier
-           // .size(60.dp)
-            .background(brush = SolidColor(Color.White), shape = CircleShape, alpha = 0.2f)
+            .size(70.dp)
+            .background(brush = SolidColor(Color.White), shape = CircleShape, alpha = DefaultAlpha),
+          rippleRadius = 35.dp,
         ) {
           Icon(
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(55.dp),
             painter = painterResource(id = if (audioState.isPlaying) TroonaIcons.Pause.resourceId else TroonaIcons.Play.resourceId),
             contentDescription = "Play/Pause",
             tint = Color.White
           )
         }
-        IconButton(
-          onClick = {},
-          modifier = Modifier.size(40.dp)
+        TroonaIconButton(
+          onClick = onSkipNext,
+          modifier = Modifier.size(55.dp),
+          rippleRadius = 32.dp,
         ) {
           Icon(
-            painter = painterResource(id = TroonaIcons.SkipNext.resourceId),
+            modifier = Modifier.size(55.dp),
+            painter = painterResource(id = TroonaIcons.FastForward.resourceId),
             contentDescription = "Skip Next",
             tint = Color.White
           )
         }
-        IconButton(
-          onClick = {},
-          modifier = Modifier.size(20.dp)
+        TroonaIconButton(
+          onClick = onRepeat,
+          modifier = Modifier.size(24.dp)
         ) {
           Icon(
+            modifier = Modifier.size(24.dp),
             painter = painterResource(id = TroonaIcons.Repeat.resourceId),
             contentDescription = "Repeat Mode",
             tint = Color.White
@@ -397,3 +411,6 @@ fun AnimateColorTransition(dominantColor: Int, blendedColor: Animatable<Color, A
 }
 
 private val PlayerScreenPadding = 20.dp
+private const val DefaultAlpha = 0.14f
+private const val DefaultTextAlpha = 0.9f
+private const val DefaultSliderAlpha = 0.5f

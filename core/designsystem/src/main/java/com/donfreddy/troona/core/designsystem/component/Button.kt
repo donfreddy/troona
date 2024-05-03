@@ -17,16 +17,29 @@
 package com.donfreddy.troona.core.designsystem.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.donfreddy.troona.core.designsystem.component.TroonaButtonDefaults.RippleRadius
 import com.donfreddy.troona.core.designsystem.theme.TroonaTheme
 
 /**
@@ -130,11 +143,41 @@ fun TroonaTextButton(
   // Todo: implement component here.
 }
 
+@Composable
+fun TroonaIconButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  rippleRadius: Dp = RippleRadius,
+  rippleColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
+  enabled: Boolean = true,
+  interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  content: @Composable () -> Unit,
+) {
+  Box(
+    modifier = modifier
+      .clickable(
+        enabled = enabled,
+        role = Role.Button,
+        onClick = onClick,
+        interactionSource = interactionSource,
+        indication = rememberRipple(
+          bounded = false,
+          radius = rippleRadius,
+          //color = rippleColor
+        ),
+      ),
+    contentAlignment = Alignment.Center
+  ) {
+    val contentAlpha = if (enabled) LocalContentAlpha.current else ContentAlpha.disabled
+    CompositionLocalProvider(LocalContentAlpha provides contentAlpha, content = content)
+  }
+}
+
 @Preview
 @Composable
 fun NiaButtonPreview() {
   TroonaTheme {
-   //
+    //
   }
 }
 
@@ -147,4 +190,7 @@ object TroonaButtonDefaults {
 
   // OutlinedButton default border width isn't exposed via ButtonDefaults
   val OutlinedButtonBorderWidth = 1.dp
+
+  // Default ripple radius for TroonaIconButton
+  val RippleRadius = 24.dp
 }

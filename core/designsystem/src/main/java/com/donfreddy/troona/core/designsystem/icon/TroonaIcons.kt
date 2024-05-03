@@ -56,6 +56,7 @@ object TroonaIcons {
   val Pause = DrawableResourceIcon(R.drawable.ic_pause)
   val SkipNext = DrawableResourceIcon(R.drawable.ic_skip_next)
   val FastForward = DrawableResourceIcon(R.drawable.ic_fast_forward)
+  val FastRewind = DrawableResourceIcon(R.drawable.ic_fast_rewind)
   val Sort = DrawableResourceIcon(R.drawable.ic_sort)
   val Palette = DrawableResourceIcon(R.drawable.ic_palette)
   val DarkMode = DrawableResourceIcon(R.drawable.ic_dark_mode)
