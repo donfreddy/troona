@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
@@ -44,6 +45,7 @@ fun TroonaImage(
   contentDescription: String?,
   modifier: Modifier = Modifier,
   shape: Shape = MaterialTheme.shapes.medium,
+  elevation: Dp = 0.dp,
   backgroundColor: Color = MaterialTheme.colors.surface,
   loading: @Composable (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Loading) -> Unit)? = null,
   error: @Composable (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Error) -> Unit)? = null,
@@ -52,7 +54,7 @@ fun TroonaImage(
   Card(
     modifier = modifier,
     shape = shape,
-    elevation = 0.dp,
+    elevation = elevation,
     backgroundColor = backgroundColor
   ) {
     SubcomposeAsyncImage(
@@ -73,10 +75,11 @@ fun TroonaArtwork(
   modifier: Modifier = Modifier,
   shape: Shape = MaterialTheme.shapes.medium,
   backgroundColor: Color = Color.Transparent,
+  elevation: Dp = 0.dp,
   placeholder: @Composable () -> Unit = {
     Card(
       shape = shape,
-      elevation = 0.dp,
+      elevation = elevation,
       contentColor = MaterialTheme.colors.primary.copy(alpha = 0.2f),
       backgroundColor = Color.White
     ) {
@@ -94,6 +97,7 @@ fun TroonaArtwork(
     model = artworkUri,
     contentDescription = contentDescription,
     shape = shape,
+    elevation = elevation,
     backgroundColor = backgroundColor,
     loading = { placeholder() },
     error = { placeholder() },

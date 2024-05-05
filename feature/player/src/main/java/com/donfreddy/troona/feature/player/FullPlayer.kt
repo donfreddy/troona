@@ -29,17 +29,13 @@ import androidx.compose.animation.core.StartOffset
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -51,14 +47,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Slider
-import androidx.compose.material.SliderDefaults
 import androidx.compose.material.Text
-import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -89,6 +80,7 @@ import com.donfreddy.troona.core.designsystem.component.SingleLineText
 import com.donfreddy.troona.core.designsystem.component.TroonaIconButton
 import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 import com.donfreddy.troona.core.designsystem.images.TroonaArtwork
+import com.donfreddy.troona.core.designsystem.theme.TroonaColor
 import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.media.AudioState
 import com.donfreddy.troona.core.model.data.Song
@@ -190,14 +182,14 @@ private fun FullPlayerContent(
       //.background(brush = Brush.verticalGradient(gradientColors))
       .background(Color(dominantColor).copy(alpha = DefaultTextAlpha))
   ) {
-    Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraLarge))
+    Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
     Box(
       modifier = Modifier
         .width(34.dp)
         .height(4.dp)
         .clip(RoundedCornerShape(4.dp))
         //.shadow(elevation = 0.dp, shape = RoundedCornerShape(8.dp))
-        .background(Color.White.copy(alpha = DefaultAlpha))
+        .background(TroonaColor.WhiteAlpha02)
         .align(Alignment.CenterHorizontally)
     )
     Box(
@@ -209,6 +201,7 @@ private fun FullPlayerContent(
         modifier = modifier.aspectRatio(1f),
         artworkUri = currentSong.albumArt,
         shape = RoundedCornerShape(MaterialTheme.spacing.smallMedium),
+        elevation = 8.dp,
         contentDescription = currentSong.title
       )
     }
@@ -231,16 +224,15 @@ private fun FullPlayerContent(
         SingleLineText(
           text = currentSong.artistName,
           shouldUseMarquee = audioState.isPlaying,
-          fontSize = 18.sp,
-          color = Color.White.copy(DefaultTextAlpha),
+          fontSize = 20.sp,
+          color = TroonaColor.WhiteAlpha08,
           fontWeight = FontWeight.SemiBold,
         )
       }
 
       Row(
         modifier = Modifier.padding(
-          start = MaterialTheme.spacing.small,
-          end = MaterialTheme.spacing.medium
+          start = MaterialTheme.spacing.small, end = MaterialTheme.spacing.medium
         ),
       ) {
         IconButton(modifier = Modifier.size(35.dp), onClick = {}) {
@@ -268,41 +260,38 @@ private fun FullPlayerContent(
         .fillMaxWidth()
     ) {
 
-        Slider(
-          modifier = Modifier
-            .padding(0.dp)
-            .then(Modifier.background(Color.Black)),
-          value = DefaultSliderAlpha,
-          onValueChange = {},
-          colors = SliderDefaults.colors(
-            thumbColor = Color.White,
-            activeTrackColor = Color.White,
-            inactiveTrackColor = Color.White.copy(alpha = DefaultSliderAlpha),
-            activeTickColor = Color.White,
-            inactiveTickColor = Color.White.copy(alpha = DefaultSliderAlpha)
-          )
-        )
+      Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
-
-      Row(
+      TroonaSlider(
+        value = DefaultSliderAlpha,
+        onValueChanged = { newValue ->
+          println(newValue)
+          //viewModel.onEvent(UIEvents.SeekTo(newValue.toLong()))
+        },
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+      )
+      Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+      Row(
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
       ) {
         Text(
-          text = "0:00",
-          style = MaterialTheme.typography.body2,
-          fontWeight = FontWeight.SemiBold,
-          color = Color.White,
+          text = "0:09",
+          style = MaterialTheme.typography.body2.copy(
+            fontWeight = FontWeight.W700,
+            fontSize = 11.sp,
+            color = TroonaColor.WhiteAlpha04,
+          ),
         )
         Text(
-          text = "3:00",
-          style = MaterialTheme.typography.body2,
-          fontWeight = FontWeight.SemiBold,
-          color = Color.White,
+          text = "-3:00",
+          style = MaterialTheme.typography.body2.copy(
+            fontWeight = FontWeight.W700,
+            fontSize = 11.sp,
+            color = TroonaColor.WhiteAlpha04,
+          ),
         )
       }
-
-      Spacer(modifier = Modifier.height(MaterialTheme.spacing.smallMedium))
+      Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
       Row(
         modifier = modifier.fillMaxWidth(),
@@ -310,14 +299,13 @@ private fun FullPlayerContent(
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
         TroonaIconButton(
-          onClick = onShuffle,
-          modifier = Modifier.size(24.dp)
+          onClick = onShuffle, modifier = Modifier.size(24.dp)
         ) {
           Icon(
             modifier = Modifier.size(24.dp),
             painter = painterResource(id = TroonaIcons.Shuffle.resourceId),
             contentDescription = "Shuffle",
-            tint = Color.White
+            tint = TroonaColor.WhiteAlpha04
           )
         }
         TroonaIconButton(
@@ -359,8 +347,7 @@ private fun FullPlayerContent(
           )
         }
         TroonaIconButton(
-          onClick = onRepeat,
-          modifier = Modifier.size(24.dp)
+          onClick = onRepeat, modifier = Modifier.size(24.dp)
         ) {
           Icon(
             modifier = Modifier.size(24.dp),

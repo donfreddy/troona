@@ -35,6 +35,10 @@ object TroonaColor {
 
   // Suggested
   val White = Color(0xFFFFFFFF)
+  val WhiteAlpha02 = White.copy(alpha = 0.2f)
+  val WhiteAlpha04 = White.copy(alpha = 0.4f)
+  val WhiteAlpha06 = White.copy(alpha = 0.6f)
+  val WhiteAlpha08 = White.copy(alpha = 0.8f)
   val Grey = Color(0xFF9F9F9F)
   val DarkGrey = Color(0xFF272727)
   val Black = Color(0xFF101010)
