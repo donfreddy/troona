@@ -15,8 +15,8 @@
   ~ limitations under the License.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  xmlns:dist="http://schemas.android.com/apk/distribution">
+  xmlns:dist="http://schemas.android.com/apk/distribution"
+  xmlns:tools="http://schemas.android.com/tools">
 
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
@@ -49,20 +49,11 @@
       <intent-filter>
         <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
       </intent-filter>
-    </activity>
 
-   <!-- <service
-      android:name=".core.media.core.AudioService"
-      android:enabled="true"
-      android:exported="true"
-      android:foregroundServiceType="mediaPlayback"
-      android:permission=""
-      tools:ignore="ExportedService">
-      <intent-filter>
-        <action android:name="androidx.media3.session.MediaSessionService" />
-        <action android:name="android.media.browse.MediaBrowserService" />
-      </intent-filter>
-    </service>-->
+      <!--  App shortcuts -->
+      <meta-data android:name="android.app.shortcuts"
+        android:resource="@xml/shortcuts" />
+    </activity>
   </application>
 
 </manifest>

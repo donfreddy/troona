@@ -16,7 +16,9 @@
 
 package com.donfreddy.troona.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -35,12 +37,15 @@ import com.donfreddy.troona.core.designsystem.theme.TroonaTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   private val viewModel: MainActivityViewModel by viewModels()
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    handleIntent(intent)
+
     val splashScreen = installSplashScreen()
 
     super.onCreate(savedInstanceState)
@@ -64,8 +69,7 @@ class MainActivity : ComponentActivity() {
     // This also sets up the initial system bar style based on the platform theme
     enableEdgeToEdge(
       navigationBarStyle = SystemBarStyle.auto(
-        lightScrim = lightScrim,
-        darkScrim = darkScrim
+        lightScrim = lightScrim, darkScrim = darkScrim
       )
     )
 
@@ -75,10 +79,24 @@ class MainActivity : ComponentActivity() {
       // val isDarkTheme = shouldUseDarkTheme(uiState)
 
       TroonaTheme(
-        isDarkTheme = false,
-        useDynamicColor = shouldUseDynamicColor(uiState)
+        isDarkTheme = false, useDynamicColor = shouldUseDynamicColor(uiState)
       ) {
         TroonaApp()
+      }
+    }
+  }
+
+  override fun onNewIntent(intent: Intent?) {
+    super.onNewIntent(intent)
+    handleIntent(intent)
+  }
+
+  private fun handleIntent(intent: Intent?) {
+    intent?.let {
+      val shortcutId = it.getStringExtra("shortcut_id")
+
+      if (shortcutId != null) {
+        Timber.tag("MainActivity").d("Shortcut clicked: $shortcutId")
       }
     }
   }
