@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.donfreddy.troona.core.designsystem.component.TroonaButtonDefaults.RippleRadius
+import com.donfreddy.troona.core.designsystem.theme.TroonaColor
 import com.donfreddy.troona.core.designsystem.theme.TroonaTheme
 
 /**
@@ -148,7 +149,7 @@ fun TroonaIconButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   rippleRadius: Dp = RippleRadius,
-  rippleColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
+  rippleColor: Color = TroonaColor.WhiteAlpha02,
   enabled: Boolean = true,
   interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
   content: @Composable () -> Unit,
@@ -163,7 +164,7 @@ fun TroonaIconButton(
         indication = rememberRipple(
           bounded = false,
           radius = rippleRadius,
-          //color = rippleColor
+          color = rippleColor
         ),
       ),
     contentAlignment = Alignment.Center

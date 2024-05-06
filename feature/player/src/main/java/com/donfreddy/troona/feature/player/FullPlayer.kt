@@ -19,10 +19,7 @@ package com.donfreddy.troona.feature.player
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector4D
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.StartOffset
@@ -44,7 +41,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -59,8 +55,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RadialGradientShader
+import androidx.compose.ui.graphics.Shader
+import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -111,17 +111,8 @@ fun FullPlayer(
     viewModel.playingQueue[audioState.currentMediaIndex]
   }
 
-  var dominantColor: Int by remember { mutableIntStateOf(Color.Black.toArgb()) }
-
-  val blendedColor = remember { Animatable(Color(dominantColor)) }
-
-  var gradientColors by remember {
-    mutableStateOf(
-      listOf(
-        Color(Color.Black.toArgb()), Color(Color.White.toArgb())
-      )
-    )
-  }
+  var dominantColor: Int by remember { mutableIntStateOf(0) }
+  var gradientColors by remember { mutableStateOf(emptyList<Color>()) }
 
   LaunchedEffect(currentSong.albumArt) {
     var palette: Palette?
@@ -133,9 +124,11 @@ fun FullPlayer(
 
     // Create a gradient from the dominant colors
     gradientColors = run {
-      dominantColor = palette!!.dominantSwatch?.rgb ?: Color.Black.toArgb()
-      return@run listOf(Color(dominantColor), Color(Color.Black.toArgb()))
+      dominantColor = palette!!.getDominantColor(TroonaColor.PrimaryColor.toArgb())
+      return@run listOf(Color(dominantColor), TroonaColor.Black)
     }
+
+    // Animate the gradient colors
   }
 
   FullPlayerContent(
@@ -143,7 +136,6 @@ fun FullPlayer(
     currentSong = currentSong,
     playingQueue = playingQueue,
     gradientColors = gradientColors,
-    dominantColor = dominantColor,
     currentPosition = audioState.duration,
     onSkipPrevious = { viewModel.onEvent(UIEvents.SeekToPrevious) },
     onPlayPause = {
@@ -158,15 +150,15 @@ fun FullPlayer(
   )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+
 @Composable
 private fun FullPlayerContent(
   audioState: AudioState,
   currentSong: Song,
   playingQueue: List<Song>,
   gradientColors: List<Color>,
-  dominantColor: Int,
   currentPosition: Long,
+  modifier: Modifier = Modifier,
   onLike: () -> Unit = {},
   onShuffle: () -> Unit = {},
   onRepeat: () -> Unit = {},
@@ -174,21 +166,30 @@ private fun FullPlayerContent(
   onPlayPause: () -> Unit,
   onSkipNext: () -> Unit,
   isFavorite: Boolean = false,
-  modifier: Modifier = Modifier,
 ) {
+  val largeRadialGradient = object : ShaderBrush() {
+    override fun createShader(size: Size): Shader {
+      val biggerDimension = maxOf(size.height, size.width)
+      return RadialGradientShader(
+        colors = gradientColors,
+        center = size.center,
+        radius = biggerDimension,
+        colorStops = listOf(0f, 0.95f)
+      )
+    }
+  }
+
   Column(
     modifier = modifier
       .fillMaxSize()
-      //.background(brush = Brush.verticalGradient(gradientColors))
-      .background(Color(dominantColor).copy(alpha = DefaultTextAlpha))
+      .background(largeRadialGradient)
   ) {
     Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
     Box(
       modifier = Modifier
-        .width(34.dp)
-        .height(4.dp)
-        .clip(RoundedCornerShape(4.dp))
-        //.shadow(elevation = 0.dp, shape = RoundedCornerShape(8.dp))
+        .width(MaterialTheme.spacing.large)
+        .height(MaterialTheme.spacing.extraSmall)
+        .clip(RoundedCornerShape(MaterialTheme.spacing.extraSmall))
         .background(TroonaColor.WhiteAlpha02)
         .align(Alignment.CenterHorizontally)
     )
@@ -201,7 +202,7 @@ private fun FullPlayerContent(
         modifier = modifier.aspectRatio(1f),
         artworkUri = currentSong.albumArt,
         shape = RoundedCornerShape(MaterialTheme.spacing.smallMedium),
-        elevation = 8.dp,
+        elevation = MaterialTheme.spacing.smallMedium,
         contentDescription = currentSong.title
       )
     }
@@ -218,7 +219,7 @@ private fun FullPlayerContent(
         SingleLineText(
           text = currentSong.title,
           shouldUseMarquee = audioState.isPlaying,
-          fontSize = 24.sp,
+          fontSize = 22.sp,
           color = Color.White,
         )
         SingleLineText(
@@ -240,7 +241,6 @@ private fun FullPlayerContent(
             painter = painterResource(id = if (isFavorite) TroonaIcons.Favorite.resourceId else TroonaIcons.FavoriteBorder.resourceId),
             contentDescription = "Favorite",
             tint = Color.White
-            // modifier = Modifier.size(30.dp)
           )
         }
         IconButton(modifier = Modifier.size(35.dp), onClick = {}) {
@@ -248,7 +248,6 @@ private fun FullPlayerContent(
             painter = painterResource(id = TroonaIcons.MoreVert.resourceId),
             contentDescription = "More Options",
             tint = Color.White
-            //modifier = Modifier.size(30.dp)
           )
         }
       }
@@ -266,7 +265,6 @@ private fun FullPlayerContent(
         value = DefaultSliderAlpha,
         onValueChanged = { newValue ->
           println(newValue)
-          //viewModel.onEvent(UIEvents.SeekTo(newValue.toLong()))
         },
         modifier = Modifier.fillMaxWidth(),
       )
@@ -374,27 +372,6 @@ suspend fun Uri.asArtworkBitmap(context: Context): Bitmap? {
 
   val drawable = ImageLoader(context).execute(request).drawable
   return drawable?.toBitmap()
-}
-
-fun createGradientBrush(colors: List<Color>): Brush {
-  return Brush.verticalGradient(
-    colors = colors,
-  )
-}
-
-@Composable
-fun AnimateColorTransition(dominantColor: Int, blendedColor: Animatable<Color, AnimationVector4D>) {
-  val infiniteTransition = rememberInfiniteTransition(label = "ColorTransition")
-  infiniteTransition.animateColor(
-    initialValue = Color(Color.Black.toArgb()),
-    targetValue = Color(dominantColor),
-    animationSpec = infiniteRepeatable(
-      animation = tween(durationMillis = 2000, easing = LinearEasing),
-      repeatMode = RepeatMode.Reverse,
-      initialStartOffset = StartOffset(Random.nextInt(0, 2000))
-    ),
-    label = "ColorTransition"
-  )
 }
 
 private val PlayerScreenPadding = 20.dp
