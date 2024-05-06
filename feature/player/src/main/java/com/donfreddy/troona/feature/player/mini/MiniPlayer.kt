@@ -65,18 +65,17 @@ fun MiniPlayer(
   viewModel: PlayerViewModel = hiltViewModel(),
 ) {
   val audioState by viewModel.audioState.collectAsStateWithLifecycle()
-  val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
-
-  val progress by animateFloatAsState(
-    targetValue = convertToProgress(count = currentPosition, total = audioState.duration),
-    label = "ProgressAnimation"
-  )
-
   val currentSong = if (viewModel.playingQueue.isEmpty()) {
     Song.EXAMPLE
   } else {
     viewModel.playingQueue[audioState.currentMediaIndex]
   }
+
+  val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
+  val progress by animateFloatAsState(
+    targetValue = convertToProgress(count = currentPosition, total = currentSong.duration),
+    label = "ProgressAnimation"
+  )
 
   MiniPlayerContent(
     currentSong = currentSong,
@@ -171,7 +170,8 @@ private fun MiniPlayerContent(
         LinearProgressIndicator(
           modifier = Modifier
             .fillMaxWidth()
-            .height(3.dp), progress = progress
+            .height(3.dp),
+          progress = progress,
         )
       }
     }

@@ -39,7 +39,7 @@ class PlayerViewModel @Inject constructor(
   val currentPosition = audioServiceConnection.currentPosition.stateIn(
     scope = viewModelScope,
     started = SharingStarted.Eagerly,
-    initialValue = C.TIME_UNSET
+    initialValue = 0L
   )
 
   val playingQueue = audioServiceConnection.playingQueue

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.feature.player
+package com.donfreddy.troona.feature.player.components
 
 import android.view.MotionEvent
 import androidx.compose.animation.core.animateDpAsState

@@ -81,10 +81,10 @@ class AudioServiceConnection @Inject constructor(
   var position = -1
 
   val songDurationMillis: Int
-    get() = 0
+    get() = -1
 
   val songProgressMillis: Int
-    get() = 0
+    get() = -1
 
   private var queuesRestored = false
 
@@ -102,7 +102,7 @@ class AudioServiceConnection @Inject constructor(
 
   val currentPosition = flow {
     while (currentCoroutineContext().isActive) {
-      emit(controller?.currentPosition ?: C.TIME_UNSET)
+      emit(controller?.currentPosition ?: 0L)
       delay(1.milliseconds)
     }
   }

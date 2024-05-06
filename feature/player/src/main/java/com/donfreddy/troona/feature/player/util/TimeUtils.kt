@@ -28,10 +28,26 @@ internal fun convertToProgress(count: Long, total: Long) =
 internal fun convertToPosition(value: Float, total: Long) = (value * total).toLong()
 
 @Composable
-internal fun Long.asFormattedString() = milliseconds.toComponents { minutes, seconds, _ ->
-  stringResource(
-    id = R.string.feature_player_timestamp_format,
-    String.format(locale = Locale.US, format = "%02d", minutes),
-    String.format(locale = Locale.US, format = "%02d", seconds)
-  )
+internal fun Long.asFormattedString() = milliseconds.toComponents { hours, minutes, seconds, _ ->
+  val formattedHoursOnly = String.format(Locale.US, "%01d", hours)
+  val formattedMinutesOnly = String.format(Locale.US, "%01d", minutes)
+
+  val formattedHours = String.format(Locale.US, "%02d", hours)
+  val formattedMinutes = String.format(Locale.US, "%02d", minutes)
+  val formattedSeconds = String.format(Locale.US, "%02d", seconds)
+
+  if (hours > 0) {
+    stringResource(
+      id = R.string.feature_player_timestamp_format_hour_minute,
+      if (hours < 10) formattedHoursOnly else formattedHours,
+      formattedMinutes,
+      formattedSeconds
+    )
+  } else {
+    stringResource(
+      id = R.string.feature_player_timestamp_format_minute,
+      if (minutes < 10) formattedMinutesOnly else formattedMinutes,
+      formattedSeconds
+    )
+  }
 }

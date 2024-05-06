@@ -19,13 +19,6 @@ package com.donfreddy.troona.feature.player
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.StartOffset
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -84,9 +77,11 @@ import com.donfreddy.troona.core.designsystem.theme.TroonaColor
 import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.media.AudioState
 import com.donfreddy.troona.core.model.data.Song
+import com.donfreddy.troona.feature.player.components.SeekBar
+import com.donfreddy.troona.feature.player.components.TroonaSlider
+import com.donfreddy.troona.feature.player.util.convertToPosition
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.random.Random
 
 @UnstableApi
 @Composable
@@ -112,7 +107,7 @@ fun FullPlayer(
   }
 
   var dominantColor: Int by remember { mutableIntStateOf(0) }
-  var gradientColors by remember { mutableStateOf(emptyList<Color>()) }
+  var gradientColors by remember { mutableStateOf(listOf(Color(dominantColor), TroonaColor.Black)) }
 
   LaunchedEffect(currentSong.albumArt) {
     var palette: Palette?
@@ -136,7 +131,7 @@ fun FullPlayer(
     currentSong = currentSong,
     playingQueue = playingQueue,
     gradientColors = gradientColors,
-    currentPosition = audioState.duration,
+    currentPosition = currentPosition,
     onSkipPrevious = { viewModel.onEvent(UIEvents.SeekToPrevious) },
     onPlayPause = {
       if (audioState.isPlaying) {
@@ -146,6 +141,7 @@ fun FullPlayer(
       }
     },
     onSkipNext = { viewModel.onEvent(UIEvents.SeekToNext) },
+    onSkipTo = { viewModel.onEvent(UIEvents.SeekTo(convertToPosition(it, currentSong.duration))) },
     modifier = modifier
   )
 }
@@ -160,6 +156,7 @@ private fun FullPlayerContent(
   currentPosition: Long,
   modifier: Modifier = Modifier,
   onLike: () -> Unit = {},
+  onSkipTo: (Float) -> Unit,
   onShuffle: () -> Unit = {},
   onRepeat: () -> Unit = {},
   onSkipPrevious: () -> Unit,
@@ -259,37 +256,12 @@ private fun FullPlayerContent(
         .fillMaxWidth()
     ) {
 
-      Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-
-      TroonaSlider(
-        value = DefaultSliderAlpha,
-        onValueChanged = { newValue ->
-          println(newValue)
-        },
-        modifier = Modifier.fillMaxWidth(),
+      SeekBar(
+        currentPosition = currentPosition,
+        duration = currentSong.duration,
+        onSkipTo = onSkipTo,
+        modifier = Modifier,
       )
-      Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-      Row(
-        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-      ) {
-        Text(
-          text = "0:09",
-          style = MaterialTheme.typography.body2.copy(
-            fontWeight = FontWeight.W700,
-            fontSize = 11.sp,
-            color = TroonaColor.WhiteAlpha04,
-          ),
-        )
-        Text(
-          text = "-3:00",
-          style = MaterialTheme.typography.body2.copy(
-            fontWeight = FontWeight.W700,
-            fontSize = 11.sp,
-            color = TroonaColor.WhiteAlpha04,
-          ),
-        )
-      }
-      Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
       Row(
         modifier = modifier.fillMaxWidth(),
