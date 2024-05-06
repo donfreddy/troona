@@ -18,10 +18,9 @@
   <shortcut
     android:enabled="true"
     android:icon="@drawable/ic_search"
-    android:shortcutDisabledMessage="@string/search_disabled_message"
     android:shortcutId="search"
-    android:shortcutLongLabel="@string/search_shortcut_long_label"
-    android:shortcutShortLabel="@string/search_shortcut_short_label"
+    android:shortcutShortLabel="@string/search_shortcut_label"
+    android:shortcutDisabledMessage="@string/search_disabled_message"
     tools:targetApi="25">
     <intent
       android:action="android.intent.action.VIEW"

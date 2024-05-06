@@ -16,7 +16,6 @@
   -->
 <resources>
   <string name="app_name">Troona</string>
-  <string name="search_shortcut_short_label">Search</string>
-  <string name="search_shortcut_long_label">Search</string>
-  <string name="search_disabled_message">Search is disabled</string>
+  <string name="search_shortcut_label">Search</string>
+  <string name="search_disabled_message">Oops! Search is currently disabled</string>
 </resources>
