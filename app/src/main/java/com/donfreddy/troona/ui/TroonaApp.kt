@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -37,7 +38,6 @@ import androidx.compose.material.SwipeableState
 import androidx.compose.material.Text
 import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -55,7 +55,6 @@ import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.layoutId
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.donfreddy.troona.R
 import com.donfreddy.troona.core.designsystem.component.TroonaTopBar
 import com.donfreddy.troona.core.permission.PermissionContent
 import com.donfreddy.troona.feature.player.FullPlayer
@@ -101,16 +100,14 @@ fun TroonaAppContent(
   context: Context = LocalContext.current
 ) {
   // Initialize motion scene content from json5 file
-  val motionSceneContent = remember {
-    context.resources.openRawResource(R.raw.motion_screne).readBytes().decodeToString()
-  }
+  //val motionSceneContent = remember {
+  //  context.resources.openRawResource(R.raw.motion_screne).readBytes().decodeToString()
+  //}
 
   val statusBarsHeight: Dp
-  val systemBarsHeight: Dp
   val navigationBarsHeight: Dp
   with(LocalDensity.current) {
     statusBarsHeight = WindowInsets.systemBars.getTop(this).toDp()
-    systemBarsHeight = WindowInsets.systemBars.getBottom(this).toDp()
     navigationBarsHeight = WindowInsets.navigationBars.getBottom(this).toDp()
   }
 
@@ -151,7 +148,7 @@ fun TroonaAppContent(
     constrain(navigationBar) {
       start.linkTo(parent.start)
       end.linkTo(parent.end)
-      bottom.linkTo(parent.bottom, systemBarsHeight)
+      bottom.linkTo(parent.bottom)
     }
   }
   val endConstraintSet = ConstraintSet {
@@ -258,6 +255,7 @@ fun TroonaAppContent(
         destinations = appState.topLevelDestinations,
         currentDestination = appState.currentDestination,
         onNavigateToDestination = appState::navigateToTopLevelDestination,
+        modifier = Modifier.padding(bottom = navigationBarsHeight)
       )
     }
   }
@@ -274,7 +272,7 @@ fun TroonaBottomBar(
     visible = currentDestination != null,
     enter = slideInVertically(initialOffsetY = { it }),
     exit = slideOutVertically(targetOffsetY = { it }),
-    modifier = modifier
+    //modifier = modifier
   ) {
     BottomNavigation(
       backgroundColor = MaterialTheme.colors.background,
@@ -301,6 +299,7 @@ fun TroonaBottomBar(
           unselectedContentColor = MaterialTheme.colors.onBackground,
           alwaysShowLabel = false,
           selected = isSelected,
+          modifier = modifier,
           onClick = { onNavigateToDestination(destination) })
       }
     }

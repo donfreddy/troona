@@ -187,7 +187,7 @@ private fun FullPlayerContent(
     modifier = modifier
       .fillMaxSize()
       .background(largeRadialGradient)
-      .padding(top = MaterialTheme.spacing.extraMedium)
+      .padding(top = MaterialTheme.spacing.large)
   ) {
    /* Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
     Box(

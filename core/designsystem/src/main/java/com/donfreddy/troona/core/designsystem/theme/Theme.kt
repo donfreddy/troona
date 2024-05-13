@@ -16,6 +16,7 @@
 
 package com.donfreddy.troona.core.designsystem.theme
 
+import android.app.Activity
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -26,8 +27,12 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import com.donfreddy.troona.core.designsystem.theme.TroonaColor.PrimaryColor
 
 private val DarkColorScheme = darkColors(
@@ -74,6 +79,16 @@ fun TroonaTheme(
   useDynamicColor: Boolean = true,
   content: @Composable () -> Unit
 ) {
+
+  val view = LocalView.current
+  if (!view.isInEditMode) {
+    SideEffect {
+      val window = (view.context as Activity).window
+      WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !isDarkTheme
+      WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !isDarkTheme
+    }
+  }
+
   val troonaColors = if (useDynamicColor && supportsDynamicTheming()) {
     TODO() // Dynamic theming
     // val context = LocalContext.current

@@ -17,26 +17,25 @@
 package com.donfreddy.troona.ui
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.material.MaterialTheme
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.donfreddy.troona.core.designsystem.theme.TroonaColor
 import com.donfreddy.troona.core.designsystem.theme.TroonaTheme
+import com.donfreddy.troona.core.model.enums.DarkThemeConfig
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,6 +44,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   private val viewModel: MainActivityViewModel by viewModels()
+
 
   override fun onCreate(savedInstanceState: Bundle?) {
     handleIntent(intent)
@@ -67,44 +67,31 @@ class MainActivity : ComponentActivity() {
     // the UI.
     splashScreen.setKeepOnScreenCondition { uiState == MainActivityUiState.Loading }
 
-    // Turn off the decor fitting system windows, which allows us to handle insets,
-    // including IME animations, and go edge-to-edge
-    // This also sets up the initial system bar style based on the platform theme
-    enableEdgeToEdge(
-      /*navigationBarStyle = SystemBarStyle.auto(
-        lightScrim = lightScrim, darkScrim = darkScrim
-      )*/
-    )
-
     WindowCompat.setDecorFitsSystemWindows(window, false)
 
+    @RequiresApi(Build.VERSION_CODES.Q)
+    window.isNavigationBarContrastEnforced = false
+
     setContent {
-      // val isDarkTheme = shouldUseDarkTheme(uiState)
+      val isDarkTheme = shouldUseDarkTheme(uiState)
+      val systemUiController = WindowInsetsControllerCompat(window, window.decorView)
 
       TroonaTheme(
-        isDarkTheme = false, useDynamicColor = shouldUseDynamicColor(uiState)
+        isDarkTheme = false,
+        useDynamicColor = shouldUseDynamicColor(uiState)
       ) {
         TroonaApp(
           onSetSystemBarsLightIcons = {
-            Timber.d("Setting system bars light icons")
-            enableEdgeToEdge(
-              statusBarStyle = SystemBarStyle.auto(
-                TroonaColor.PrimaryColor.toArgb(),
-                TroonaColor.PrimaryColor.toArgb()
-              ),
-              navigationBarStyle = SystemBarStyle.auto(
-                TroonaColor.PrimaryColor.toArgb(),
-                TroonaColor.PrimaryColor.toArgb()
-              )
-            )
+            if (!isDarkTheme) {
+              systemUiController.isAppearanceLightStatusBars = false
+              systemUiController.isAppearanceLightNavigationBars = false
+            }
           },
           onResetSystemBarsIcons = {
-            Timber.d("Resetting system bars icons")
-            enableEdgeToEdge(
-             /* navigationBarStyle = SystemBarStyle.auto(
-                lightScrim = lightScrim, darkScrim = darkScrim
-              )*/
-            )
+            if (!isDarkTheme) {
+              systemUiController.isAppearanceLightStatusBars = true
+              systemUiController.isAppearanceLightNavigationBars = true
+            }
           },
         )
       }
@@ -133,14 +120,12 @@ private fun shouldUseDynamicColor(uiState: MainActivityUiState) = when (uiState)
   is MainActivityUiState.Success -> true
 }
 
-/**
- * The default light scrim, as defined by androidx and the platform:
- * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:activity/activity/src/main/java/androidx/activity/EdgeToEdge.kt;l=35-38;drc=27e7d52e8604a080133e8b842db10c89b4482598
- */
-private val lightScrim = android.graphics.Color.argb(0xe6, 0xFF, 0xFF, 0xFF)
-
-/**
- * The default dark scrim, as defined by androidx and the platform:
- * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:activity/activity/src/main/java/androidx/activity/EdgeToEdge.kt;l=40-44;drc=27e7d52e8604a080133e8b842db10c89b4482598
- */
-private val darkScrim = android.graphics.Color.argb(0x80, 0x1b, 0x1b, 0x1b)
+@Composable
+private fun shouldUseDarkTheme(uiState: MainActivityUiState) = when (uiState) {
+  MainActivityUiState.Loading -> isSystemInDarkTheme()
+  is MainActivityUiState.Success -> when (uiState.userData.darkThemeConfig) {
+    DarkThemeConfig.SystemDefault -> isSystemInDarkTheme()
+    DarkThemeConfig.Light -> false
+    DarkThemeConfig.Dark -> true
+  }
+}
