@@ -86,6 +86,9 @@ import kotlinx.coroutines.withContext
 @UnstableApi
 @Composable
 fun FullPlayer(
+  isPlayerOpened: Boolean,
+  onSetSystemBarsLightIcons: () -> Unit,
+  onResetSystemBarsIcons: () -> Unit,
   modifier: Modifier = Modifier,
   context: Context = LocalContext.current,
   viewModel: PlayerViewModel = hiltViewModel(),
@@ -124,6 +127,10 @@ fun FullPlayer(
     }
 
     // Animate the gradient colors
+  }
+
+  LaunchedEffect(isPlayerOpened, onSetSystemBarsLightIcons, onResetSystemBarsIcons) {
+    if (isPlayerOpened) onSetSystemBarsLightIcons() else onResetSystemBarsIcons()
   }
 
   FullPlayerContent(
@@ -180,8 +187,9 @@ private fun FullPlayerContent(
     modifier = modifier
       .fillMaxSize()
       .background(largeRadialGradient)
+      .padding(top = MaterialTheme.spacing.extraMedium)
   ) {
-    Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
+   /* Spacer(modifier = Modifier.height(MaterialTheme.spacing.large))
     Box(
       modifier = Modifier
         .width(MaterialTheme.spacing.large)
@@ -189,7 +197,8 @@ private fun FullPlayerContent(
         .clip(RoundedCornerShape(MaterialTheme.spacing.extraSmall))
         .background(TroonaColor.WhiteAlpha02)
         .align(Alignment.CenterHorizontally)
-    )
+    )*/
+    //Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
     Box(
       modifier = Modifier.padding(
         horizontal = PlayerScreenPadding, vertical = MaterialTheme.spacing.medium
@@ -216,7 +225,7 @@ private fun FullPlayerContent(
         SingleLineText(
           text = currentSong.title,
           shouldUseMarquee = audioState.isPlaying,
-          fontSize = 22.sp,
+          fontSize = 24.sp,
           color = Color.White,
         )
         SingleLineText(
@@ -249,7 +258,7 @@ private fun FullPlayerContent(
         }
       }
     }
-    Spacer(modifier = Modifier.height(MaterialTheme.spacing.smallMedium))
+    Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
     Column(
       modifier = modifier
         .padding(horizontal = PlayerScreenPadding)
@@ -335,7 +344,12 @@ private fun FullPlayerContent(
 @UnstableApi
 @Composable
 fun FullPlayerPreview() {
-  FullPlayer()
+  FullPlayer(
+    isPlayerOpened = true,
+    onSetSystemBarsLightIcons = {},
+    onResetSystemBarsIcons = {},
+    modifier = Modifier.fillMaxSize(),
+  )
 }
 
 suspend fun Uri.asArtworkBitmap(context: Context): Bitmap? {

@@ -1,1 +1,0 @@
-com.donfreddy.troona.core.datastore.proto.test

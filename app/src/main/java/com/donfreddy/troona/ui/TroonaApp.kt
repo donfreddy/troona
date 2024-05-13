@@ -23,8 +23,10 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -39,14 +41,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
-import androidx.constraintlayout.compose.MotionScene
 import androidx.constraintlayout.compose.layoutId
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -64,11 +69,17 @@ import com.google.accompanist.permissions.PermissionStatus
 @OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun TroonaApp(
+  onSetSystemBarsLightIcons: () -> Unit,
+  onResetSystemBarsIcons: () -> Unit,
   appState: TroonaAppState = rememberTroonaAppState(),
 ) {
   when (appState.permissionState.status) {
     PermissionStatus.Granted -> {
-      TroonaAppContent(appState = appState)
+      TroonaAppContent(
+        appState = appState,
+        onSetSystemBarsLightIcons = onSetSystemBarsLightIcons,
+        onResetSystemBarsIcons = onResetSystemBarsIcons
+      )
     }
 
     is PermissionStatus.Denied -> {
@@ -83,23 +94,118 @@ fun TroonaApp(
 @OptIn(ExperimentalMotionApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun TroonaAppContent(
-  appState: TroonaAppState, modifier: Modifier = Modifier, context: Context = LocalContext.current
+  appState: TroonaAppState,
+  onSetSystemBarsLightIcons: () -> Unit,
+  onResetSystemBarsIcons: () -> Unit,
+  modifier: Modifier = Modifier,
+  context: Context = LocalContext.current
 ) {
   // Initialize motion scene content from json5 file
   val motionSceneContent = remember {
     context.resources.openRawResource(R.raw.motion_screne).readBytes().decodeToString()
   }
 
-  //Todo: fix player swipe issue
+  val statusBarsHeight: Dp
+  val systemBarsHeight: Dp
+  val navigationBarsHeight: Dp
+  with(LocalDensity.current) {
+    statusBarsHeight = WindowInsets.systemBars.getTop(this).toDp()
+    systemBarsHeight = WindowInsets.systemBars.getBottom(this).toDp()
+    navigationBarsHeight = WindowInsets.navigationBars.getBottom(this).toDp()
+  }
+
+  val startConstraintSet = ConstraintSet {
+    val topBar = createRefFor(TopBarId)
+    val content = createRefFor(ContentId)
+    val miniPlayer = createRefFor(MiniPlayerId)
+    val fullPlayer = createRefFor(FullPlayerId)
+    val navigationBar = createRefFor(NavigationBarId)
+
+    constrain(topBar) {
+      top.linkTo(parent.top, statusBarsHeight)
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+    }
+
+    constrain(content) {
+      height = Dimension.fillToConstraints
+      width = Dimension.fillToConstraints
+      top.linkTo(topBar.bottom)
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+      bottom.linkTo(parent.bottom)
+    }
+
+    constrain(miniPlayer) {
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+      bottom.linkTo(navigationBar.top)
+    }
+
+    constrain(fullPlayer) {
+      top.linkTo(navigationBar.top)
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+    }
+
+    constrain(navigationBar) {
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+      bottom.linkTo(parent.bottom, systemBarsHeight)
+    }
+  }
+  val endConstraintSet = ConstraintSet {
+    val topBar = createRefFor(TopBarId)
+    val content = createRefFor(ContentId)
+    val miniPlayer = createRefFor(MiniPlayerId)
+    val fullPlayer = createRefFor(FullPlayerId)
+    val navigationBar = createRefFor(NavigationBarId)
+
+    constrain(topBar) {
+      top.linkTo(parent.top, statusBarsHeight)
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+    }
+
+    constrain(content) {
+      height = Dimension.fillToConstraints
+      width = Dimension.fillToConstraints
+      top.linkTo(topBar.bottom)
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+      bottom.linkTo(navigationBar.top)
+    }
+
+    constrain(miniPlayer) {
+      top.linkTo(fullPlayer.top)
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+    }
+
+    constrain(fullPlayer) {
+      top.linkTo(parent.top)
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+      bottom.linkTo(content.bottom)
+    }
+
+    constrain(navigationBar) {
+      top.linkTo(parent.bottom)
+      start.linkTo(parent.start)
+      end.linkTo(parent.end)
+    }
+  }
+
   MotionLayout(
+    start = startConstraintSet,
+    end = endConstraintSet,
     modifier = modifier
       .fillMaxSize()
-      .safeContentPadding(),
-    motionScene = MotionScene(content = motionSceneContent),
-    progress = appState.motionProgress
+      .background(MaterialTheme.colors.background),
+    progress = appState.motionProgress,
   ) {
     // Top bar
-    Box(modifier = Modifier.layoutId("topBar")) {
+    Box(modifier = Modifier.layoutId(TopBarId)) {
       TroonaTopBar(modifier = modifier, searchWidgetState = {})
     }
 
@@ -107,7 +213,7 @@ fun TroonaAppContent(
     Box(
       modifier = Modifier
         .background(MaterialTheme.colors.background)
-        .layoutId("content")
+        .layoutId(ContentId)
     ) {
       TroonaNavHost(
         navController = appState.navController,
@@ -116,9 +222,11 @@ fun TroonaAppContent(
     }
 
     // Mini player
-    Box(modifier = Modifier
-      .background(MaterialTheme.colors.background)
-      .layoutId("miniPlayer")) {
+    Box(
+      modifier = Modifier
+        .background(MaterialTheme.colors.background)
+        .layoutId(MiniPlayerId)
+    ) {
       MiniPlayer(
         modifier = Modifier.playerSwipe(
           swipeableState = appState.swipeableState,
@@ -131,18 +239,21 @@ fun TroonaAppContent(
     Box(
       modifier = Modifier
         .background(MaterialTheme.colors.background)
-        .layoutId("fullPlayer")
+        .layoutId(FullPlayerId)
     ) {
       FullPlayer(
         modifier = Modifier.playerSwipe(
           swipeableState = appState.swipeableState,
           anchors = appState.anchors,
         ),
+        isPlayerOpened = appState.isPlayerOpened,
+        onSetSystemBarsLightIcons = onSetSystemBarsLightIcons,
+        onResetSystemBarsIcons = onResetSystemBarsIcons,
       )
     }
 
     // Bottom navigation
-    Box(modifier = Modifier.layoutId("navigationBar")) {
+    Box(modifier = Modifier.layoutId(NavigationBarId)) {
       TroonaBottomBar(
         destinations = appState.topLevelDestinations,
         currentDestination = appState.currentDestination,
@@ -215,4 +326,9 @@ private fun Modifier.playerSwipe(
     }),
 )
 
+private const val TopBarId = "topBar"
+private const val ContentId = "content"
+private const val MiniPlayerId = "miniPlayer"
+private const val FullPlayerId = "fullPlayer"
+private const val NavigationBarId = "navigationBar"
 private const val SwipeFraction = 0.3f

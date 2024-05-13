@@ -24,15 +24,18 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.donfreddy.troona.core.designsystem.theme.TroonaColor
 import com.donfreddy.troona.core.designsystem.theme.TroonaTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -68,9 +71,9 @@ class MainActivity : ComponentActivity() {
     // including IME animations, and go edge-to-edge
     // This also sets up the initial system bar style based on the platform theme
     enableEdgeToEdge(
-      navigationBarStyle = SystemBarStyle.auto(
+      /*navigationBarStyle = SystemBarStyle.auto(
         lightScrim = lightScrim, darkScrim = darkScrim
-      )
+      )*/
     )
 
     WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -81,7 +84,29 @@ class MainActivity : ComponentActivity() {
       TroonaTheme(
         isDarkTheme = false, useDynamicColor = shouldUseDynamicColor(uiState)
       ) {
-        TroonaApp()
+        TroonaApp(
+          onSetSystemBarsLightIcons = {
+            Timber.d("Setting system bars light icons")
+            enableEdgeToEdge(
+              statusBarStyle = SystemBarStyle.auto(
+                TroonaColor.PrimaryColor.toArgb(),
+                TroonaColor.PrimaryColor.toArgb()
+              ),
+              navigationBarStyle = SystemBarStyle.auto(
+                TroonaColor.PrimaryColor.toArgb(),
+                TroonaColor.PrimaryColor.toArgb()
+              )
+            )
+          },
+          onResetSystemBarsIcons = {
+            Timber.d("Resetting system bars icons")
+            enableEdgeToEdge(
+             /* navigationBarStyle = SystemBarStyle.auto(
+                lightScrim = lightScrim, darkScrim = darkScrim
+              )*/
+            )
+          },
+        )
       }
     }
   }
