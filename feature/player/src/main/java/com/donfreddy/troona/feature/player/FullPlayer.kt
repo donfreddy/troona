@@ -369,7 +369,7 @@ private fun SongInfo(
     )
     SingleLineText(
       text = currentSong.artistName,
-      fontSize = 18.sp,
+      fontSize = 20.sp,
       color = TroonaColor.WhiteAlpha08,
       shouldUseMarquee = isPlaying,
       fontWeight = FontWeight.SemiBold,
