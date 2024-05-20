@@ -16,31 +16,16 @@
 
 package com.donfreddy.troona.core.designsystem.theme
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.donfreddy.troona.core.designsystem.R
-
-private val light = Font(R.font.nunito_light, FontWeight.W300)
-private val regular = Font(R.font.nunito_regular, FontWeight.W400)
-private val italic = Font(R.font.nunito_italic, FontWeight.W400, FontStyle.Italic)
-private val medium = Font(R.font.nunito_medium, FontWeight.W500)
-private val semiBold = Font(R.font.nunito_semibold, FontWeight.W600)
-private val bold = Font(R.font.nunito_bold, FontWeight.W700)
-
-private val troonaFontFamily = FontFamily(light, regular, italic, medium, semiBold, bold)
 
 /**
  * Troona typography.
  */
 internal val TroonaTypography = Typography(
-  defaultFontFamily = troonaFontFamily,
+  defaultFontFamily = Nunito,
 
   /*h1 = TextStyle(
     fontFamily = troonaFontFamily,
@@ -83,7 +68,7 @@ internal val TroonaTypography = Typography(
     fontSize = 14.sp
   ),*/
   body1 = TextStyle(
-    fontFamily = troonaFontFamily,
+    fontFamily = Nunito,
     fontWeight = FontWeight.W400,
     fontSize = 16.sp,
     lineHeight = 24.sp,

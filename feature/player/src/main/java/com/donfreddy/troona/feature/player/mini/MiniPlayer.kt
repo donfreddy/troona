@@ -50,11 +50,11 @@ import com.donfreddy.troona.core.designsystem.component.SingleLineText
 import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 import com.donfreddy.troona.core.designsystem.images.TroonaArtwork
 import com.donfreddy.troona.core.designsystem.theme.TroonaColor
+import com.donfreddy.troona.core.designsystem.theme.TroonaTheme
 import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.model.data.Song
 import com.donfreddy.troona.core.ui.song.asDuration
 import com.donfreddy.troona.feature.player.PlayerViewModel
-import com.donfreddy.troona.feature.player.UIEvents
 import com.donfreddy.troona.feature.player.util.convertToProgress
 
 @OptIn(UnstableApi::class)
@@ -82,14 +82,9 @@ fun MiniPlayer(
     isPlaying = audioState.isPlaying,
     progress = progress,
     onNavigateToPlayer = onNavigateToPlayer,
-    onSkipNext = { viewModel.onEvent(UIEvents.SeekToNext) },
-    onPlayPause = {
-      if (audioState.isPlaying) {
-        viewModel.onEvent(UIEvents.Pause)
-      } else {
-        viewModel.onEvent(UIEvents.Play)
-      }
-    },
+    onPlay = viewModel::onPlay,
+    onPause = viewModel::onPause,
+    onSkipNext = viewModel::onSkipNext,
     modifier = modifier
   )
 }
@@ -100,8 +95,9 @@ private fun MiniPlayerContent(
   isPlaying: Boolean,
   progress: Float,
   onNavigateToPlayer: () -> Unit,
+  onPlay: () -> Unit,
+  onPause: () -> Unit,
   onSkipNext: () -> Unit,
-  onPlayPause: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   AnimatedVisibility(
@@ -151,7 +147,7 @@ private fun MiniPlayerContent(
           }
 
           Row {
-            IconButton(onClick = onPlayPause) {
+            IconButton(onClick = if (isPlaying) onPause else onPlay) {
               Icon(
                 painter = painterResource(id = if (isPlaying) TroonaIcons.Pause.resourceId else TroonaIcons.Play.resourceId),
                 contentDescription = "Play/Pause",
@@ -178,14 +174,18 @@ private fun MiniPlayerContent(
   }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun MiniPlayerContentPreview() {
-  MiniPlayerContent(currentSong = Song.EXAMPLE,
-    isPlaying = true,
-    progress = 0.5f,
-    modifier = Modifier.fillMaxWidth(),
-    onNavigateToPlayer = {},
-    onSkipNext = {},
-    onPlayPause = {})
+  TroonaTheme {
+    MiniPlayerContent(currentSong = Song.EXAMPLE,
+      isPlaying = true,
+      progress = 0.5f,
+      modifier = Modifier.fillMaxWidth(),
+      onNavigateToPlayer = {},
+      onPlay = {},
+      onPause = {},
+      onSkipNext = {},
+    )
+  }
 }

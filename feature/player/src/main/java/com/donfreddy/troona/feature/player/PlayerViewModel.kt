@@ -16,17 +16,13 @@
 
 package com.donfreddy.troona.feature.player
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 import com.donfreddy.troona.core.media.AudioServiceConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @UnstableApi
@@ -44,48 +40,55 @@ class PlayerViewModel @Inject constructor(
 
   val playingQueue = audioServiceConnection.playingQueue
 
-  fun onEvent(event: UIEvents) = viewModelScope.launch {
-    when (event) {
-      is UIEvents.SeekToPrevious -> {
-        Timber.tag("PlayerViewModel").d("SeekToPrevious")
-        audioServiceConnection.seekToPrevious()
-      }
-
-      is UIEvents.Play -> {
-        Timber.tag("PlayerViewModel").d("Play")
-        audioServiceConnection.play()
-      }
-
-      is UIEvents.Pause -> {
-        Timber.tag("PlayerViewModel").d("Pause")
-        audioServiceConnection.pause()
-      }
-
-      is UIEvents.SeekToNext -> {
-        Timber.tag("PlayerViewModel").d("SeekToNext")
-        audioServiceConnection.seekToNext()
-      }
-
-      is UIEvents.SeekTo -> {
-        Timber.tag("PlayerViewModel").d("Repeat")
-        audioServiceConnection.seekTo(event.position)
-      }
-
-      is UIEvents.SkipToIndex -> {
-        Timber.tag("PlayerViewModel").d("SeekTo")
-        audioServiceConnection.skipToIndex(event.index)
-      }
-    }
+  fun onPlay() {
+    audioServiceConnection.play()
   }
-}
 
-sealed class UIEvents {
-  data object SeekToPrevious : UIEvents()
-  data object Play : UIEvents()
-  data object Pause : UIEvents()
-  data object SeekToNext : UIEvents()
-  data class SeekTo(val position: Long) : UIEvents()
-  data class SkipToIndex(val index: Int) : UIEvents()
+  fun onPause() {
+    audioServiceConnection.pause()
+  }
+
+  fun onStop() {}
+
+  fun onSkipPrevious() {
+    audioServiceConnection.seekToPrevious()
+  }
+
+  fun onSkipNext() {
+    audioServiceConnection.seekToNext()
+  }
+
+  fun onSkipTo(position: Long) {
+    audioServiceConnection.seekTo(position)
+  }
+
+  fun onSkipToIndex(index: Int) {
+    audioServiceConnection.skipToIndex(index)
+  }
+
+  fun onShuffle() {
+    // Implement method
+  }
+
+  fun onRepeat() {
+    // Implement method
+  }
+
+  fun setVolume(volume: Float) {
+    // Implement method
+  }
+
+  fun moveQueueItem(currentIndex: Int, newIndex: Int) {
+    // Implement method
+  }
+
+  fun removeQueueItemAt(index: Int) {
+    // Implement method
+  }
+
+  fun skipToQueueItem(index: Int) {
+    // Implement method
+  }
 }
 
 sealed class UIState {

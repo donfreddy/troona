@@ -57,9 +57,9 @@ fun SongCard(
     modifier = modifier
       .fillMaxWidth()
       .padding(horizontal = MaterialTheme.spacing.small)
-      .clip(MaterialTheme.shapes.large)
+      .clip(MaterialTheme.shapes.medium)
       .clickable(onClick = onClick),
-    shape = MaterialTheme.shapes.large,
+    shape = MaterialTheme.shapes.medium,
     elevation = 0.dp,
   ) {
     Row(

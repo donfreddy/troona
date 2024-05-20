@@ -44,7 +44,7 @@ fun TroonaImage(
   model: Any?,
   contentDescription: String?,
   modifier: Modifier = Modifier,
-  shape: Shape = MaterialTheme.shapes.medium,
+  shape: Shape = MaterialTheme.shapes.small,
   elevation: Dp = 0.dp,
   backgroundColor: Color = MaterialTheme.colors.surface,
   loading: @Composable (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Loading) -> Unit)? = null,
@@ -73,7 +73,7 @@ fun TroonaArtwork(
   artworkUri: Uri,
   contentDescription: String?,
   modifier: Modifier = Modifier,
-  shape: Shape = MaterialTheme.shapes.medium,
+  shape: Shape = MaterialTheme.shapes.small,
   backgroundColor: Color = Color.Transparent,
   elevation: Dp = 0.dp,
   placeholder: @Composable () -> Unit = {

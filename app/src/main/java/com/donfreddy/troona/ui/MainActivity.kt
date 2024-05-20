@@ -76,10 +76,7 @@ class MainActivity : ComponentActivity() {
       val isDarkTheme = shouldUseDarkTheme(uiState)
       val systemUiController = WindowInsetsControllerCompat(window, window.decorView)
 
-      TroonaTheme(
-        isDarkTheme = false,
-        useDynamicColor = shouldUseDynamicColor(uiState)
-      ) {
+      TroonaTheme(isDarkTheme = isDarkTheme) {
         TroonaApp(
           onSetSystemBarsLightIcons = {
             if (!isDarkTheme) {
@@ -112,12 +109,6 @@ class MainActivity : ComponentActivity() {
       }
     }
   }
-}
-
-@Composable
-private fun shouldUseDynamicColor(uiState: MainActivityUiState) = when (uiState) {
-  MainActivityUiState.Loading -> false
-  is MainActivityUiState.Success -> true
 }
 
 @Composable

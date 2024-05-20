@@ -63,6 +63,11 @@ object TroonaIcons {
   val GitHub = DrawableResourceIcon(R.drawable.ic_github)
   val Info = ImageVectorIcon(Icons.Rounded.Info)
   val Security = DrawableResourceIcon(R.drawable.ic_security)
+  val VolumeDown = DrawableResourceIcon(R.drawable.ic_volume_down)
+  val VolumeUp = DrawableResourceIcon(R.drawable.ic_volume_up)
+  val VolumeMute = DrawableResourceIcon(R.drawable.ic_volume_mute)
+  val Lyrics = DrawableResourceIcon(R.drawable.ic_lyrics)
+  val QueueMusic = DrawableResourceIcon(R.drawable.ic_queue_music)
 }
 
 sealed interface Icon {

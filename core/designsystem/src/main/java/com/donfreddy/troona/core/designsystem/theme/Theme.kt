@@ -17,31 +17,19 @@
 package com.donfreddy.troona.core.designsystem.theme
 
 import android.app.Activity
-import android.os.Build
-import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Shapes
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.donfreddy.troona.core.designsystem.theme.TroonaColor.PrimaryColor
 
-private val DarkColorScheme = darkColors(
-  primary = PrimaryColor,
-  // secondary = PurpleGrey80,
-  // tertiary = Pink80
-)
-
-private val LightColorScheme = lightColors(
+private val lightScheme = lightColors(
   primary = PrimaryColor,
   //secondary = PurpleGrey40,
   surface = TroonaColor.Light.Background,
@@ -60,26 +48,23 @@ private val LightColorScheme = lightColors(
     */
 )
 
-private val TroonaShapes = Shapes(
-  small = RoundedCornerShape(2.dp),
-  medium = RoundedCornerShape(4.dp),
-  large = RoundedCornerShape(6.dp)
+private val darkScheme = darkColors(
+  primary = PrimaryColor,
+  // secondary = PurpleGrey80,
+  // tertiary = Pink80
 )
 
 /**
- * Now in Android theme.
+ * Troona theme.
  *
  * @param isDarkTheme Whether the theme should use a dark color scheme (follows system by default).
- * @param useDynamicColor If true, the theme will use dynamic color scheme if the device supports it.
+ * @param content The content of the theme.
  */
 @Composable
 fun TroonaTheme(
   isDarkTheme: Boolean = isSystemInDarkTheme(),
-  // Dynamic color is available on Android 12+
-  useDynamicColor: Boolean = true,
   content: @Composable () -> Unit
 ) {
-
   val view = LocalView.current
   if (!view.isInEditMode) {
     SideEffect {
@@ -89,19 +74,11 @@ fun TroonaTheme(
     }
   }
 
-  val troonaColors = if (useDynamicColor && supportsDynamicTheming()) {
-    TODO() // Dynamic theming
-    // val context = LocalContext.current
-    // if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-  } else {
-    if (isDarkTheme) DarkColorScheme else LightColorScheme
-  }
-
   CompositionLocalProvider(
     LocalSpacing provides Spacing()
   ) {
     MaterialTheme(
-      colors = troonaColors,
+      colors = if (isDarkTheme) darkScheme else lightScheme,
       typography = TroonaTypography,
       shapes = TroonaShapes,
       content = content
@@ -113,9 +90,4 @@ fun TroonaTheme(
  * Spacing values used in the app
  */
 val MaterialTheme.spacing: Spacing
-  @Composable
-  @ReadOnlyComposable
-  get() = LocalSpacing.current
-
-@ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)
-fun supportsDynamicTheming() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+  @Composable @ReadOnlyComposable get() = LocalSpacing.current
