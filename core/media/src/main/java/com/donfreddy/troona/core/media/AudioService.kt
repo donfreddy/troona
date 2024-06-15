@@ -35,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @UnstableApi
@@ -58,8 +59,12 @@ class AudioService : MediaSessionService() {
   @JvmField
   var shuffleMode = 0
 
+  /**
+   * This method is called when the service is being created.
+   * It initializes the ExoPlayer and MediaSession instances and sets the MediaSessionServiceListener.
+   */
   override fun onCreate() {
-    Log.d(TAG, "AudioService created")
+    Timber.tag(TAG).d("AudioService created")
     super.onCreate()
     //setMediaNotificationProvider(notificationProvider)
   }
@@ -67,14 +72,14 @@ class AudioService : MediaSessionService() {
   @UnstableApi
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     if (intent != null && intent.action != null) {
-      Log.d(TAG, "Received intent with action: ${intent.action}")
+      Timber.tag(TAG).d("Received intent with action: %s", intent.action)
       serviceScope.launch {
         // TODO: restore the queue with the current media item if needed
 
         /** Handle the intent action here */
         when (intent.action) {
           ACTION_PLAY -> {
-            Log.d(TAG, "Play action")
+            Timber.tag(TAG).d("Play action")
           }
         }
       }
@@ -82,16 +87,33 @@ class AudioService : MediaSessionService() {
     return super.onStartCommand(intent, flags, startId)
   }
 
+  /**
+   * This method is called when the system determines that the service is no longer used and is being removed.
+   * It checks the player's state and if the player is not ready to play or there are no items in the media queue, it stops the service.
+   *
+   * @param rootIntent The original root Intent that was used to launch the task that is being removed.
+   */
   override fun onTaskRemoved(rootIntent: Intent?) {
-    Log.d(TAG, "Task removed")
+    Timber.tag(TAG).d("Task removed")
     super.onTaskRemoved(rootIntent)
   }
 
+  /**
+   * This method is called when a MediaSession.ControllerInfo requests the MediaSession.
+   * It returns the current MediaSession instance.
+   *
+   * @param controllerInfo The MediaSession.ControllerInfo that is requesting the MediaSession.
+   * @return The current MediaSession instance.
+   */
   override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession =
     mediaSession
 
+  /**
+   * This method is called when the service is being destroyed.
+   * It releases the player and the MediaSession instances.
+   */
   override fun onDestroy() {
-    Log.d(TAG, "AudioService destroyed")
+    Timber.tag(TAG).d("AudioService destroyed")
     super.onDestroy()
     releaseMediaSession()
   }
@@ -102,7 +124,7 @@ class AudioService : MediaSessionService() {
   }
 
   init {
-    Log.d(TAG, "AudioService created")
+    Timber.tag(TAG).d("AudioService created")
   }
 
   /**
@@ -155,11 +177,7 @@ class AudioService : MediaSessionService() {
 
     override fun onPlayerError(error: PlaybackException) {
       var message = R.string.core_media_generic_error;
-      Log.e(
-        TAG,
-        "Player error: " + error.errorCodeName + " (" + error.errorCode + ")",
-        error
-      );
+      Timber.e(error, "Player error: " + error.errorCodeName + " (" + error.errorCode + ")");
       if (error.errorCode == PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS
         || error.errorCode == PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND
       ) {

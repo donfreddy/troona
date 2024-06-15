@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+
 @UnstableApi
 class TroonaNotificationProvider @Inject constructor(
   @ApplicationContext private val context: Context,
@@ -53,12 +54,18 @@ class TroonaNotificationProvider @Inject constructor(
   ): MediaNotification {
     ensureNotificationChannel()
     val player = mediaSession.player
+    /*val pendingIntent: PendingIntent = TaskStackBuilder.create(context).run {
+      addNextIntentWithParentStack(Intent(Intent.ACTION_VIEW, "troona://full_player".toUri()))
+      getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT)!!
+    }*/
 
     val builder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
       .setContentTitle(player.mediaMetadata.title).setContentText(player.mediaMetadata.artist)
       .setSmallIcon(TroonaIcons.Music.resourceId)
-      .setStyle(MediaStyleNotificationHelper.MediaStyle(mediaSession))
-      .setContentIntent(mediaSession.sessionActivity).setPriority(NotificationCompat.PRIORITY_LOW)
+      .setStyle(MediaStyleNotificationHelper.MediaStyle(mediaSession)).setContentIntent(
+        // Todo: Implement pending intent to open full player when notification is clicked
+        mediaSession.sessionActivity
+      ).setPriority(NotificationCompat.PRIORITY_LOW)
 
     // Favorite action (like button)
     /* builder.addAction(
@@ -89,14 +96,12 @@ class TroonaNotificationProvider @Inject constructor(
       )
     ).forEach { builder.addAction(it) }
 
-    setupArtwork(
-      uri = player.mediaMetadata.artworkUri,
+    setupArtwork(uri = player.mediaMetadata.artworkUri,
       setLargeIcon = builder::setLargeIcon,
       updateNotification = {
         val notification = MediaNotification(NOTIFICATION_ID, builder.build())
         onNotificationChangedCallback.onNotificationChanged(notification)
-      }
-    )
+      })
 
     return MediaNotification(NOTIFICATION_ID, builder.build())
   }
@@ -129,9 +134,7 @@ class TroonaNotificationProvider @Inject constructor(
   )
 
   private fun setupArtwork(
-    uri: Uri?,
-    setLargeIcon: (Bitmap?) -> Unit,
-    updateNotification: () -> Unit
+    uri: Uri?, setLargeIcon: (Bitmap?) -> Unit, updateNotification: () -> Unit
   ) = coroutineScope.launch {
     val bitmap = loadArtworkBitmap(uri)
     setLargeIcon(bitmap)
@@ -149,11 +152,8 @@ class TroonaNotificationProvider @Inject constructor(
 
 internal suspend fun Uri.asArtworkBitmap(context: Context): Bitmap? {
   val loader = ImageLoader(context)
-  val request = ImageRequest.Builder(context)
-    .data(this)
-    .placeholder(TroonaIcons.Music.resourceId)
-    .error(TroonaIcons.Music.resourceId)
-    .build()
+  val request = ImageRequest.Builder(context).data(this).placeholder(TroonaIcons.Music.resourceId)
+    .error(TroonaIcons.Music.resourceId).build()
 
   val drawable = loader.execute(request).drawable
   return drawable?.toBitmap()

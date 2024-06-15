@@ -28,6 +28,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,16 +46,25 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ShoppingCart
+import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -104,10 +114,12 @@ import com.donfreddy.troona.feature.player.util.asFormattedString
 import com.donfreddy.troona.feature.player.util.convertToPosition
 import com.donfreddy.troona.feature.player.util.convertToProgress
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.intellij.lang.annotations.Language
 import java.time.Duration
 
+@OptIn(ExperimentalMaterialApi::class)
 @UnstableApi
 @Composable
 fun FullPlayer(
@@ -137,23 +149,56 @@ fun FullPlayer(
     if (isPlayerOpened) onSetSystemBarsLightIcons() else onResetSystemBarsIcons()
   }
 
-  FullPlayer(
-    audioState = audioState,
-    currentSong = currentSong,
-    playingQueue = playingQueue,
-    currentPosition = currentPosition,
-    playerControlActions = PlayerControlActions(
-      onPlay = viewModel::onPlay,
-      onPause = viewModel::onPause,
-      onSkipPrevious = viewModel::onSkipPrevious,
-      onSkipNext = viewModel::onSkipNext,
-      onSkipTo = { (viewModel::onSkipTo)(convertToPosition(it.toFloat(), currentSong.duration)) },
-      onSkipToIndex = viewModel::onSkipToIndex,
-      onShuffle = viewModel::onShuffle,
-      onRepeat = viewModel::onRepeat,
-    ),
-    modifier = modifier,
+
+  val sheetState = rememberModalBottomSheetState(
+    initialValue = ModalBottomSheetValue.Hidden
   )
+  val scope = rememberCoroutineScope()
+
+  ModalBottomSheetLayout(
+    sheetContent = {
+      Column(Modifier.padding(16.dp)) {
+        repeat(30) { index ->
+          Row(horizontalArrangement = Arrangement.spacedBy(20.dp),
+            modifier = Modifier
+              .clickable { /* TODO */ }
+              .fillMaxWidth()
+              .padding(vertical = 10.dp)) {
+            Icon(
+              Icons.Rounded.ShoppingCart, contentDescription = null
+            )
+            Text("Option $index")
+          }
+        }
+      }
+    },
+    sheetState = sheetState,
+    scrimColor = Color.Transparent,
+    sheetBackgroundColor = MaterialTheme.colors.background,
+    //sheetShape = MaterialTheme.shapes.large,
+    //sheetElevation = 0.dp,
+    //modifier = modifier,
+  ) {
+    FullPlayer(
+      audioState = audioState,
+      currentSong = currentSong,
+      playingQueue = playingQueue,
+      currentPosition = currentPosition,
+      playerControlActions = PlayerControlActions(
+        onPlay = viewModel::onPlay,
+        onPause = viewModel::onPause,
+        onSkipPrevious = viewModel::onSkipPrevious,
+        onSkipNext = viewModel::onSkipNext,
+        onSkipTo = { (viewModel::onSkipTo)(convertToPosition(it.toFloat(), currentSong.duration)) },
+        onSkipToIndex = viewModel::onSkipToIndex,
+        onShuffle = viewModel::onShuffle,
+        onRepeat = viewModel::onRepeat,
+      ),
+      showMoreSheet = { scope.launch { sheetState.show() } },
+      showPlaylistSheet = {},
+      modifier = modifier,
+    )
+  }
 }
 
 @Composable
@@ -163,6 +208,8 @@ private fun FullPlayer(
   playingQueue: List<Song>,
   currentPosition: Long,
   playerControlActions: PlayerControlActions,
+  showMoreSheet: () -> Unit,
+  showPlaylistSheet: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {
@@ -174,6 +221,8 @@ private fun FullPlayer(
       playingQueue = playingQueue,
       currentPosition = currentPosition,
       playerControlActions = playerControlActions,
+      showMoreSheet = showMoreSheet,
+      showPlaylistSheet = showPlaylistSheet,
       modifier = modifier
     )
   }
@@ -245,6 +294,8 @@ private fun FullPlayerContent(
   currentPosition: Long,
   playerControlActions: PlayerControlActions,
   modifier: Modifier = Modifier,
+  showMoreSheet: () -> Unit,
+  showPlaylistSheet: () -> Unit,
   isFavorite: Boolean = false,
 ) {
 
@@ -279,7 +330,7 @@ private fun FullPlayerContent(
       )
       FavoriteAndMore(
         onFavoriteClick = {},
-        onMoreClick = {},
+        onMoreClick = showMoreSheet,
         isFavorite = isFavorite,
         modifier = Modifier
       )
@@ -545,7 +596,9 @@ private fun BottomActions(
   modifier: Modifier = Modifier,
 ) {
   Row(
-    modifier = modifier.fillMaxWidth().padding(horizontal = MaterialTheme.spacing.extraLarge),
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(horizontal = MaterialTheme.spacing.extraLarge),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
@@ -566,6 +619,22 @@ private fun BottomActions(
       )
     }
   }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun MoreModalBottomSheet(
+  onDismiss: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  ModalBottomSheetLayout(
+    sheetContent = {},
+    sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden),
+    sheetShape = MaterialTheme.shapes.large,
+    sheetElevation = 0.dp,
+    modifier = modifier,
+  ) {}
+
 }
 
 /**
@@ -618,6 +687,8 @@ fun FullPlayerScreenPreview() {
         onShuffle = {},
         onRepeat = {},
       ),
+      showMoreSheet = {},
+      showPlaylistSheet = {},
     )
   }
 }

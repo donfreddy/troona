@@ -20,9 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.donfreddy.troona.feature.favorites.navigation.favoritesScreen
 import com.donfreddy.troona.feature.home.navigation.HOME_ROUTE
 import com.donfreddy.troona.feature.home.navigation.homeScreen
-import com.donfreddy.troona.feature.favorites.navigation.favoritesScreen
 import com.donfreddy.troona.feature.playlists.navigation.playlistsScreen
 import com.donfreddy.troona.feature.settings.navigation.settingsScreen
 
@@ -30,6 +30,9 @@ import com.donfreddy.troona.feature.settings.navigation.settingsScreen
 fun TroonaNavHost(
   navController: NavHostController,
   onNavigateToPlayer: () -> Unit,
+/*  onSetSystemBarsLightIcons: () -> Unit,
+  onResetSystemBarsIcons: () -> Unit,
+  appState: TroonaAppState,*/
   modifier: Modifier = Modifier,
   startDestination: String = HOME_ROUTE
 ) {
@@ -46,5 +49,20 @@ fun TroonaNavHost(
     favoritesScreen()
     playlistsScreen()
     settingsScreen()
+
+    /*composable(
+      route = "full_player",
+      deepLinks = listOf(navDeepLink { uriPattern = "troona://full_player" })
+    ) {
+      FullPlayer(
+        modifier = Modifier.playerSwipe(
+          swipeableState = appState.swipeableState,
+          anchors = appState.anchors,
+        ),
+        isPlayerOpened = appState.isPlayerOpened,
+        onSetSystemBarsLightIcons = onSetSystemBarsLightIcons,
+        onResetSystemBarsIcons = onResetSystemBarsIcons,
+      )
+    }*/
   }
 }

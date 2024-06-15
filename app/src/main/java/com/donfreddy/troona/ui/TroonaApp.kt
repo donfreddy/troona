@@ -53,6 +53,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.layoutId
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.donfreddy.troona.core.designsystem.component.TroonaTopBar
@@ -66,6 +67,7 @@ import com.google.accompanist.permissions.PermissionStatus
 
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
+@UnstableApi
 @Composable
 fun TroonaApp(
   onSetSystemBarsLightIcons: () -> Unit,
@@ -91,6 +93,7 @@ fun TroonaApp(
 }
 
 @OptIn(ExperimentalMotionApi::class, ExperimentalMaterialApi::class)
+@UnstableApi
 @Composable
 fun TroonaAppContent(
   appState: TroonaAppState,
@@ -215,6 +218,9 @@ fun TroonaAppContent(
       TroonaNavHost(
         navController = appState.navController,
         onNavigateToPlayer = appState::openPlayer,
+        // onSetSystemBarsLightIcons = onSetSystemBarsLightIcons,
+        // onResetSystemBarsIcons = onResetSystemBarsIcons,
+        // appState = appState
       )
     }
 
@@ -314,7 +320,7 @@ private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLev
  * Todo: migrate deprecated swipeable to use new swipeable
  */
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialApi::class)
-private fun Modifier.playerSwipe(
+fun Modifier.playerSwipe(
   swipeableState: SwipeableState<Int>, anchors: Map<Float, Int>
 ): Modifier = this.then(
   swipeable(state = swipeableState,

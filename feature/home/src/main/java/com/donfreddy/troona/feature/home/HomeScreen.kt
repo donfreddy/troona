@@ -59,7 +59,7 @@ fun HomeRoute(
         uiState = uiState,
         onSongClick = { startIndex ->
           Timber.tag("HomeRoute").d("onSongClick: %s", startIndex)
-          viewModel.onEvent(HomeUiEvent.Play(uiState.songs, startIndex))
+          (viewModel::play)(uiState.songs, startIndex)
         },
         currentPlayingSong = audioState.currentMediaId,
         modifier = modifier,

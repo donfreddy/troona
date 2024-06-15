@@ -47,17 +47,9 @@ class HomeViewModel @Inject constructor(
     scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = HomeUiState.Loading
   )
 
-  fun onEvent(event: HomeUiEvent) {
-    when (event) {
-      is HomeUiEvent.Play -> {
-        audioServiceConnection.play(event.songs, event.startIndex)
-      }
-    }
+  fun play(songs: List<Song>, startIndex: Int = 0){
+    audioServiceConnection.play(songs, startIndex)
   }
-}
-
-sealed class HomeUiEvent {
-  data class Play(val songs: List<Song>, val startIndex: Int = 0) : HomeUiEvent()
 }
 
 sealed interface HomeUiState {

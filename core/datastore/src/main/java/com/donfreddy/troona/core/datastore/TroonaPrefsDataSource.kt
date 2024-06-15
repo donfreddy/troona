@@ -43,6 +43,7 @@ import com.donfreddy.troona.core.model.enums.PlaybackMode
 import com.donfreddy.troona.core.model.enums.SongSortBy
 import com.donfreddy.troona.core.model.enums.SortOrder
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
@@ -162,7 +163,7 @@ class TroonaPrefsDataSource @Inject constructor(
         }
       }
     } catch (ioException: IOException) {
-      Log.e(TAG, ERROR_MESSAGE, ioException)
+      Timber.tag(TAG).e(ioException, ERROR_MESSAGE)
     }
   }
 }

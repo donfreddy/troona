@@ -105,7 +105,7 @@ private fun MiniPlayerContent(
     enter = slideInVertically(initialOffsetY = { it }),
     exit = slideOutVertically(targetOffsetY = { it }),
   ) {
-    Surface(elevation = MaterialTheme.spacing.extraSmall) {
+    Surface(elevation = MaterialTheme.spacing.medium) {
       Column(
         modifier = modifier.clickable(onClick = onNavigateToPlayer)
 
@@ -138,7 +138,7 @@ private fun MiniPlayerContent(
                 fontSize = 15.sp,
               )
               SingleLineText(
-                text = "${currentSong.artistName} • ${currentSong.duration.asDuration()}",
+                text = currentSong.artistName,
                 shouldUseMarquee = isPlaying,
                 fontSize = 12.sp,
                 color = TroonaColor.Grey

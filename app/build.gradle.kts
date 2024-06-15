@@ -69,6 +69,7 @@ dependencies {
   implementation(libs.androidx.compose.material)
   implementation(libs.google.android.material)
   implementation(libs.tracing.ktx)
+  implementation(libs.bundles.androidx.media3)
   implementation(libs.accompanist.navigation.material)
   implementation(libs.kotlinx.coroutines.guava)
 

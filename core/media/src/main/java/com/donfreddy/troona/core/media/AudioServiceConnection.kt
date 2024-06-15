@@ -67,18 +67,37 @@ class AudioServiceConnection @Inject constructor(
   @ApplicationContext context: Context,
   @Dispatcher(Main) mainDispatcher: CoroutineDispatcher,
   private val useCases: UseCaseContainer
-) {
+) : A {
   private var controller: MediaController? = null
   private val scope = CoroutineScope(mainDispatcher + SupervisorJob())
 
   private val playerListener: PlayerListener = PlayerListener()
   val player: Player? get() = controller
 
+  private var originalPlayingQueue = ArrayList<Song>()
+
   @JvmField
   var playingQueue = ArrayList<Song>()
 
   @JvmField
   var position = -1
+
+  @JvmField
+  var shuffleMode = 0
+
+  private val isLastTrack: Boolean
+    get() = getPosition() == playingQueue.size - 1
+
+  var repeatMode = 0
+    private set(value) {
+      when (value) {
+        Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ONE, Player.REPEAT_MODE_ALL -> {
+          field = value
+          // setRepeatMode(value)
+          // handleInternalChange(REPEAT_MODE_CHANGED)
+        }
+      }
+    }
 
   val songDurationMillis: Int
     get() = -1
@@ -112,50 +131,41 @@ class AudioServiceConnection @Inject constructor(
       val newController = MediaController.Builder(
         context, SessionToken(context, ComponentName(context, AudioService::class.java))
       ).setListener(ControllerListener()).buildAsync().await().apply {
-        addListener(PlayerListener())
+        addListener(playerListener)
       }
       controller = newController
     }
   }
 
-  fun addSong(song: Song, position: Int) {
+  fun addSong(position: Int, song: Song) {
     playingQueue.add(position, song)
+    originalPlayingQueue.add(position, song)
     notifyChange(QUEUE_CHANGED)
   }
 
   fun addSong(song: Song) {
     playingQueue.add(song)
+    originalPlayingQueue.add(song)
     notifyChange(QUEUE_CHANGED)
   }
 
-  private fun addSongs(songs: List<Song>, position: Int) {
+  private fun addSongs(position: Int, songs: List<Song>) {
     Timber.tag(TAG).d("Position %s", position)
     playingQueue.addAll(position, songs)
+    originalPlayingQueue.addAll(position, songs)
     notifyChange(QUEUE_CHANGED)
   }
 
   private fun addSongs(songs: List<Song>) {
     playingQueue.addAll(songs)
+    originalPlayingQueue.addAll(songs)
     notifyChange(QUEUE_CHANGED)
   }
 
-  fun removeSong(position: Int) {
-    playingQueue.removeAt(position)
-    notifyChange(QUEUE_CHANGED)
-  }
-
-  fun removeSongs(song: Song) {
-    playingQueue.remove(song)
-    notifyChange(QUEUE_CHANGED)
-  }
-
-  fun removeSongs(position: Int, count: Int) {
-    repeat(count) { playingQueue.removeAt(position) }
-    notifyChange(QUEUE_CHANGED)
-  }
-
-  fun removeSongs(songs: List<Song>) {
-    songs.forEach { playingQueue.remove(it) }
+  fun clearQueue() {
+    playingQueue.clear()
+    originalPlayingQueue.clear()
+    setPosition(-1)
     notifyChange(QUEUE_CHANGED)
   }
 
@@ -183,25 +193,18 @@ class AudioServiceConnection @Inject constructor(
         playingQueue = ArrayList(playingSongs)
         position = storedQueueIndex
 
-        scope.launch {
-        }
+        scope.launch {}
       }
       queuesRestored = true
     }
-  }
-
-  fun clearQueue() {
-    playingQueue.clear()
-    setPosition(-1)
-    notifyChange(QUEUE_CHANGED)
   }
 
   fun play() = controller?.play()
   fun pause() = controller?.pause()
 
   fun play(songs: List<Song>, startIndex: Int) {
-    setMediaItems(songs)
-    addSongs(songs, startIndex)
+    //setMediaItems(songs)
+    addSongs(songs)
     controller?.run {
       prepare()
       when (startIndex) {
@@ -221,7 +224,7 @@ class AudioServiceConnection @Inject constructor(
           Timber.tag(TAG).d("Current index in queue: $currentMediaItemIndex")
           //Timber.tag(TAG).d("Current index in playing queue: $position")
           seekToDefaultPosition(startIndex)
-          // position = startIndex
+          position = startIndex
           playWhenReady = true
           _audioState.update { it.copy(playWhenReady = true) }
         }
@@ -269,9 +272,9 @@ class AudioServiceConnection @Inject constructor(
   private inner class PlayerListener : Player.Listener {
     override fun onEvents(player: Player, events: Player.Events) {
       /** Save the current media item position */
-      if (events.contains(Player.EVENT_POSITION_DISCONTINUITY)
-        || events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)
-        || events.contains(Player.EVENT_PLAY_WHEN_READY_CHANGED)
+      if (events.contains(Player.EVENT_POSITION_DISCONTINUITY) || events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION) || events.contains(
+          Player.EVENT_PLAY_WHEN_READY_CHANGED
+        )
       ) {
         savePlayingQueuePosition(player)
         savePlayingQueue()
@@ -283,9 +286,9 @@ class AudioServiceConnection @Inject constructor(
       }
 
       /** Update audio state */
-      if (events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED)
-        || events.contains(Player.EVENT_PLAY_WHEN_READY_CHANGED)
-        || events.contains(Player.EVENT_MEDIA_METADATA_CHANGED)
+      if (events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED) || events.contains(Player.EVENT_PLAY_WHEN_READY_CHANGED) || events.contains(
+          Player.EVENT_MEDIA_METADATA_CHANGED
+        )
       ) {
         updateAudioState(player)
       }
@@ -346,10 +349,7 @@ class AudioServiceConnection @Inject constructor(
   }
 
   fun openQueue(
-    songs: List<Song>,
-    startPosition: Int,
-    startPositionMs: Long,
-    playWhenReady: Boolean
+    songs: List<Song>, startPosition: Int, startPositionMs: Long, playWhenReady: Boolean
   ) {
     if (playingQueue.isNotEmpty() && startPosition >= 0 && startPosition < playingQueue.size) {
       Log.d(TAG, "Queue already opened")
@@ -368,8 +368,7 @@ class AudioServiceConnection @Inject constructor(
    */
   private fun handleInternalChange(what: String) {
     when (what) {
-      PLAY_STATE_CHANGED -> {
-        /*  val isPlaying = audioState.value.isPlaying
+      PLAY_STATE_CHANGED -> {/*  val isPlaying = audioState.value.isPlaying
           if (!isPlaying && songProgressMillis > 0) {
             savePlayingQueuePosition()
           }*/
@@ -383,7 +382,9 @@ class AudioServiceConnection @Inject constructor(
       }
 
       QUEUE_CHANGED -> {
-        controller?.run { setMediaItems(playingQueue) }
+        controller?.run {
+          setMediaItems(playingQueue)
+        }
         savePlayingQueue()
         if (playingQueue.size > 0) {
           Log.d(TAG, "Queue changed")
@@ -391,11 +392,51 @@ class AudioServiceConnection @Inject constructor(
           Log.d(TAG, "Queue is empty")
         }
       }
+    }
+  }
 
-      else -> {
-        Log.d(TAG, "Unknown change: $what")
+  private fun getNextPosition(force: Boolean): Int {
+    var position = getPosition() + 1
+    when (repeatMode) {
+      REPEAT_MODE_NONE -> if (isLastTrack) {
+        position -= 1
+      }
+
+      REPEAT_MODE_ALL -> if (isLastTrack) {
+        position = 0
+      }
+
+      REPEAT_MODE_ONE -> if (force) {
+        if (isLastTrack) {
+          position = 0
+        }
+      } else {
+        position -= 1
       }
     }
+    return position
+  }
+
+  private fun getPreviousPosition(force: Boolean): Int {
+    var newPosition = getPosition() - 1
+    when (repeatMode) {
+      REPEAT_MODE_NONE -> if (newPosition < 0) {
+        newPosition = 0
+      }
+
+      REPEAT_MODE_ONE -> if (force) {
+        if (newPosition < 0) {
+          newPosition = playingQueue.size - 1
+        }
+      } else {
+        newPosition = getPosition()
+      }
+
+      REPEAT_MODE_ALL -> if (newPosition < 0) {
+        newPosition = playingQueue.size - 1
+      }
+    }
+    return newPosition
   }
 
   fun restoreState(completion: () -> Unit = {}) {
@@ -411,9 +452,7 @@ class AudioServiceConnection @Inject constructor(
     private var instance: AudioServiceConnection? = null
 
     fun getInstance(
-      context: Context,
-      mainDispatcher: CoroutineDispatcher,
-      useCases: UseCaseContainer
+      context: Context, mainDispatcher: CoroutineDispatcher, useCases: UseCaseContainer
     ) = instance ?: synchronized(this) {
       instance ?: AudioServiceConnection(
         context, mainDispatcher, useCases
@@ -426,26 +465,28 @@ class AudioServiceConnection @Inject constructor(
     const val MUSIC_PACKAGE_NAME = "com.android.music"
     const val QUEUE_CHANGED = "$TROONA_PACKAGE_NAME.queue_changed"
     const val PLAY_STATE_CHANGED = "$TROONA_PACKAGE_NAME.play_state_changed"
+    const val SHUFFLE_MODE_NONE = 0
+    const val SHUFFLE_MODE_ALL = 1
+    const val REPEAT_MODE_NONE = 0
+    const val REPEAT_MODE_ALL = 1
+    const val REPEAT_MODE_ONE = 2
   }
 
   //Todo: Remove this method from here
   private fun setMediaItems(audioList: List<Song>) {
     audioList.map { audio ->
-      MediaItem.Builder()
-        .setMediaId(String.format("%s", audio.id))
-        .setUri(audio.uri)
+      MediaItem.Builder().setMediaId(String.format("%s", audio.id)).setUri(audio.uri)
         .setMediaMetadata(
-          MediaMetadata.Builder()
-            .setArtworkUri(audio.albumArt)
-            .setAlbumArtist(audio.albumArtist)
-            .setDisplayTitle(audio.title)
-            .setSubtitle(audio.displayName)
-            .setIsPlayable(true)
-            .build()
+          MediaMetadata.Builder().setArtworkUri(audio.albumArt).setAlbumArtist(audio.albumArtist)
+            .setDisplayTitle(audio.title).setSubtitle(audio.displayName).setIsPlayable(true).build()
         ).build()
     }.also {
       controller?.setMediaItems(it)
     }
+  }
+
+  override fun bar() {
+    TODO("Not yet implemented")
   }
 }
 
@@ -458,9 +499,7 @@ data class AudioState(
 ) {
   val isPlaying: Boolean
     get() {
-      return (playbackState == Player.STATE_BUFFERING
-          || playbackState == Player.STATE_READY)
-          && playWhenReady
+      return (playbackState == Player.STATE_BUFFERING || playbackState == Player.STATE_READY) && playWhenReady
     }
 }
 
@@ -474,3 +513,7 @@ data class UseCaseContainer @Inject constructor(
   val getPlayingQueuePositionUseCase: GetPlayingQueuePositionUseCase,
   val setPlayingQueuePositionUseCase: SetPlayingQueuePositionUseCase
 )
+
+interface A {
+  fun bar()
+}
