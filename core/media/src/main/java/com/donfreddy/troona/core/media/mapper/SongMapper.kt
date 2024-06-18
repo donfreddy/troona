@@ -20,3 +20,5 @@ import com.donfreddy.troona.core.media.util.buildPlayableMediaItem
 import com.donfreddy.troona.core.model.data.Song
 
 internal fun Song.asMediaItem() = buildPlayableMediaItem(this)
+
+internal fun ArrayList<Song>.asMediaItems() = this.map { buildPlayableMediaItem(it) }

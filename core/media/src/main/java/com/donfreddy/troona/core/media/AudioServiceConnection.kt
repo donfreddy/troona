@@ -19,8 +19,6 @@ package com.donfreddy.troona.core.media
 import android.content.ComponentName
 import android.content.Context
 import androidx.media3.common.C
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
@@ -36,6 +34,8 @@ import com.donfreddy.troona.core.domain.usecase.settings.SetPlayingQueueIdsUseCa
 import com.donfreddy.troona.core.domain.usecase.settings.SetPlayingQueueIndexUseCase
 import com.donfreddy.troona.core.domain.usecase.settings.SetPlayingQueuePositionUseCase
 import com.donfreddy.troona.core.domain.usecase.songs.GetSongsUseCase
+import com.donfreddy.troona.core.media.ShuffleHelper.makeShuffleList
+import com.donfreddy.troona.core.media.mapper.asMediaItems
 import com.donfreddy.troona.core.model.data.Song
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -67,7 +67,7 @@ class AudioServiceConnection @Inject constructor(
   @ApplicationContext context: Context,
   @Dispatcher(Main) mainDispatcher: CoroutineDispatcher,
   private val useCases: UseCaseContainer
-) : A {
+) {
   private var controller: MediaController? = null
   private val scope = CoroutineScope(mainDispatcher + SupervisorJob())
 
@@ -189,7 +189,8 @@ class AudioServiceConnection @Inject constructor(
         //val storedQueuePosition = getPlayingQueuePositionUseCase.invoke().first()
 
         val songs = getSongsUseCase.invoke().first()
-        val playingSongs = songs.filter { song -> storedQueueIds.contains(song.id.toString()) }
+        val playingSongs =
+          songs.filter { song -> storedQueueIds.contains(song.id.toString()) }
         playingQueue = ArrayList(playingSongs)
         position = storedQueueIndex
 
@@ -200,6 +201,7 @@ class AudioServiceConnection @Inject constructor(
   }
 
   fun play() = controller?.play()
+
   fun pause() = controller?.pause()
 
   fun play(songs: List<Song>, startIndex: Int) {
@@ -223,13 +225,25 @@ class AudioServiceConnection @Inject constructor(
           Timber.tag(TAG).d("Seeking to $startIndex")
           Timber.tag(TAG).d("Current index in queue: $currentMediaItemIndex")
           //Timber.tag(TAG).d("Current index in playing queue: $position")
-          seekToDefaultPosition(startIndex)
+          //seekTo(startIndex, C.TIME_UNSET)
           position = startIndex
-          playWhenReady = true
+          seekToDefaultPosition(getPosition())
           _audioState.update { it.copy(playWhenReady = true) }
+          playWhenReady = true
         }
       }
     }
+  }
+
+  private fun playSongAt(index: Int) {
+    this.position = index
+    controller?.run {
+      seekToDefaultPosition(index)
+      position = index
+      playWhenReady = true
+      _audioState.update { it.copy(playWhenReady = true) }
+    }
+    //notifyChange(META_CHANGED)
   }
 
   fun seekToPrevious() = controller?.run {
@@ -255,6 +269,31 @@ class AudioServiceConnection @Inject constructor(
   fun stop() {
     controller?.stop()
     notifyChange(PLAY_STATE_CHANGED)
+  }
+
+  fun openQueue(
+    playingQueue: List<Song>?,
+    startPosition: Int,
+    startPlaying: Boolean,
+  ) {
+    if (!playingQueue.isNullOrEmpty()
+      && startPosition >= 0 && startPosition < playingQueue.size
+    ) {
+      // it is important to copy the playing queue here first as we might add/remove songs later
+      originalPlayingQueue = ArrayList(playingQueue)
+      this.playingQueue = ArrayList(originalPlayingQueue)
+      var position = startPosition
+      if (shuffleMode == SHUFFLE_MODE_ALL) {
+        makeShuffleList(this.playingQueue, startPosition)
+        position = 0
+      }
+      if (startPlaying) {
+        playSongAt(position)
+      } else {
+        setPosition(position)
+      }
+      notifyChange(QUEUE_CHANGED)
+    }
   }
 
   fun release() {
@@ -368,10 +407,14 @@ class AudioServiceConnection @Inject constructor(
    */
   private fun handleInternalChange(what: String) {
     when (what) {
-      PLAY_STATE_CHANGED -> {/*  val isPlaying = audioState.value.isPlaying
-          if (!isPlaying && songProgressMillis > 0) {
-            savePlayingQueuePosition()
-          }*/
+      PLAY_STATE_CHANGED -> {
+        val isPlaying = audioState.value.isPlaying
+        //if (!isPlaying && songProgressMillis > 0) {
+        //
+        // TODO(Don): Save position in track
+        //savePositionInTrack()
+        // savePlayingQueuePosition()
+        //}
         controller?.run {
           if (audioState.value.isPlaying) {
             play()
@@ -382,9 +425,7 @@ class AudioServiceConnection @Inject constructor(
       }
 
       QUEUE_CHANGED -> {
-        controller?.run {
-          setMediaItems(playingQueue)
-        }
+        controller?.setMediaItems(playingQueue.asMediaItems())
         savePlayingQueue()
         if (playingQueue.size > 0) {
           Log.d(TAG, "Queue changed")
@@ -446,6 +487,9 @@ class AudioServiceConnection @Inject constructor(
     }
   }
 
+  /**
+   * Companion object to hold constants and static methods.
+   */
 
   companion object {
     @Volatile
@@ -463,30 +507,31 @@ class AudioServiceConnection @Inject constructor(
     val TAG: String = AudioServiceConnection::class.java.simpleName
     private const val TROONA_PACKAGE_NAME = "com.donfreddy.troona"
     const val MUSIC_PACKAGE_NAME = "com.android.music"
+    const val META_CHANGED = "$TROONA_PACKAGE_NAME.meta_changed"
     const val QUEUE_CHANGED = "$TROONA_PACKAGE_NAME.queue_changed"
     const val PLAY_STATE_CHANGED = "$TROONA_PACKAGE_NAME.play_state_changed"
+    const val REPEAT_MODE_CHANGED = "$TROONA_PACKAGE_NAME.repeat_mode_changed"
+    const val SHUFFLE_MODE_CHANGED = "$TROONA_PACKAGE_NAME.shuffle_mode_changed"
+    const val FAVORITE_STATE_CHANGED = "$TROONA_PACKAGE_NAME.favorite_state_changed"
     const val SHUFFLE_MODE_NONE = 0
     const val SHUFFLE_MODE_ALL = 1
     const val REPEAT_MODE_NONE = 0
     const val REPEAT_MODE_ALL = 1
     const val REPEAT_MODE_ONE = 2
   }
+}
 
-  //Todo: Remove this method from here
-  private fun setMediaItems(audioList: List<Song>) {
-    audioList.map { audio ->
-      MediaItem.Builder().setMediaId(String.format("%s", audio.id)).setUri(audio.uri)
-        .setMediaMetadata(
-          MediaMetadata.Builder().setArtworkUri(audio.albumArt).setAlbumArtist(audio.albumArtist)
-            .setDisplayTitle(audio.title).setSubtitle(audio.displayName).setIsPlayable(true).build()
-        ).build()
-    }.also {
-      controller?.setMediaItems(it)
+object ShuffleHelper {
+
+  fun makeShuffleList(listToShuffle: MutableList<Song>, current: Int) {
+    if (listToShuffle.isEmpty()) return
+    if (current >= 0) {
+      val song = listToShuffle.removeAt(current)
+      listToShuffle.shuffle()
+      listToShuffle.add(0, song)
+    } else {
+      listToShuffle.shuffle()
     }
-  }
-
-  override fun bar() {
-    TODO("Not yet implemented")
   }
 }
 
@@ -513,7 +558,3 @@ data class UseCaseContainer @Inject constructor(
   val getPlayingQueuePositionUseCase: GetPlayingQueuePositionUseCase,
   val setPlayingQueuePositionUseCase: SetPlayingQueuePositionUseCase
 )
-
-interface A {
-  fun bar()
-}

@@ -22,7 +22,8 @@ import androidx.media3.common.MediaMetadata
 import com.donfreddy.troona.core.model.data.Song
 
 internal fun buildPlayableMediaItem(song: Song) = MediaItem.Builder()
-  .setMediaId(song.id.toString())
+  .setMediaId(String.format("%s", song.id))
+  .setUri(song.uri)
   .setRequestMetadata(
     MediaItem.RequestMetadata.Builder()
       .setMediaUri(song.uri)
@@ -34,6 +35,10 @@ internal fun buildPlayableMediaItem(song: Song) = MediaItem.Builder()
       .setTitle(song.title)
       .setArtist(song.artistName)
       .setIsBrowsable(false)
+      .setAlbumTitle(song.albumName)
+      .setAlbumArtist(song.albumArtist)
+      .setDisplayTitle(song.title)
+      .setSubtitle(song.displayName)
       .setIsPlayable(true)
       .setExtras(
         bundleOf(
@@ -44,8 +49,6 @@ internal fun buildPlayableMediaItem(song: Song) = MediaItem.Builder()
           SIZE to song.size,
           YEAR to song.year,
           MINE_TYPE to song.mineType,
-          //DATA_ADDED to song.dateAdded,
-          //DATA_MODIFIED to song.dateModified
         )
       )
       .build()
@@ -59,5 +62,3 @@ private const val DURATION = "duration"
 private const val SIZE = "size"
 private const val YEAR = "year"
 private const val MINE_TYPE = "mine_type"
-private const val DATA_ADDED = "date_added"
-private const val DATA_MODIFIED = "date_modified"

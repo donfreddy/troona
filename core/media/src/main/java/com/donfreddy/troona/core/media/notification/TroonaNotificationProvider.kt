@@ -60,12 +60,19 @@ class TroonaNotificationProvider @Inject constructor(
     }*/
 
     val builder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-      .setContentTitle(player.mediaMetadata.title).setContentText(player.mediaMetadata.artist)
+      .setContentTitle(player.mediaMetadata.title)
+      .setContentText(player.mediaMetadata.artist)
       .setSmallIcon(TroonaIcons.Music.resourceId)
+      .setPriority(NotificationCompat.PRIORITY_LOW)
       .setStyle(MediaStyleNotificationHelper.MediaStyle(mediaSession)).setContentIntent(
         // Todo: Implement pending intent to open full player when notification is clicked
         mediaSession.sessionActivity
-      ).setPriority(NotificationCompat.PRIORITY_LOW)
+      ).addAction(
+        actionFactory.createCustomActionFromCustomCommandButton(
+          mediaSession, customLayout.first()
+        )
+      )
+
 
     // Favorite action (like button)
     /* builder.addAction(
@@ -74,20 +81,30 @@ class TroonaNotificationProvider @Inject constructor(
        )
      )*/
 
+
     listOf(
+      createMediaAction(
+        mediaSession,
+        actionFactory,
+        TroonaIcons.Favorite.resourceId,
+        "Add to favorites",
+        33
+      ),
       createMediaAction(
         mediaSession,
         actionFactory,
         TroonaIcons.SkipPrevious.resourceId,
         "Skip previous",
         Player.COMMAND_SEEK_TO_PREVIOUS
-      ), createMediaAction(
+      ),
+      createMediaAction(
         mediaSession,
         actionFactory,
         if (player.playWhenReady) TroonaIcons.Pause.resourceId else TroonaIcons.Play.resourceId,
         if (player.playWhenReady) "Pause" else "Play",
         Player.COMMAND_PLAY_PAUSE
-      ), createMediaAction(
+      ),
+      createMediaAction(
         mediaSession,
         actionFactory,
         TroonaIcons.FastForward.resourceId,
