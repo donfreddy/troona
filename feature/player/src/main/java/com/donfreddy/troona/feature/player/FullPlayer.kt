@@ -22,11 +22,18 @@ import android.graphics.RuntimeShader
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.EaseInOutCirc
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -234,35 +241,30 @@ private fun PlayerBackground(
   modifier: Modifier,
   context: Context = LocalContext.current,
 ) {
-  var dominantColor: Int by remember { mutableIntStateOf(0) }
-  //var bodyTextColor: Int by remember { mutableIntStateOf(0) }
-  var gradientColors by remember {
-    mutableStateOf(listOf(Color(dominantColor), TroonaColor.Black))
-  }
+  val currentColor = remember { MutableTransitionState(Color.Transparent) }
+  val label = "ColorAnimation"
 
-  LaunchedEffect(currentSong.albumArt) {
-    var palette: Palette?
+  val transition = updateTransition(currentColor, label)
 
-    // Get dominant colors from the image using Palette
-    withContext(Dispatchers.IO) {
-      palette = Palette.from(currentSong.albumArt.asArtworkBitmap(context)!!).generate()
+  val dominantColor by transition.animateColor(
+    transitionSpec = { tween(durationMillis = 500) },
+    label = label,
+    targetValueByState = { it },
+  )
+
+  LaunchedEffect(currentSong) {
+    val bitmap = currentSong.albumArt.asArtworkBitmap(context) ?: return@LaunchedEffect
+    val palette = withContext(Dispatchers.IO) {
+      Palette.from(bitmap).generate()
     }
-
-    // Create a gradient from the dominant colors
-    gradientColors = run {
-      dominantColor = palette!!.getDominantColor(TroonaColor.PrimaryColor.toArgb())
-      //bodyTextColor = palette!!.vibrantSwatch?.rgb!!
-      return@run listOf(Color(dominantColor), TroonaColor.Black)
-    }
-
-    //Todo: Animate the gradient colors when the image changes
+    currentColor.targetState = Color(palette.getDominantColor(TroonaColor.PrimaryColor.toArgb()))
   }
 
   val largeVerticalGradient = object : ShaderBrush() {
     override fun createShader(size: Size): Shader {
       val biggerDimension = maxOf(size.height, size.width)
       return LinearGradientShader(
-        colors = gradientColors,
+        colors = listOf(dominantColor, TroonaColor.Black),
         from = Offset(0f, -biggerDimension),
         to = Offset(biggerDimension * 1.6f, size.height),
         colorStops = listOf(0.4f, 1f)
@@ -270,21 +272,8 @@ private fun PlayerBackground(
     }
   }
 
-  /* fun verticalGradient(
-      vararg colorStops: Pair<Float, Color>,
-      startY: Float = 0f,
-      endY: Float = Float.POSITIVE_INFINITY,
-      tileMode: TileMode = TileMode.Clamp
-    ): Brush = linearGradient(
-      *colorStops,
-      start = Offset(0.0f, startY),
-      end = Offset(0.0f, endY),
-      tileMode = tileMode
-    )*/
-
   Box(modifier = modifier.background(largeVerticalGradient))
 }
-
 
 @Composable
 private fun FullPlayerContent(
