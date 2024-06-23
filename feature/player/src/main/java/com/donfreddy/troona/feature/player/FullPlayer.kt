@@ -247,7 +247,7 @@ private fun PlayerBackground(
   val transition = updateTransition(currentColor, label)
 
   val dominantColor by transition.animateColor(
-    transitionSpec = { tween(durationMillis = 500) },
+    transitionSpec = { tween(durationMillis = 1000) },
     label = label,
     targetValueByState = { it },
   )
