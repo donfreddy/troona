@@ -178,7 +178,10 @@ fun TroonaIconButton(
 @Composable
 fun NiaButtonPreview() {
   TroonaTheme {
-    //
+    TroonaIconButton(
+      onClick =  {  },
+      content =  {  }
+    )
   }
 }
 

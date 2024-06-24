@@ -431,14 +431,23 @@ private fun FavoriteAndMore(
         end = MaterialTheme.spacing.medium,
       ),
   ) {
-    IconButton(modifier = Modifier.size(35.dp), onClick = onFavoriteClick) {
+    /*IconButton(modifier = Modifier.size(35.dp), onClick = onFavoriteClick) {
       Icon(
         painter = painterResource(id = if (isFavorite) TroonaIcons.Favorite.resourceId else TroonaIcons.FavoriteBorder.resourceId),
         contentDescription = "Favorite",
         tint = Color.White
       )
-    }
-    IconButton(modifier = Modifier.size(35.dp), onClick = onMoreClick) {
+    }*/
+    IconButton(
+      modifier = Modifier
+        .size(35.dp)
+        .background(
+          brush = SolidColor(Color.White),
+          shape = CircleShape,
+          alpha = DefaultAlpha
+        ),
+      onClick = onMoreClick
+    ) {
       Icon(
         painter = painterResource(id = TroonaIcons.MoreVert.resourceId),
         contentDescription = "More Options",
@@ -694,3 +703,5 @@ private val PlayerScreenPadding = 24.dp
 private const val DefaultAlpha = 0.14f
 private const val DefaultTextAlpha = 0.9f
 private const val DefaultSliderAlpha = 0.5f
+
+// Mboa troc mboatroc
