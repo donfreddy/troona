@@ -19,6 +19,7 @@ package com.donfreddy.troona.feature.player
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.MutableTransitionState
@@ -53,8 +54,10 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -92,6 +95,8 @@ import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.media.AudioState
 import com.donfreddy.troona.core.model.data.Song
 import com.donfreddy.troona.core.ui.tooling.DevicePreviews
+import com.donfreddy.troona.feature.player.components.BottomSheetType
+import com.donfreddy.troona.feature.player.components.SheetLayout
 import com.donfreddy.troona.feature.player.components.TroonaSlider
 import com.donfreddy.troona.feature.player.util.asFormattedString
 import com.donfreddy.troona.feature.player.util.convertToPosition
@@ -131,27 +136,28 @@ fun FullPlayer(
     if (isPlayerOpened) onSetSystemBarsLightIcons() else onResetSystemBarsIcons()
   }
 
+  // State to track the current type of bottom sheet being displayed.
+  var currentBottomSheet: BottomSheetType? by remember { mutableStateOf(null) }
 
-  val sheetState = rememberModalBottomSheetState(
-    initialValue = ModalBottomSheetValue.Hidden
-  )
+  val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,
+    confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded })
   val scope = rememberCoroutineScope()
+
+  // Callback to close the bottom sheet.
+  val closeSheet = { scope.launch { sheetState.hide() } }
+
+  // Callback to open the bottom sheet.
+  val openSheet = { scope.launch { sheetState.show() } }
+
+  // BackHandler to automatically close the bottom sheet when the back button is pressed.
+  BackHandler(sheetState.isVisible) { closeSheet() }
 
   ModalBottomSheetLayout(
     sheetContent = {
-      Column(Modifier.padding(MaterialTheme.dimens.grid200)) {
-        repeat(30) { index ->
-          Row(horizontalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = Modifier
-              .clickable { /* TODO */ }
-              .fillMaxWidth()
-              .padding(vertical = 10.dp)) {
-            Icon(
-              Icons.Rounded.ShoppingCart, contentDescription = null
-            )
-            Text("Option $index")
-          }
-        }
+      currentBottomSheet?.let {
+        SheetLayout(
+          closeSheet = { closeSheet() }, bottomSheetType = it
+        )
       }
     },
     sheetState = sheetState,
@@ -176,8 +182,18 @@ fun FullPlayer(
         onShuffle = viewModel::onShuffle,
         onRepeat = viewModel::onRepeat,
       ),
-      showMoreSheet = { scope.launch { sheetState.show() } },
-      showPlaylistSheet = {},
+      showMoreSheet = {
+        scope.launch {
+          currentBottomSheet = BottomSheetType.MORE
+          openSheet()
+        }
+      },
+      onQueueClick = {
+        scope.launch {
+          currentBottomSheet = BottomSheetType.QUEUE
+          openSheet()
+        }
+      },
       modifier = modifier,
     )
   }
@@ -191,7 +207,7 @@ private fun FullPlayer(
   currentPosition: Long,
   playerControlActions: PlayerControlActions,
   showMoreSheet: () -> Unit,
-  showPlaylistSheet: () -> Unit,
+  onQueueClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {
@@ -204,7 +220,7 @@ private fun FullPlayer(
       currentPosition = currentPosition,
       playerControlActions = playerControlActions,
       showMoreSheet = showMoreSheet,
-      showPlaylistSheet = showPlaylistSheet,
+      onQueueClick = onQueueClick,
       modifier = modifier
     )
   }
@@ -222,12 +238,12 @@ private fun PlayerBackground(
   val transition = updateTransition(currentColor, label)
 
   val dominantColor by transition.animateColor(
-    transitionSpec = { tween(durationMillis = 1000) },
+    transitionSpec = { tween(durationMillis = 800) },
     label = label,
     targetValueByState = { it },
   )
 
-  LaunchedEffect(currentSong) {
+  LaunchedEffect(currentSong.albumArt) {
     val bitmap = currentSong.albumArt.asArtworkBitmap(context) ?: return@LaunchedEffect
     val palette = withContext(Dispatchers.IO) {
       Palette.from(bitmap).generate()
@@ -259,7 +275,7 @@ private fun FullPlayerContent(
   playerControlActions: PlayerControlActions,
   modifier: Modifier = Modifier,
   showMoreSheet: () -> Unit,
-  showPlaylistSheet: () -> Unit,
+  onQueueClick: () -> Unit,
   isFavorite: Boolean = false,
 ) {
 
@@ -288,9 +304,7 @@ private fun FullPlayerContent(
       horizontalArrangement = Arrangement.SpaceBetween
     ) {
       SongInfo(
-        currentSong = currentSong,
-        isPlaying = audioState.isPlaying,
-        modifier = Modifier.weight(1f)
+        currentSong = currentSong, isPlaying = audioState.isPlaying, modifier = Modifier.weight(1f)
       )
       FavoriteAndMore(
         onFavoriteClick = {},
@@ -325,9 +339,8 @@ private fun FullPlayerContent(
 
     Spacer(modifier = Modifier.weight(1.0f))
 
-    BottomActions(
-      onLyricsClick = {},
-      onQueueClick = {},
+    BottomActions(onLyricsClick = {},
+      onQueueClick = onQueueClick,
       modifier = Modifier
         .padding(horizontal = PlayerScreenPadding)
         .fillMaxWidth()
@@ -344,9 +357,7 @@ private fun FullPlayerContent(
 
 @Composable
 private fun PlayerArtwork(
-  currentSong: Song,
-  isPlaying: Boolean,
-  modifier: Modifier = Modifier
+  currentSong: Song, isPlaying: Boolean, modifier: Modifier = Modifier
 ) {
   val sizeScale: Float by animateFloatAsState(
     targetValue = if (isPlaying) 1f else 0.8f,
@@ -371,9 +382,7 @@ private fun PlayerArtwork(
 
 @Composable
 private fun SongInfo(
-  currentSong: Song,
-  isPlaying: Boolean,
-  modifier: Modifier = Modifier
+  currentSong: Song, isPlaying: Boolean, modifier: Modifier = Modifier
 ) {
   Column(modifier = modifier, verticalArrangement = Arrangement.Center) {
     SingleLineText(
@@ -400,8 +409,7 @@ private fun FavoriteAndMore(
   modifier: Modifier = Modifier
 ) {
   Row(
-    modifier = modifier
-      .padding(
+    modifier = modifier.padding(
         start = MaterialTheme.spacing.small,
         end = MaterialTheme.spacing.medium,
       ),
@@ -417,11 +425,8 @@ private fun FavoriteAndMore(
       modifier = Modifier
         .size(35.dp)
         .background(
-          brush = SolidColor(Color.White),
-          shape = CircleShape,
-          alpha = DefaultAlpha
-        ),
-      onClick = onMoreClick
+          brush = SolidColor(Color.White), shape = CircleShape, alpha = DefaultAlpha
+        ), onClick = onMoreClick
     ) {
       Icon(
         painter = painterResource(id = TroonaIcons.MoreVert.resourceId),
@@ -525,9 +530,7 @@ private fun PlayerButtons(
       modifier = Modifier
         .size(70.dp)
         .background(
-          brush = SolidColor(Color.White),
-          shape = CircleShape,
-          alpha = DefaultAlpha
+          brush = SolidColor(Color.White), shape = CircleShape, alpha = DefaultAlpha
         ),
       rippleRadius = 35.dp,
     ) {
@@ -628,16 +631,14 @@ data class PlayerControlActions(
 @Composable
 fun PlayerButtonsPreview() {
   TroonaTheme {
-    PlayerButtons(
-      hasNext = false,
+    PlayerButtons(hasNext = false,
       isPlaying = false,
       onPlay = {},
       onPause = {},
       onSkipPrevious = {},
       onSkipNext = {},
       onShuffle = {},
-      onRepeat = {}
-    )
+      onRepeat = {})
   }
 }
 
@@ -661,7 +662,7 @@ fun FullPlayerScreenPreview() {
         onRepeat = {},
       ),
       showMoreSheet = {},
-      showPlaylistSheet = {},
+      onQueueClick = {},
     )
   }
 }
