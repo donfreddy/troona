@@ -25,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.donfreddy.troona.core.designsystem.theme.TroonaColor.PrimaryColor
@@ -62,8 +64,7 @@ private val darkScheme = darkColors(
  */
 @Composable
 fun TroonaTheme(
-  isDarkTheme: Boolean = isSystemInDarkTheme(),
-  content: @Composable () -> Unit
+  isDarkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit
 ) {
   val view = LocalView.current
   if (!view.isInEditMode) {
@@ -74,8 +75,13 @@ fun TroonaTheme(
     }
   }
 
+  val configuration = LocalConfiguration.current
+  val dimensions = if (configuration.screenWidthDp <= 360) smallDimensions else sw360Dimensions
+  //val typography = if (configuration.screenWidthDp <= 360) smallTypography else sw360Typography
+
+  val dimensionSet = remember { dimensions }
   CompositionLocalProvider(
-    LocalSpacing provides Spacing()
+    LocalSpacing provides Spacing(), LocalDimens provides dimensionSet
   ) {
     MaterialTheme(
       colors = if (isDarkTheme) darkScheme else lightScheme,
@@ -91,3 +97,6 @@ fun TroonaTheme(
  */
 val MaterialTheme.spacing: Spacing
   @Composable @ReadOnlyComposable get() = LocalSpacing.current
+
+val MaterialTheme.dimens: Dimensions
+  @Composable @ReadOnlyComposable get() = LocalDimens.current
