@@ -1,27 +1,25 @@
+<br>
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/donfreddy/troona/raw/develop/docs/images/troona-logotype-white.png">
-    <img alt="Troona logo" src="https://github.com/donfreddy/troona/raw/develop/docs/images/troona-logotype-black.png">
+    <img alt="Troona logo" src="https://github.com/donfreddy/troona/raw/develop/docs/images/troona-logotype-black.png" width="50%">
   </picture>
 </div>
-
-<div align="center">
-
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue)](#license)
-[![Go Report Card](https://goreportcard.com/badge/github.com/donfreddy/troona)](https://goreportcard.com/report/github.com/daytonaio/daytona)
-[![Issues - troona](https://img.shields.io/github/issues/donfreddy/troona)](https://github.com/donfreddy/troona/issues)
-![GitHub Release](https://img.shields.io/github/v/release/donfreddy/troona)
 <br>
-[![Open Bounties](https://img.shields.io/endpoint?url=https%3A%2F%2Fconsole.algora.io%2Fapi%2Fshields%2Fdaytonaio%2Fbounties%3Fstatus%3Dopen)](https://console.algora.io/org/daytonaio/bounties?status=open)
-[![Rewarded Bounties](https://img.shields.io/endpoint?url=https%3A%2F%2Fconsole.algora.io%2Fapi%2Fshields%2Fdaytonaio%2Fbounties%3Fstatus%3Dcompleted)](https://console.algora.io/org/daytonaio/bounties?status=completed)
+
+<div align="center">
+
+[![Issues - troona](https://img.shields.io/github/issues/donfreddy/troona)](https://github.com/donfreddy/troona/issues)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/donfreddy/troona)
+![GitHub Release](https://img.shields.io/github/v/release/donfreddy/troona)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue)](#license)
 
 </div>
 
 <div align="center">
-**Troona** is a music player that lets you play music from your local device. It is built
-entirely with kotlin and Jetpack Composer.
+   <strong>The music player that lets you play music from your local device.</strong>
 </div>
-
+<br>
 <p align="center">
   <a href="https://play.google.com/store/apps/details?id=com.troona">
     <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" width="140">
@@ -30,18 +28,6 @@ entirely with kotlin and Jetpack Composer.
 
 <br>
 :star: Star us on GitHub — it motivates us a lot!
-
----
-
-## Buy me a coffee
-
-Whether you use this project, have learned something from it, or just like it, please consider
-supporting it by buying me a coffee, so I can dedicate more time on open-source projects like
-this :)
-
-<a href="https://www.buymeacoffee.com/donfreddy" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
-
----
 
 ## Table of Contents
 
@@ -57,13 +43,13 @@ this :)
 
 ## Features
 
-- [] Play music from your local device
+- [ ] Play music from your local device
 - [x]  Shuffle and repeat
-- [] Playlists
+- [ ] Playlists
 - [x] Dark mode support
-- [] Search for music
-- [] Play music in the background
-- [] Control music from the lock screen
+- [ ] Search for music
+- [ ] Play music in the background
+- [ ] Control music from the lock screen
 
 ## Screenshots
 
@@ -97,7 +83,7 @@ using:
   injection
 - And more!
 
-__The **troona** app has been fully modularized.__
+>__The **troona** app has been fully modularized.__
 
 ## Contributing
 
