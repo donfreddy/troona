@@ -1,13 +1,9 @@
-<br>
-
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/donfreddy/troona/raw/develop/docs/images/troona-logotype-white.png">
-    <img alt="Troona logo" src="https://github.com/donfreddy/troona/raw/develop/docs/images/troona-logotype-black.png" width="40%">
+    <img alt="Troona logo" src="https://github.com/donfreddy/troona/raw/develop/docs/images/troona-logotype-black.png">
   </picture>
 </div>
-
-<br>
 
 <div align="center">
 
