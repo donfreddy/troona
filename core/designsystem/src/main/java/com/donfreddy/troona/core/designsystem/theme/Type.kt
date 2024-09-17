@@ -61,12 +61,12 @@ internal val TroonaTypography = Typography(
     fontFamily = troonaFontFamily,
     fontWeight = FontWeight.W500,
     fontSize = 16.sp
-  ),
-  subtitle2 = TextStyle(
-    fontFamily = troonaFontFamily,
-    fontWeight = FontWeight.W600,
-    fontSize = 14.sp
   ),*/
+  subtitle2 = TextStyle(
+    fontFamily = Nunito,
+    fontWeight = FontWeight.Bold,
+    fontSize = 14.sp
+  ),
   body1 = TextStyle(
     fontFamily = Nunito,
     fontWeight = FontWeight.W400,
@@ -74,11 +74,12 @@ internal val TroonaTypography = Typography(
     lineHeight = 24.sp,
     letterSpacing = 0.5.sp
   ),
-  /* body2 = TextStyle(
-     fontFamily = troonaFontFamily,
+   body2 = TextStyle(
+     fontFamily = Nunito,
      fontWeight = FontWeight.W400,
      fontSize = 14.sp
    ),
+  /*
    button = TextStyle(
      fontFamily = troonaFontFamily,
      fontWeight = FontWeight.W600,
