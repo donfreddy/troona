@@ -43,7 +43,8 @@ that will guide you through collecting and providing the information we need to 
 If you find an Issue that addresses the problem you're having, please add your own reproduction
 information to the existing issue rather than creating a new one. Adding
 a [reaction](https://github.blog/news-insights/product-news/add-reactions-to-pull-requests-issues-and-comments)
-can also help be indicating to our maintainers that a particular problem is affecting more than just the
+can also help be indicating to our maintainers that a particular problem is affecting more than just
+the
 reporter.
 
 ### Pull Requests
@@ -56,6 +57,7 @@ for the next release. In general, PRs should:
 - Add unit or integration tests for fixed or changed functionality (if a test suite already exists).
 - Address a single concern in the least number of changed lines as possible.
 - Be accompanied by a complete Pull Request template (loaded automatically when a PR is created).
+- Follow the [commit message convention](COMMIT_MESSAGE_CONVENTION.md) used in this repository.
 
 For changes that address core functionality or would require breaking changes (e.g. a major
 release), it's best to open an Issue to discuss your proposal first. This is not required but can
