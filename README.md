@@ -2,7 +2,7 @@
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/donfreddy/troona/raw/develop/docs/images/troona-logotype-white.png">
-    <img alt="Troona logo" src="https://github.com/donfreddy/troona/raw/develop/docs/images/troona-logotype-black.png" width="50%">
+    <img alt="Troona logo" src="https://github.com/donfreddy/troona/raw/develop/docs/images/troona-logotype-black.png" width="60%">
   </picture>
 </div>
 <br>
@@ -20,14 +20,29 @@
    <strong>The music player that lets you play music from your local device.</strong>
 </div>
 <br>
-<p align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.troona">
-    <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" width="140">
+<p align="center" >
+  <a href="https://play.google.com/store/apps/details?id=com.troona" target="_blank">
+    <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" height="50">
   </a>
+  <br/><br/>
+  <strong>OR</strong>
+  <br/><br/>
+  <a href="https://t.me/troona_official" target="_blank">
+    <img alt="Join Telegram Channel" src="https://img.shields.io/badge/Telegram-2CA5E0?logo=telegram&logoColor=white" height="50">
+  </a>
+  <br/>
 </p>
 
-<br>
+---
+
 :star: Star us on GitHub — it motivates us a lot!
+
+[![GitHub stars](https://img.shields.io/github/stars/donfreddy/troona.svg?style=social&label=Star)](https://github.com//donfreddy/troona) 
+&nbsp;
+![GitHub forks](https://img.shields.io/github/forks/donfreddy/troona.svg?style=social&label=Forks) 
+&nbsp;
+![GitHub followers](https://img.shields.io/github/followers/donfreddy.svg?style=social&label=Follow)
+
 
 ## Table of Contents
 
