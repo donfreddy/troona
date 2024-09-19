@@ -19,14 +19,21 @@ package com.donfreddy.troona.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
+import com.donfreddy.troona.core.domain.usecase.settings.sort.SetSongSortByUseCase
 import com.donfreddy.troona.core.domain.usecase.songs.GetSongsUseCase
 import com.donfreddy.troona.core.media.AudioServiceConnection
 import com.donfreddy.troona.core.model.data.Song
+import com.donfreddy.troona.core.model.enums.SongSortBy
+import com.donfreddy.troona.core.model.enums.SortOrder
+import com.donfreddy.troona.core.ui.controllers.SnackBarAction
+import com.donfreddy.troona.core.ui.controllers.SnackBarController
+import com.donfreddy.troona.core.ui.controllers.SnackBarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @UnstableApi
@@ -34,6 +41,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
   private val audioServiceConnection: AudioServiceConnection,
   getSongsUseCase: GetSongsUseCase,
+  //private val setSortOrderUseCase: SetSortOrderUseCase,
+  private val setSongSortByUseCase: SetSongSortByUseCase,
 ) : ViewModel() {
   val audioState = audioServiceConnection.audioState
 
@@ -47,16 +56,39 @@ class HomeViewModel @Inject constructor(
     scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = HomeUiState.Loading
   )
 
-  fun play(songs: List<Song>, startIndex: Int = 0){
+  fun play(songs: List<Song>, startIndex: Int = 0) {
+    showSnackBar("Playing ${songs[startIndex].title} from ${songs[startIndex].albumName}")
     audioServiceConnection.play(songs, startIndex)
   }
+
+  private fun showSnackBar(
+    message: String,
+    actionText: String? = null,
+    action: (suspend () -> Unit)? = null
+  ) {
+    viewModelScope.launch {
+      val snackBarAction = action?.let {
+        SnackBarAction(name = actionText ?: "Action", action = it)
+      }
+      SnackBarController.sendEvent(
+        event = SnackBarEvent(
+          message = message,
+          action = snackBarAction
+        )
+      )
+    }
+  }
+  //fun onChangeSortOrder(sortOrder: SortOrder) = viewModelScope.launch { setSortOrderUseCase(sortOrder) }
+
+  fun onChangeSongSortBy(songSortBy: SongSortBy) =
+    viewModelScope.launch { setSongSortByUseCase(songSortBy) }
 }
 
 sealed interface HomeUiState {
   data object Loading : HomeUiState
 
   data class Success(
-    val songs: List<Song>, val artists: List<Song>
+    val songs: List<Song>, val artists: List<Song>,
   ) : HomeUiState
 
   data object Empty : HomeUiState

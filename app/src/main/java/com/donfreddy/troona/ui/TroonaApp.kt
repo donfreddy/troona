@@ -34,10 +34,16 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.SwipeableState
 import androidx.compose.material.Text
 import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -58,12 +64,15 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.donfreddy.troona.core.designsystem.component.TroonaTopBar
 import com.donfreddy.troona.core.permission.PermissionContent
+import com.donfreddy.troona.core.ui.controllers.SnackBarController
+import com.donfreddy.troona.core.ui.events.ObserveAsEvents
 import com.donfreddy.troona.feature.player.FullPlayer
 import com.donfreddy.troona.feature.player.mini.MiniPlayer
 import com.donfreddy.troona.navigation.TopLevelDestination
 import com.donfreddy.troona.navigation.TroonaNavHost
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
@@ -76,11 +85,39 @@ fun TroonaApp(
 ) {
   when (appState.permissionState.status) {
     PermissionStatus.Granted -> {
-      TroonaAppContent(
-        appState = appState,
-        onSetSystemBarsLightIcons = onSetSystemBarsLightIcons,
-        onResetSystemBarsIcons = onResetSystemBarsIcons
-      )
+      val snackBarHostState = remember {
+        SnackbarHostState()
+      }
+
+      ObserveAsEvents(
+        flow = SnackBarController.events,
+        key1 = snackBarHostState,
+      ) { event ->
+        appState.coroutineScope.launch {
+          snackBarHostState.currentSnackbarData?.dismiss()
+
+          val result = snackBarHostState.showSnackbar(
+            message = event.message,
+            actionLabel = event.action?.name,
+            duration = SnackbarDuration.Long
+          )
+
+          if (result == SnackbarResult.ActionPerformed) {
+            event.action?.action?.invoke()
+          }
+        }
+      }
+      Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+      ) { innerPadding ->
+        TroonaAppContent(
+          appState = appState,
+          onSetSystemBarsLightIcons = onSetSystemBarsLightIcons,
+          onResetSystemBarsIcons = onResetSystemBarsIcons,
+          modifier = Modifier.padding(innerPadding)
+        )
+      }
+
     }
 
     is PermissionStatus.Denied -> {
@@ -100,12 +137,7 @@ fun TroonaAppContent(
   onSetSystemBarsLightIcons: () -> Unit,
   onResetSystemBarsIcons: () -> Unit,
   modifier: Modifier = Modifier,
-  context: Context = LocalContext.current
 ) {
-  // Initialize motion scene content from json5 file
-  //val motionSceneContent = remember {
-  //  context.resources.openRawResource(R.raw.motion_screne).readBytes().decodeToString()
-  //}
 
   val statusBarsHeight: Dp
   val navigationBarsHeight: Dp
