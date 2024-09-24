@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.domain.usecase.settings
+package com.donfreddy.troona.core.domain.usecase.settings.playing_queue
 
 import com.donfreddy.troona.core.domain.repository.SettingsRepository
 import com.donfreddy.troona.core.domain.usecase.UseCase
-import com.donfreddy.troona.core.model.data.UserData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
- * A use case which sets the playing queue position.
+ * A use case which return the playing queue position.
  */
-class SetPlayingQueuePositionUseCase @Inject constructor(
+class GetPlayingQueuePositionUseCase @Inject constructor(
   private val repository: SettingsRepository
-) : UseCase<Unit, Long> {
-  suspend operator fun invoke(queuePosition: Long) =
-    repository.setPlayingQueuePosition(queuePosition)
+) : UseCase<Flow<Long>, UseCase.NoParams> {
+  operator fun invoke() = repository.userData.map { it.playingQueuePosition }
 }

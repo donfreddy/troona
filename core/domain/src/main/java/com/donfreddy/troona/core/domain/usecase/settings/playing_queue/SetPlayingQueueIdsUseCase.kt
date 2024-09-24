@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.domain.usecase.settings
+package com.donfreddy.troona.core.domain.usecase.settings.playing_queue
 
 import com.donfreddy.troona.core.domain.repository.SettingsRepository
 import com.donfreddy.troona.core.domain.usecase.UseCase
-import com.donfreddy.troona.core.model.data.UserData
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**

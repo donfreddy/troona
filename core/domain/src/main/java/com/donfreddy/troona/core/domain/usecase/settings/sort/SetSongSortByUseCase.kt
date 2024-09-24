@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.domain.usecase.settings
+package com.donfreddy.troona.core.domain.usecase.settings.sort
 
 import com.donfreddy.troona.core.domain.repository.SettingsRepository
 import com.donfreddy.troona.core.domain.usecase.UseCase
-import com.donfreddy.troona.core.model.data.UserData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import com.donfreddy.troona.core.model.enums.SongSortBy
 import javax.inject.Inject
 
 /**
- * A use case which return the playing queue index.
+ * A use case which sorts the songs by.
  */
-class GetPlayingQueueIndexUseCase @Inject constructor(
+class SetSongSortByUseCase @Inject constructor(
   private val repository: SettingsRepository
-) : UseCase<Flow<Int>, UseCase.NoParams> {
-  operator fun invoke() = repository.userData.map { it.playingQueueIndex }
+) : UseCase<Unit, SongSortBy> {
+  suspend operator fun invoke(songSortBy: SongSortBy) =
+    repository.setSongSortBy(songSortBy)
 }

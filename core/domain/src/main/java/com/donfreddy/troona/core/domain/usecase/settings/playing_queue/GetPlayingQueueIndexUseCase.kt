@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.domain.usecase.settings
+package com.donfreddy.troona.core.domain.usecase.settings.playing_queue
 
 import com.donfreddy.troona.core.domain.repository.SettingsRepository
 import com.donfreddy.troona.core.domain.usecase.UseCase
-import com.donfreddy.troona.core.model.data.UserData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
- * A use case which returns the playing queue ids.
+ * A use case which return the playing queue index.
  */
-class GetPlayingQueueIdsUseCase @Inject constructor(
+class GetPlayingQueueIndexUseCase @Inject constructor(
   private val repository: SettingsRepository
-) : UseCase<Flow<List<String>>, UseCase.NoParams> {
-  operator fun invoke() = repository.userData.map { it.playingQueueIds }
+) : UseCase<Flow<Int>, UseCase.NoParams> {
+  operator fun invoke() = repository.userData.map { it.playingQueueIndex }
 }

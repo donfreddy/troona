@@ -19,6 +19,7 @@ package com.donfreddy.troona.core.data.repository
 import com.donfreddy.troona.core.datastore.TroonaPrefsDataSource
 import com.donfreddy.troona.core.domain.repository.SettingsRepository
 import com.donfreddy.troona.core.model.data.UserData
+import com.donfreddy.troona.core.model.enums.SongSortBy
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -39,6 +40,10 @@ class SettingsRepositoryImpl @Inject constructor(
 
   override suspend fun setPlayingQueuePosition(queuePosition: Long) {
     troonaPrefsDataSource.setPlayingQueuePosition(queuePosition)
+  }
+
+  override suspend fun setSongSortBy(songSortBy: SongSortBy) {
+    troonaPrefsDataSource.setSongSortBy(songSortBy)
   }
 
 }

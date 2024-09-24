@@ -31,6 +31,8 @@ entirely with kotlin and Jetpack Composer.
 <br>
 :star: Star us on GitHub — it motivates us a lot!
 
+## Download
+
 ---
 
 ## Buy me a coffee
@@ -52,6 +54,7 @@ this :)
     - [Setup](#setup)
 - [Architecture](#architecture)
 - [Contributing](#contributing)
+- [Buy me a coffee](#buy-me-a-coffee)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
@@ -64,6 +67,9 @@ this :)
 - [] Search for music
 - [] Play music in the background
 - [] Control music from the lock screen
+
+and much more!
+You can check it by yourself :smiley:
 
 ## Screenshots
 

@@ -34,6 +34,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.media3.common.util.UnstableApi
 import com.donfreddy.troona.core.designsystem.theme.TroonaTheme
 import com.donfreddy.troona.core.model.enums.DarkThemeConfig
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
   private val viewModel: MainActivityViewModel by viewModels()
 
 
+  @UnstableApi
   override fun onCreate(savedInstanceState: Bundle?) {
     handleIntent(intent)
 

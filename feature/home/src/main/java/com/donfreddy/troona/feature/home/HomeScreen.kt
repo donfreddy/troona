@@ -31,7 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
-import com.donfreddy.troona.core.ui.MediaPager
+import com.donfreddy.troona.core.model.enums.AlbumSortBy
+import com.donfreddy.troona.core.model.enums.ArtistSortBy
+import com.donfreddy.troona.core.model.enums.SongSortBy
+import com.donfreddy.troona.core.model.enums.SortOrder
+import com.donfreddy.troona.core.ui.component.MediaPager
+import com.donfreddy.troona.core.ui.component.SortParams
 import timber.log.Timber
 
 @OptIn(UnstableApi::class)
@@ -57,6 +62,16 @@ fun HomeRoute(
     is HomeUiState.Success -> {
       HomeScreen(
         uiState = uiState,
+        sortParams = SortParams(
+          sortOrder = SortOrder.Ascending,
+          songSortBy = SongSortBy.Title,
+          artistSortBy = ArtistSortBy.NumberOfSongs,
+          albumSortBy = AlbumSortBy.Artist,
+          onChangeSortOrder = {},
+          onChangeSongSortBy = viewModel::onChangeSongSortBy,
+          onChangeArtistSortBy = {},
+          onChangeAlbumSortBy = {},
+        ),
         onSongClick = { startIndex ->
           Timber.tag("HomeRoute").d("onSongClick: %s", startIndex)
           (viewModel::play)(uiState.songs, startIndex)
@@ -75,12 +90,14 @@ fun HomeRoute(
 @Composable
 private fun HomeScreen(
   uiState: HomeUiState.Success,
+  sortParams: SortParams,
   onSongClick: (Int) -> Unit,
   currentPlayingSong: String,
   modifier: Modifier = Modifier,
 ) {
   MediaPager(
     songs = uiState.songs,
+    sortParams = sortParams,
     currentPlayingSongId = currentPlayingSong,
     onSongClick = onSongClick,
     modifier = modifier,
@@ -94,6 +111,16 @@ fun HomeScreenPreview() {
     uiState = HomeUiState.Success(
       songs = emptyList(),
       artists = emptyList(),
+    ),
+    sortParams = SortParams(
+      sortOrder = SortOrder.Ascending,
+      songSortBy = SongSortBy.Title,
+      artistSortBy = ArtistSortBy.NumberOfSongs,
+      albumSortBy = AlbumSortBy.Artist,
+      onChangeSortOrder = {},
+      onChangeSongSortBy = {},
+      onChangeArtistSortBy = {},
+      onChangeAlbumSortBy = {},
     ),
     currentPlayingSong = "",
     onSongClick = {},

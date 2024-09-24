@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.domain.repository
+package com.donfreddy.troona.core.domain.usecase.settings.playing_queue
 
-import com.donfreddy.troona.core.model.data.UserData
-import com.donfreddy.troona.core.model.enums.SongSortBy
+import com.donfreddy.troona.core.domain.repository.SettingsRepository
+import com.donfreddy.troona.core.domain.usecase.UseCase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-interface SettingsRepository {
-
-  /**
-   * Stream of [UserData]
-   */
-  val userData: Flow<UserData>
-
-  suspend fun setPlayingQueueIds(queueIds: List<String>)
-  suspend fun setPlayingQueueIndex(queueIndex: Int)
-  suspend fun setPlayingQueuePosition(queuePosition: Long)
-  suspend fun setSongSortBy(songSortBy: SongSortBy)
+/**
+ * A use case which returns the playing queue ids.
+ */
+class GetPlayingQueueIdsUseCase @Inject constructor(
+  private val repository: SettingsRepository
+) : UseCase<Flow<List<String>>, UseCase.NoParams> {
+  operator fun invoke() = repository.userData.map { it.playingQueueIds }
 }
