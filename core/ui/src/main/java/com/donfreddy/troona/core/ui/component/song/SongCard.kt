@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.ui.song
+package com.donfreddy.troona.core.ui.component.song
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

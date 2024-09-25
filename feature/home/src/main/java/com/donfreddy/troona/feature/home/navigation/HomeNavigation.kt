@@ -23,16 +23,19 @@ import androidx.navigation.compose.composable
 import com.donfreddy.troona.feature.home.HomeRoute
 
 
+const val HOME_GRAPH_ROUTE = "home_graph"
 const val HOME_ROUTE = "home_route"
 
 fun NavController.navigateToHome(navOptions: NavOptions) = navigate(HOME_ROUTE, navOptions)
 
 fun NavGraphBuilder.homeScreen(
-  onNavigateToPlayer: () -> Unit,
-  //onNavigateToArtist: (artistId: Long) -> Unit,
-  //onNavigateToAlbum: (albumId: Long) -> Unit,
+  onNavigateToArtist: (artistId: Long) -> Unit,
+  onNavigateToAlbum: (albumId: Long) -> Unit,
 ) {
   composable(route = HOME_ROUTE) {
-    HomeRoute()
+    HomeRoute(
+      onNavigateToArtist = onNavigateToArtist,
+      onNavigateToAlbum = onNavigateToAlbum,
+    )
   }
 }

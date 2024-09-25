@@ -43,6 +43,8 @@ import timber.log.Timber
 @Composable
 fun HomeRoute(
   modifier: Modifier = Modifier,
+  onNavigateToArtist: (Long) -> Unit,
+  onNavigateToAlbum: (Long) -> Unit,
   viewModel: HomeViewModel = hiltViewModel(),
 ) {
   val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -76,6 +78,8 @@ fun HomeRoute(
           Timber.tag("HomeRoute").d("onSongClick: %s", startIndex)
           (viewModel::play)(uiState.songs, startIndex)
         },
+        onArtistClick = onNavigateToArtist,
+        onAlbumClick = onNavigateToAlbum,
         currentPlayingSong = audioState.currentMediaId,
         modifier = modifier,
       )
@@ -92,14 +96,20 @@ private fun HomeScreen(
   uiState: HomeUiState.Success,
   sortParams: SortParams,
   onSongClick: (Int) -> Unit,
+  onArtistClick: (Long) -> Unit,
+  onAlbumClick: (Long) -> Unit,
   currentPlayingSong: String,
   modifier: Modifier = Modifier,
 ) {
   MediaPager(
     songs = uiState.songs,
+    artists = uiState.artists,
+    albums = uiState.albums,
     sortParams = sortParams,
     currentPlayingSongId = currentPlayingSong,
     onSongClick = onSongClick,
+    onArtistClick = onArtistClick,
+    onAlbumClick = onAlbumClick,
     modifier = modifier,
   )
 }
@@ -111,6 +121,8 @@ fun HomeScreenPreview() {
     uiState = HomeUiState.Success(
       songs = emptyList(),
       artists = emptyList(),
+      albums = emptyList(),
+      songSortBy = SongSortBy.Title
     ),
     sortParams = SortParams(
       sortOrder = SortOrder.Ascending,
@@ -124,5 +136,7 @@ fun HomeScreenPreview() {
     ),
     currentPlayingSong = "",
     onSongClick = {},
+    onArtistClick = {},
+    onAlbumClick = {},
   )
 }

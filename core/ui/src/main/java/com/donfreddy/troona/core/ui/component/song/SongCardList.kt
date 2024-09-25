@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.ui.song
+package com.donfreddy.troona.core.ui.component.song
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.model.data.Song
+import com.donfreddy.troona.core.ui.R
+import com.donfreddy.troona.core.ui.component.EmptyContent
 
 /**
  * [SongCardItems] use for displaying a [List] of [SongCard] backed by a list of
@@ -71,7 +73,7 @@ fun SongCardItems(
       }
     }
   } else {
-    EmptyContent()
+    EmptyContent(textResource = R.string.core_ui_no_songs)
   }
 }
 
@@ -105,25 +107,8 @@ fun LazyListScope.songCardItems(
     }
   } else {
     item {
-      EmptyContent()
+      EmptyContent(textResource = R.string.core_ui_no_songs)
     }
   }
 }
 
-@Composable
-internal fun EmptyContent() {
-  Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-    Column(
-      horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
-    ) {
-      Text(text = "No songs found", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-      Spacer(modifier = Modifier.height(2.dp))
-      Text(
-        text = "Please add some songs to your sd card or internal storage",
-        fontSize = 12.sp,
-        color = Color.Gray,
-        fontStyle = FontStyle.Italic
-      )
-    }
-  }
-}

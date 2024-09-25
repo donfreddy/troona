@@ -19,7 +19,6 @@ package com.donfreddy.troona.core.ui.component
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.MaterialTheme
@@ -36,13 +35,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.donfreddy.troona.core.designsystem.component.TroonaScrollableTabRow
 import com.donfreddy.troona.core.designsystem.component.TroonaTab
+import com.donfreddy.troona.core.model.data.Album
+import com.donfreddy.troona.core.model.data.Artist
 import com.donfreddy.troona.core.model.data.Song
-import com.donfreddy.troona.core.model.enums.AlbumSortBy
-import com.donfreddy.troona.core.model.enums.ArtistSortBy
-import com.donfreddy.troona.core.model.enums.SongSortBy
-import com.donfreddy.troona.core.model.enums.SortOrder
 import com.donfreddy.troona.core.ui.common.MediaTab
-import com.donfreddy.troona.core.ui.song.songCardItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -50,9 +46,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun MediaPager(
   songs: List<Song>,
+  artists: List<Artist>,
+  albums: List<Album>,
   sortParams: SortParams,
   currentPlayingSongId: String,
   onSongClick: (Int) -> Unit,
+  onArtistClick: (Long) -> Unit,
+  onAlbumClick: (Long) -> Unit,
   modifier: Modifier = Modifier,
   coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
@@ -86,37 +86,16 @@ fun MediaPager(
       when (tabs[index]) {
         // MediaTab.SUGGESTED -> {SuggestedScreen()}
 
-        MediaTab.SONGS, MediaTab.ARTISTS, MediaTab.ALBUMS -> {
-          val dropdownItems = listOf(
-            DropDownItem("Ascending", false),
-            DropDownItem("Descending", false),
-            DropDownItem("Artist", false),
-            DropDownItem("Album", false),
-            DropDownItem("Year", false),
-            DropDownItem("Date Added", true),
-            DropDownItem("Date Modified", false),
-            DropDownItem("Composer", false),
-          )
-          LazyColumn(modifier = modifier.fillMaxSize()) {
-            item {
-              MediaHeader(
-                sortParams = SortParams(
-                  sortOrder = SortOrder.Ascending,
-                  songSortBy = SongSortBy.Title,
-                  artistSortBy = ArtistSortBy.NumberOfSongs,
-                  albumSortBy = AlbumSortBy.Artist,
-                  onChangeSortOrder = {},
-                  onChangeSongSortBy = {},
-                  onChangeArtistSortBy = {},
-                  onChangeAlbumSortBy = {},
-                ),
-                dropdownItems = dropdownItems,
-              )
-            }
-            songCardItems(
-              songs = songs, currentPlayingSongId = currentPlayingSongId, onClick = onSongClick
-            )
-          }
+        MediaTab.SONGS -> {
+          Songs(songs = songs, currentPlayingSongId = currentPlayingSongId, onClick = onSongClick)
+        }
+
+        MediaTab.ARTISTS -> {
+          Artists(artists = artists, onClick = onArtistClick)
+        }
+
+        MediaTab.ALBUMS -> {
+          Albums(albums = albums, onClick = onAlbumClick)
         }
       }
     }

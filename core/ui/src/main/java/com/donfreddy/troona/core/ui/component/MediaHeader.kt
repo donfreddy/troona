@@ -63,6 +63,7 @@ data class DropDownItem(
 @Composable
 internal fun MediaHeader(
   sortParams: SortParams,
+  itemCountString: String,
   modifier: Modifier = Modifier,
   dropdownItems: List<DropDownItem>,
 ) {
@@ -79,8 +80,10 @@ internal fun MediaHeader(
       verticalAlignment = Alignment.CenterVertically
     ) {
       Text(
-        text = "360 songs",
-        style = MaterialTheme.typography.subtitle2,
+        text = itemCountString,
+        style = MaterialTheme.typography.subtitle1.copy(
+          fontWeight = FontWeight.Bold,
+        ),
       )
 
       Box {
@@ -173,5 +176,6 @@ fun MediaHeaderPreview() {
       onChangeArtistSortBy = {},
       onChangeAlbumSortBy = {}
     ),
+    itemCountString = "360 songs"
   )
 }

@@ -21,15 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.donfreddy.troona.feature.favorites.navigation.favoritesScreen
+import com.donfreddy.troona.feature.home.navigation.HOME_GRAPH_ROUTE
 import com.donfreddy.troona.feature.home.navigation.HOME_ROUTE
 import com.donfreddy.troona.feature.home.navigation.homeScreen
 import com.donfreddy.troona.feature.playlists.navigation.playlistsScreen
 import com.donfreddy.troona.feature.settings.navigation.settingsScreen
+import timber.log.Timber
 
 @Composable
 fun TroonaNavHost(
   navController: NavHostController,
-  onNavigateToPlayer: () -> Unit,
+  //onNavigateToArtist: (prefix: String, artistId: Long) -> Unit,
 /*  onSetSystemBarsLightIcons: () -> Unit,
   onResetSystemBarsIcons: () -> Unit,
   appState: TroonaAppState,*/
@@ -42,27 +44,12 @@ fun TroonaNavHost(
     modifier = modifier,
   ) {
     homeScreen(
-      onNavigateToPlayer = onNavigateToPlayer,
-      //onNavigateToArtist = navController::navigateToArtist,
-      //onNavigateToAlbum = navController::navigateToAlbum,
+      //onNavigateToArtist = { artistId -> onNavigateToArtist(HOME_GRAPH_ROUTE, artistId) },
+      onNavigateToArtist = { Timber.d("onNavigateToArtist") },
+      onNavigateToAlbum = { Timber.d("onNavigateToAlbum") },
     )
     favoritesScreen()
     playlistsScreen()
     settingsScreen()
-
-    /*composable(
-      route = "full_player",
-      deepLinks = listOf(navDeepLink { uriPattern = "troona://full_player" })
-    ) {
-      FullPlayer(
-        modifier = Modifier.playerSwipe(
-          swipeableState = appState.swipeableState,
-          anchors = appState.anchors,
-        ),
-        isPlayerOpened = appState.isPlayerOpened,
-        onSetSystemBarsLightIcons = onSetSystemBarsLightIcons,
-        onResetSystemBarsIcons = onResetSystemBarsIcons,
-      )
-    }*/
   }
 }

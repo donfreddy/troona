@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  id("kotlin-parcelize")
-}
+package com.donfreddy.troona.core.domain.usecase.artists
 
-android {
-  namespace = "com.donfreddy.troona.core.model"
-}
+import com.donfreddy.troona.core.domain.repository.SongRepository
+import com.donfreddy.troona.core.domain.usecase.UseCase
+import com.donfreddy.troona.core.model.data.Artist
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-dependencies {
-  implementation(libs.kotlinx.datetime)
-  //implementation(projects.app)
+class GetArtistsUseCase @Inject constructor(
+  private val repository: SongRepository,
+) : UseCase<List<Artist>, UseCase.NoParams> {
+
+  operator fun invoke(): Flow<List<Artist>> = repository.artists
 }

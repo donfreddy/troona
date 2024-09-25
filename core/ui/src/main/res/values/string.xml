@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2024 Don Freddy
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +14,39 @@
   ~ limitations under the License.
   -->
 <resources>
-  <!--<string name="app_name">Troona</string>
-  <string name="home_title">Home</string>
-  <string name="settings_title">Settings</string>
-  <string name="playlists_title">Playlists</string>
-  <string name="favorite_title">Favorites</string>-->
-  <string name="core_ui_suggested_title">Suggested</string>
-  <string name="core_ui_songs_title">Songs</string>
-  <string name="core_ui_artists_title">Artists</string>
-  <string name="core_ui_albums_title">Albums</string>
-  <string name="core_ui_genres_title">Genres</string>
-  <string name="core_ui_folders_title">Folders</string>
+    <!--<string name="app_name">Troona</string>
+    <string name="home_title">Home</string>
+    <string name="settings_title">Settings</string>
+    <string name="playlists_title">Playlists</string>
+    <string name="favorite_title">Favorites</string>-->
+    <string name="core_ui_suggested_title">Suggested</string>
+    <string name="core_ui_songs_title">Songs</string>
+    <string name="core_ui_artists_title">Artists</string>
+    <string name="core_ui_albums_title">Albums</string>
+    <string name="core_ui_genres_title">Genres</string>
+    <string name="core_ui_folders_title">Folders</string>
+
+    <!-- No items -->
+    <string name="core_ui_no_songs">No songs.</string>
+    <string name="core_ui_no_artists">No artists.</string>
+    <string name="core_ui_no_albums">No albums.</string>
+    <string name="core_ui_no_folders">No folders.</string>
+
+    <!-- Plurals -->
+    <plurals name="core_ui_number_of_songs">
+        <item quantity="one">%d song</item>
+        <item quantity="other">%d songs</item>
+    </plurals>
+    <plurals name="core_ui_number_of_artists">
+        <item quantity="one">%d artist</item>
+        <item quantity="other">%d artists</item>
+    </plurals>
+    <plurals name="core_ui_number_of_albums">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <plurals name="core_ui_number_of_folders">
+        <item quantity="one">%d folder</item>
+        <item quantity="other">%d folders</item>
+    </plurals>
 </resources>

@@ -26,6 +26,7 @@ import com.donfreddy.troona.core.mediastore.extensions.getLong
 import com.donfreddy.troona.core.mediastore.extensions.getString
 import com.donfreddy.troona.core.mediastore.extensions.observe
 import com.donfreddy.troona.core.mediastore.util.MediaStoreConfig
+import com.donfreddy.troona.core.model.data.Artist
 import com.donfreddy.troona.core.model.data.Song
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -72,8 +73,8 @@ class MediaStoreDataSource @Inject constructor(private val contentResolver: Cont
             data = cursor.getString(MediaStore.Audio.Media.DATA),
             mineType = cursor.getString(MediaStore.Audio.Media.MIME_TYPE),
             composer = cursor.getString(MediaStore.Audio.Media.COMPOSER),
-            dateAdded = cursor.getLong(MediaStore.Audio.Media.DATE_ADDED).asLocalDateTime(),
-            dateModified = cursor.getLong(MediaStore.Audio.Media.DATE_MODIFIED).asLocalDateTime(),
+            dateAdded = cursor.getLong(MediaStore.Audio.Media.DATE_ADDED),
+            dateModified = cursor.getLong(MediaStore.Audio.Media.DATE_MODIFIED),
           )
         }
       } ?: emptyList()

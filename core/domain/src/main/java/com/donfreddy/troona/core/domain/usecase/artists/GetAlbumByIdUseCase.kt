@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.library)
-  id("kotlin-parcelize")
-}
+package com.donfreddy.troona.core.domain.usecase.artists
 
-android {
-  namespace = "com.donfreddy.troona.core.model"
-}
+import com.donfreddy.troona.core.domain.repository.SongRepository
+import com.donfreddy.troona.core.domain.usecase.UseCase
+import com.donfreddy.troona.core.model.data.Album
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-dependencies {
-  implementation(libs.kotlinx.datetime)
-  //implementation(projects.app)
+class GetAlbumByIdUseCase @Inject constructor(private val repository: SongRepository) :
+  UseCase<Album, Long> {
+  operator fun invoke(albumId: Long) =
+    repository.albums.map { list -> list.first { it.id == albumId } }
 }

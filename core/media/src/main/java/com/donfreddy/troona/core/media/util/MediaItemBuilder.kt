@@ -47,7 +47,7 @@ internal fun buildPlayableMediaItem(song: Song) = MediaItem.Builder()
           ALBUM_ID to song.albumId,
           DURATION to song.duration,
           SIZE to song.size,
-          YEAR to song.year,
+          //YEAR to song.year,
           MINE_TYPE to song.mineType,
         )
       )

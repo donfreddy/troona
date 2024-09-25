@@ -53,7 +53,7 @@ import com.donfreddy.troona.core.designsystem.theme.TroonaColor
 import com.donfreddy.troona.core.designsystem.theme.TroonaTheme
 import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.model.data.Song
-import com.donfreddy.troona.core.ui.song.asDuration
+import com.donfreddy.troona.core.ui.component.song.asDuration
 import com.donfreddy.troona.feature.player.PlayerViewModel
 import com.donfreddy.troona.feature.player.util.convertToProgress
 

@@ -19,9 +19,14 @@ package com.donfreddy.troona.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
+import com.donfreddy.troona.core.domain.usecase.artists.GetAlbumsUseCase
+import com.donfreddy.troona.core.domain.usecase.artists.GetArtistsUseCase
+import com.donfreddy.troona.core.domain.usecase.settings.GetUserDataUseCase
 import com.donfreddy.troona.core.domain.usecase.settings.sort.SetSongSortByUseCase
 import com.donfreddy.troona.core.domain.usecase.songs.GetSongsUseCase
 import com.donfreddy.troona.core.media.AudioServiceConnection
+import com.donfreddy.troona.core.model.data.Album
+import com.donfreddy.troona.core.model.data.Artist
 import com.donfreddy.troona.core.model.data.Song
 import com.donfreddy.troona.core.model.enums.SongSortBy
 import com.donfreddy.troona.core.model.enums.SortOrder
@@ -41,6 +46,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
   private val audioServiceConnection: AudioServiceConnection,
   getSongsUseCase: GetSongsUseCase,
+  getArtistsUseCase: GetArtistsUseCase,
+  getAlbumsUseCase: GetAlbumsUseCase,
+  getUserDataUseCase: GetUserDataUseCase,
   //private val setSortOrderUseCase: SetSortOrderUseCase,
   private val setSongSortByUseCase: SetSongSortByUseCase,
 ) : ViewModel() {
@@ -50,11 +58,22 @@ class HomeViewModel @Inject constructor(
     scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = emptyList()
   )
 
-  val uiState: StateFlow<HomeUiState> = combine(songs, getSongsUseCase()) { songs, artists ->
-    HomeUiState.Success(songs = songs, artists = artists)
-  }.stateIn(
-    scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = HomeUiState.Loading
-  )
+  val uiState: StateFlow<HomeUiState> =
+    combine(
+      songs,
+      getArtistsUseCase(),
+      getAlbumsUseCase(),
+      getUserDataUseCase()
+    ) { songs, artists, albums, userData ->
+      HomeUiState.Success(
+        songs = songs,
+        artists = artists,
+        albums = albums,
+        songSortBy = userData.songSortBy
+      )
+    }.stateIn(
+      scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = HomeUiState.Loading
+    )
 
   fun play(songs: List<Song>, startIndex: Int = 0) {
     showSnackBar("Playing ${songs[startIndex].title} from ${songs[startIndex].albumName}")
@@ -88,7 +107,10 @@ sealed interface HomeUiState {
   data object Loading : HomeUiState
 
   data class Success(
-    val songs: List<Song>, val artists: List<Song>,
+    val songs: List<Song>,
+    val artists: List<Artist>,
+    val albums: List<Album>,
+    val songSortBy: SongSortBy
   ) : HomeUiState
 
   data object Empty : HomeUiState

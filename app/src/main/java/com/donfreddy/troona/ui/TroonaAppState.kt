@@ -140,6 +140,9 @@ class TroonaAppState(
 
   fun openPlayer() = coroutineScope.launch { swipeableState.animateTo(1) }
   fun closePlayer() = coroutineScope.launch { swipeableState.animateTo(0) }
+
+  //fun navigateToArtist(prefix: String, artistId: Long) =
+
   fun onBackClick() = navController.popBackStack()
 }
 

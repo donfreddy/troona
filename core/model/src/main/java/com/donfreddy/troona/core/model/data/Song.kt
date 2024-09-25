@@ -17,16 +17,18 @@
 package com.donfreddy.troona.core.model.data
 
 import android.net.Uri
-import kotlinx.datetime.LocalDateTime
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-data class Song(
+@Parcelize
+open class Song(
   val id: Long,
   val title: String,
   val displayName: String,
   val trackNumber: Int,
   val duration: Long,
   val size: Int,
-  val year: Int?,
+  val year: Int,
   val albumId: Long,
   val albumName: String,
   val albumArt: Uri,
@@ -40,11 +42,70 @@ data class Song(
   //val folder: String,
   val mineType: String?,
   val composer: String?,
-  val dateAdded: LocalDateTime?,
-  val dateModified: LocalDateTime?,
-) {
+  val dateAdded: Long,
+  val dateModified: Long,
+) : Parcelable {
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as Song
+
+    return listOf(
+      id to other.id,
+      title to other.title,
+      displayName to other.displayName,
+      trackNumber to other.trackNumber,
+      duration to other.duration,
+      size to other.size,
+      year to other.year,
+      albumId to other.albumId,
+      albumName to other.albumName,
+      albumArt to other.albumArt,
+      albumArtist to other.albumArtist,
+      artistId to other.artistId,
+      artistName to other.artistName,
+      genreId to other.genreId,
+      genreName to other.genreName,
+      data to other.data,
+      uri to other.uri,
+      mineType to other.mineType,
+      composer to other.composer,
+      dateAdded to other.dateAdded,
+      dateModified to other.dateModified
+    ).all { it.first == it.second }
+  }
+
+  override fun hashCode(): Int {
+    var result = id.hashCode()
+    result = 31 * result + title.hashCode()
+    result = 31 * result + displayName.hashCode()
+    result = 31 * result + trackNumber
+    result = 31 * result + duration.hashCode()
+    result = 31 * result + size
+    result = 31 * result + year
+    result = 31 * result + albumId.hashCode()
+    result = 31 * result + albumName.hashCode()
+    result = 31 * result + albumArt.hashCode()
+    result = 31 * result + (albumArtist?.hashCode() ?: 0)
+    result = 31 * result + artistId.hashCode()
+    result = 31 * result + artistName.hashCode()
+    result = 31 * result + (genreId?.hashCode() ?: 0)
+    result = 31 * result + (genreName?.hashCode() ?: 0)
+    result = 31 * result + (data?.hashCode() ?: 0)
+    result = 31 * result + uri.hashCode()
+    result = 31 * result + (mineType?.hashCode() ?: 0)
+    result = 31 * result + (composer?.hashCode() ?: 0)
+    result = 31 * result + dateAdded.hashCode()
+    result = 31 * result + dateModified.hashCode()
+    return result
+  }
+
+
   companion object {
-    val EMPTY = Song(
+    @JvmStatic
+    val emptySong = Song(
       id = -1,
       title = "Unknown",
       displayName = "Unknown",
@@ -64,9 +125,9 @@ data class Song(
       uri = Uri.EMPTY,
       // folder = "",
       mineType = "",
-      composer = "Unknown",
-      dateAdded = null,
-      dateModified = null,
+      composer = "",
+      dateAdded = -1,
+      dateModified = -1,
     )
 
     val EXAMPLE = Song(
@@ -90,8 +151,8 @@ data class Song(
       // folder = "",
       mineType = "audio/mpeg",
       composer = null,
-      dateAdded = LocalDateTime.parse("2022-06-13T20:45:44"),
-      dateModified = LocalDateTime.parse("2022-03-17T15:35:18")
+      dateAdded = 1615999518,
+      dateModified = 1534262400,
     )
   }
 }

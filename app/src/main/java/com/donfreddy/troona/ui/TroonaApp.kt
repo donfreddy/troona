@@ -249,7 +249,7 @@ fun TroonaAppContent(
     ) {
       TroonaNavHost(
         navController = appState.navController,
-        onNavigateToPlayer = appState::openPlayer,
+        //onNavigateToArtist = appState::navigateToArtist,
         // onSetSystemBarsLightIcons = onSetSystemBarsLightIcons,
         // onResetSystemBarsIcons = onResetSystemBarsIcons,
         // appState = appState
