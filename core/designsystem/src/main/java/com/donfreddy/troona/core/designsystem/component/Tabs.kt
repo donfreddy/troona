@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.ScrollableTabRow
+import androidx.compose.material.Surface
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
@@ -93,35 +94,40 @@ fun TroonaScrollableTabRow(
   modifier: Modifier = Modifier,
   tabs: @Composable () -> Unit,
 ) {
-  ScrollableTabRow(
-    selectedTabIndex = selectedTabIndex,
-    modifier = modifier,
-    edgePadding = MaterialTheme.spacing.small,
-    backgroundColor = MaterialTheme.colors.background,
-    indicator = { tabPositions ->
-      Box(
-        modifier = Modifier
-          .offset(y = 1.dp)
-          .tabIndicatorOffset(tabPositions[selectedTabIndex])
-          .height(MaterialTheme.spacing.extraSmall)
-          .background(
-            color = MaterialTheme.colors.primary,
-            shape = RoundedCornerShape(MaterialTheme.spacing.small)
-          )
+  Surface(
+     elevation = 10.dp,
+  ) {
+    ScrollableTabRow(
+      selectedTabIndex = selectedTabIndex,
+      modifier = modifier,
+      edgePadding = MaterialTheme.spacing.small,
+      backgroundColor = MaterialTheme.colors.background,
+      indicator = { tabPositions ->
+        Box(
+          modifier = Modifier
+            .offset(y = 1.dp)
+            .tabIndicatorOffset(tabPositions[selectedTabIndex])
+            .height(MaterialTheme.spacing.extraSmall)
+            .background(
+              color = MaterialTheme.colors.primary,
+              shape = RoundedCornerShape(MaterialTheme.spacing.small)
+            )
 
-      )
-    },
-    divider = {
-      Spacer(
-        modifier = Modifier
-          .padding(horizontal = MaterialTheme.spacing.medium)
-          .fillMaxWidth()
-          .background(Color.DarkGray.copy(alpha = 0.1f))
-          .height(1.dp)
-      )
-    },
-    tabs = tabs,
-  )
+        )
+      },
+      divider = {
+        Spacer(
+          modifier = Modifier
+            .padding(horizontal = MaterialTheme.spacing.medium)
+            .fillMaxWidth()
+            .background(Color.DarkGray.copy(alpha = 0.1f))
+            .height(1.dp)
+        )
+      },
+      tabs = tabs,
+    )
+  }
+
 }
 
 @Preview(showBackground = true)

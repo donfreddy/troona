@@ -16,6 +16,7 @@
 
 plugins {
   alias(libs.plugins.troona.android.feature)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -25,4 +26,5 @@ android {
 dependencies {
   implementation(projects.feature.player)
   implementation(projects.core.media)
+  implementation(libs.kotlinx.serialization.json)
 }

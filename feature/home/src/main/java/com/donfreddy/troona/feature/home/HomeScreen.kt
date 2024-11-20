@@ -16,6 +16,8 @@
 
 package com.donfreddy.troona.feature.home
 
+import android.content.Context
+import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,10 +44,10 @@ import timber.log.Timber
 
 @OptIn(UnstableApi::class)
 @Composable
-fun HomeRoute(
+internal fun HomeScreen(
+  onArtistClick: (Long) -> Unit,
+  onAlbumClick: (Long) -> Unit,
   modifier: Modifier = Modifier,
-  onNavigateToArtist: (Long) -> Unit,
-  onNavigateToAlbum: (Long) -> Unit,
   viewModel: HomeViewModel = hiltViewModel(),
 ) {
   val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -78,8 +81,11 @@ fun HomeRoute(
           Timber.tag("HomeRoute").d("onSongClick: %s", startIndex)
           (viewModel::play)(uiState.songs, startIndex)
         },
-        onArtistClick = onNavigateToArtist,
-        onAlbumClick = onNavigateToAlbum,
+        onArtistClick = {
+          onArtistClick(it)
+          //Toast.makeText(context, "Artist: ${it}", Toast.LENGTH_SHORT).show()
+        },
+        onAlbumClick = onAlbumClick,
         currentPlayingSong = audioState.currentMediaId,
         modifier = modifier,
       )
@@ -92,7 +98,7 @@ fun HomeRoute(
 }
 
 @Composable
-private fun HomeScreen(
+internal fun HomeScreen(
   uiState: HomeUiState.Success,
   sortParams: SortParams,
   onSongClick: (Int) -> Unit,

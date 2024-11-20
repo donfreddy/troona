@@ -16,6 +16,7 @@
 
 plugins {
   alias(libs.plugins.troona.android.library)
+  alias(libs.plugins.kotlin.serialization)
   id("kotlin-parcelize")
 }
 
@@ -25,5 +26,6 @@ android {
 
 dependencies {
   implementation(libs.kotlinx.datetime)
+  implementation(libs.kotlinx.serialization.json)
   //implementation(projects.app)
 }

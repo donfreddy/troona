@@ -21,7 +21,6 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.animation.core.tween
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SwipeableState
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.runtime.Composable
@@ -42,6 +41,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.tracing.trace
+import com.donfreddy.troona.feature.album.navigation.navigateToAlbum
+import com.donfreddy.troona.feature.artist.navigation.navigateToArtist
 import com.donfreddy.troona.feature.favorites.navigation.navigateToFavorites
 import com.donfreddy.troona.feature.home.navigation.navigateToHome
 import com.donfreddy.troona.feature.playlists.navigation.navigateToPlaylists
@@ -56,6 +57,7 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.math.max
 import kotlin.math.min
 
@@ -91,6 +93,7 @@ class TroonaAppState(
 ) {
   val currentDestination: NavDestination?
     @Composable get() = navController.currentBackStackEntryAsState().value?.destination
+
 
   // Swipeable State
   val anchors = mapOf(0f to 0, -swipeAreaHeight to 1)
@@ -141,7 +144,13 @@ class TroonaAppState(
   fun openPlayer() = coroutineScope.launch { swipeableState.animateTo(1) }
   fun closePlayer() = coroutineScope.launch { swipeableState.animateTo(0) }
 
-  //fun navigateToArtist(prefix: String, artistId: Long) =
+  fun navigateToArtist(artistId: Long) {
+    navController.navigateToArtist(artistId, navOptions { launchSingleTop = true })
+  }
+
+  fun navigateToAlbum(albumId: Long) {
+    navController.navigateToAlbum(albumId, navOptions { launchSingleTop = true })
+  }
 
   fun onBackClick() = navController.popBackStack()
 }

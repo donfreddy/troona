@@ -20,9 +20,9 @@ plugins {
 }
 
 android {
-  namespace = "com.donfreddy.troona.feature.settings"
+  namespace = "com.donfreddy.troona.feature.artist"
 }
 
 dependencies {
-  // No dependencies
+  implementation(libs.kotlinx.serialization.json)
 }

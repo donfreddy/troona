@@ -19,6 +19,7 @@ plugins {
   alias(libs.plugins.troona.android.application.compose)
   alias(libs.plugins.troona.android.hilt)
   alias(libs.plugins.troona.android.application.firebase)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -61,6 +62,8 @@ dependencies {
   implementation(projects.feature.settings)
   implementation(projects.feature.player)
   implementation(projects.feature.search)
+  implementation(projects.feature.album)
+  implementation(projects.feature.artist)
 
   implementation(libs.timber)
   implementation(libs.androidx.activity.compose)
@@ -72,6 +75,7 @@ dependencies {
   implementation(libs.bundles.androidx.media3)
   implementation(libs.accompanist.navigation.material)
   implementation(libs.kotlinx.coroutines.guava)
+  implementation(libs.kotlinx.serialization.json)
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.ui.test.junit4)

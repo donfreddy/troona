@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-plugins {
-  alias(libs.plugins.troona.android.feature)
-  alias(libs.plugins.kotlin.serialization)
-}
+package com.donfreddy.troona.feature.artist
 
-android {
-  namespace = "com.donfreddy.troona.feature.settings"
-}
-
-dependencies {
-  // No dependencies
+class ArtistViewModel {
 }

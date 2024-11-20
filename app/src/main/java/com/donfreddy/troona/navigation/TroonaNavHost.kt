@@ -20,36 +20,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.donfreddy.troona.feature.album.navigation.albumScreen
+import com.donfreddy.troona.feature.artist.navigation.artistScreen
 import com.donfreddy.troona.feature.favorites.navigation.favoritesScreen
-import com.donfreddy.troona.feature.home.navigation.HOME_GRAPH_ROUTE
-import com.donfreddy.troona.feature.home.navigation.HOME_ROUTE
+import com.donfreddy.troona.feature.home.navigation.HomeRoute
 import com.donfreddy.troona.feature.home.navigation.homeScreen
 import com.donfreddy.troona.feature.playlists.navigation.playlistsScreen
 import com.donfreddy.troona.feature.settings.navigation.settingsScreen
+import com.donfreddy.troona.ui.TroonaAppState
 import timber.log.Timber
 
 @Composable
 fun TroonaNavHost(
-  navController: NavHostController,
+  //navController: NavHostController,
   //onNavigateToArtist: (prefix: String, artistId: Long) -> Unit,
-/*  onSetSystemBarsLightIcons: () -> Unit,
-  onResetSystemBarsIcons: () -> Unit,
-  appState: TroonaAppState,*/
+  /*  onSetSystemBarsLightIcons: () -> Unit,
+    onResetSystemBarsIcons: () -> Unit,*/
+  appState: TroonaAppState,
   modifier: Modifier = Modifier,
-  startDestination: String = HOME_ROUTE
 ) {
+  val navController = appState.navController
   NavHost(
     navController = navController,
-    startDestination = startDestination,
+    startDestination = HomeRoute,
     modifier = modifier,
   ) {
     homeScreen(
-      //onNavigateToArtist = { artistId -> onNavigateToArtist(HOME_GRAPH_ROUTE, artistId) },
-      onNavigateToArtist = { Timber.d("onNavigateToArtist") },
-      onNavigateToAlbum = { Timber.d("onNavigateToAlbum") },
+      onArtistClick = appState::navigateToArtist,
+      onAlbumClick = appState::navigateToAlbum,
     )
     favoritesScreen()
     playlistsScreen()
     settingsScreen()
+
+    albumScreen(onBackClick = appState::onBackClick)
+    artistScreen(onBackClick = appState::onBackClick)
   }
 }

@@ -16,6 +16,7 @@
 
 plugins {
   alias(libs.plugins.troona.android.feature)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {

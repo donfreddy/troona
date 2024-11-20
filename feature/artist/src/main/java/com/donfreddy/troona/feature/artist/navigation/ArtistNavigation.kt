@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.feature.home.navigation
+package com.donfreddy.troona.feature.artist.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.donfreddy.troona.feature.home.HomeScreen
+import androidx.navigation.toRoute
+import com.donfreddy.troona.feature.artist.ArtistScreen
 import kotlinx.serialization.Serializable
 
 
 @Serializable
-data object HomeRoute
+data class ArtistRoute(val artistId: Long)
 
-fun NavController.navigateToHome(navOptions: NavOptions) = navigate(HomeRoute, navOptions)
+fun NavController.navigateToArtist(artistId: Long, navOptions: NavOptions) = navigate(ArtistRoute(artistId), navOptions)
 
-fun NavGraphBuilder.homeScreen(
-  onArtistClick: (artistId: Long) -> Unit,
-  onAlbumClick: (albumId: Long) -> Unit,
+fun NavGraphBuilder.artistScreen(
+  onBackClick: () -> Unit,
 ) {
-  composable<HomeRoute> {
-    HomeScreen(onArtistClick, onAlbumClick)
+  composable<ArtistRoute> { backStackEntry ->
+    val args = backStackEntry.toRoute<ArtistRoute>()
+    ArtistScreen(args.artistId, onBackClick = onBackClick)
   }
 }

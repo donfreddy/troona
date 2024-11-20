@@ -17,8 +17,6 @@
 package com.donfreddy.troona.core.ui.component
 
 import android.content.Context
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -54,10 +53,8 @@ import com.donfreddy.troona.core.model.enums.ArtistSortBy
 import com.donfreddy.troona.core.model.enums.SongSortBy
 import com.donfreddy.troona.core.model.enums.SortOrder
 import com.donfreddy.troona.core.ui.R
-import com.donfreddy.troona.core.ui.component.song.asDuration
 import com.donfreddy.troona.core.ui.util.HelpersUtil.getArtistInfoString
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun Artists(
   artists: List<Artist>,
@@ -103,10 +100,12 @@ internal fun Artists(
       }
 
       items(items = artists, key = Artist::id) { artist ->
-        ArtistItem(modifier = modifier.animateItemPlacement(),
+        ArtistItem(
+          modifier = modifier.animateItem(),
           artist = artist,
           onClick = { onClick(artist.id) },
-          onMoreClick = {})
+          onMoreClick = {},
+        )
       }
     } else {
       item {
@@ -129,9 +128,7 @@ private fun ArtistItem(
       .clickable(
         onClick = onClick,
         interactionSource = remember { MutableInteractionSource() },
-        indication = rememberRipple(
-          bounded = false, color = MaterialTheme.colors.primary.copy(alpha = 0.2f)
-        )
+        indication = rememberRipple(color = Color.Gray)
       )
       .padding(
         horizontal = MaterialTheme.spacing.small,

@@ -248,11 +248,11 @@ fun TroonaAppContent(
         .layoutId(ContentId)
     ) {
       TroonaNavHost(
-        navController = appState.navController,
+        //navController = appState.navController,
         //onNavigateToArtist = appState::navigateToArtist,
         // onSetSystemBarsLightIcons = onSetSystemBarsLightIcons,
         // onResetSystemBarsIcons = onResetSystemBarsIcons,
-        // appState = appState
+        appState = appState
       )
     }
 
@@ -307,14 +307,14 @@ fun TroonaBottomBar(
   modifier: Modifier = Modifier,
 ) {
   AnimatedVisibility(
-    visible = currentDestination != null,
+    visible = destinations.any { currentDestination.isTopLevelDestinationInHierarchy(it) },
     enter = slideInVertically(initialOffsetY = { it }),
     exit = slideOutVertically(targetOffsetY = { it }),
     //modifier = modifier
   ) {
     BottomNavigation(
       backgroundColor = MaterialTheme.colors.background,
-      contentColor = Color.White,
+      contentColor = Color.Red,
       elevation = 0.dp, // Todo: add elevation if mini player is not visible
     ) {
       destinations.forEach { destination ->
