@@ -19,7 +19,7 @@ package com.donfreddy.troona.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
-import com.donfreddy.troona.core.domain.usecase.artists.GetAlbumsUseCase
+import com.donfreddy.troona.core.domain.usecase.albums.GetAlbumsUseCase
 import com.donfreddy.troona.core.domain.usecase.artists.GetArtistsUseCase
 import com.donfreddy.troona.core.domain.usecase.settings.GetUserDataUseCase
 import com.donfreddy.troona.core.domain.usecase.settings.sort.SetSongSortByUseCase
@@ -29,7 +29,6 @@ import com.donfreddy.troona.core.model.data.Album
 import com.donfreddy.troona.core.model.data.Artist
 import com.donfreddy.troona.core.model.data.Song
 import com.donfreddy.troona.core.model.enums.SongSortBy
-import com.donfreddy.troona.core.model.enums.SortOrder
 import com.donfreddy.troona.core.ui.controllers.SnackBarAction
 import com.donfreddy.troona.core.ui.controllers.SnackBarController
 import com.donfreddy.troona.core.ui.controllers.SnackBarEvent

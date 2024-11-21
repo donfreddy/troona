@@ -54,6 +54,6 @@ fun TroonaNavHost(
     settingsScreen()
 
     albumScreen(onBackClick = appState::onBackClick)
-    artistScreen(onBackClick = appState::onBackClick)
+    artistScreen(onBackClick = appState::onBackClick, null)
   }
 }

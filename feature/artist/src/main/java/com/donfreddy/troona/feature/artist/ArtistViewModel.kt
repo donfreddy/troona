@@ -16,5 +16,58 @@
 
 package com.donfreddy.troona.feature.artist
 
-class ArtistViewModel {
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.donfreddy.troona.core.domain.usecase.albums.GetAlbumsByArtistIdUseCase
+import com.donfreddy.troona.core.domain.usecase.artists.GetArtistByIdUseCase
+import com.donfreddy.troona.core.domain.usecase.settings.GetUserDataUseCase
+import com.donfreddy.troona.core.model.data.Album
+import com.donfreddy.troona.core.model.data.Artist
+import com.donfreddy.troona.core.model.enums.ArtistSortBy
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
+
+@HiltViewModel
+class ArtistViewModel @Inject constructor(
+  //private val audioServiceConnection: AudioServiceConnection,
+  getArtistByIdUseCase: GetArtistByIdUseCase,
+  getAlbumsByArtistIdUseCase: GetAlbumsByArtistIdUseCase,
+  getUserDataUseCase: GetUserDataUseCase,
+  savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+
+  private val artistId: Long = checkNotNull(savedStateHandle["artistId"])
+
+  val uiState: StateFlow<ArtistUiState> =
+    combine(
+      getArtistByIdUseCase(artistId),
+      getAlbumsByArtistIdUseCase(artistId),
+      getUserDataUseCase()
+    ) { artist, albums, userData ->
+      ArtistUiState.Success(
+        artist = artist,
+        albums = albums,
+        artistSortBy = userData.artistSortBy
+      )
+    }.stateIn(
+      scope = viewModelScope,
+      started = SharingStarted.Eagerly,
+      initialValue = ArtistUiState.Loading
+    )
+
+}
+
+sealed interface ArtistUiState {
+  data object Loading : ArtistUiState
+
+  data class Success(
+    val artist: Artist,
+    val albums: List<Album>,
+    val artistSortBy: ArtistSortBy
+  ) : ArtistUiState
 }

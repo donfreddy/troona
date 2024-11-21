@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.domain.usecase.artists
+package com.donfreddy.troona.core.domain.usecase.albums
 
 import com.donfreddy.troona.core.domain.repository.SongRepository
 import com.donfreddy.troona.core.domain.usecase.UseCase
 import com.donfreddy.troona.core.model.data.Album
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetAlbumsUseCase @Inject constructor(
-  private val repository: SongRepository,
-) : UseCase<List<Album>, UseCase.NoParams> {
-
-  operator fun invoke(): Flow<List<Album>> = repository.albums
+class GetAlbumsByArtistIdUseCase @Inject constructor(private val repository: SongRepository) :
+  UseCase<List<Album>, Long> {
+  operator fun invoke(artistId: Long) =
+    repository.albums.map { list -> list.filter { it.artistId == artistId } }
 }

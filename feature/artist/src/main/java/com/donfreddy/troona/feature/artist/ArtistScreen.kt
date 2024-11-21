@@ -17,48 +17,94 @@
 package com.donfreddy.troona.feature.artist
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.donfreddy.troona.core.designsystem.component.TroonaTopBar
+import com.donfreddy.troona.core.model.data.Album
+import com.donfreddy.troona.core.model.data.Artist
+import com.donfreddy.troona.core.model.enums.AlbumSortBy
+import com.donfreddy.troona.core.model.enums.ArtistSortBy
+import com.donfreddy.troona.core.model.enums.SongSortBy
+import com.donfreddy.troona.core.model.enums.SortOrder
+import com.donfreddy.troona.core.ui.component.MediaPager
+import com.donfreddy.troona.core.ui.component.SortParams
+import timber.log.Timber
 
 @Composable
 internal fun ArtistScreen(
-  artistId: Long,
   onBackClick: () -> Unit,
+  viewModel: ArtistViewModel = hiltViewModel(),
 ) {
-  ArtistScreen(
-    artistId = artistId,
-    onBackClick = onBackClick,
-    modifier = Modifier
-  )
+  val state by viewModel.uiState.collectAsStateWithLifecycle()
+  //val audioState by viewModel.audioState.collectAsStateWithLifecycle()
+
+  when (val uiState = state) {
+    ArtistUiState.Loading -> Unit
+
+    is ArtistUiState.Success -> {
+      ArtistScreen(
+        artist = uiState.artist,
+        albums = uiState.albums,
+        onBackClick = onBackClick,
+        modifier = Modifier
+      )
+    }
+  }
 }
 
 @Composable
-internal fun ArtistScreen(
-  artistId: Long,
+private fun ArtistScreen(
+  artist: Artist,
+  albums: List<Album>,
   onBackClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  Column(
-    modifier = Modifier
-      .fillMaxSize()
-      .background(color = Color.DarkGray)
-      .wrapContentSize(Alignment.Center)
-  ) {
-    Text(
-      text = "Artists with id $artistId",
-      modifier = Modifier.align(Alignment.CenterHorizontally),
-      textAlign = TextAlign.Center,
-      color = Color.White
-      //style = MaterialTheme.typography.h6
-    )
+
+  Scaffold(
+    topBar = {
+      TroonaTopBar(searchWidgetState = { /*TODO*/ }, onBackClick = onBackClick)
+    }
+  ) { innerPadding ->
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .background(color = Color.DarkGray)
+        .wrapContentSize(Alignment.Center)
+        .padding(innerPadding)
+    ) {
+      Text(
+        text = "Artist name: ${artist.name}",
+        modifier = Modifier.align(Alignment.CenterHorizontally),
+        textAlign = TextAlign.Center,
+        color = Color.White
+        //style = MaterialTheme.typography.h6
+      )
+      // album count
+      Text(
+        text = "Albums: ${albums.size}",
+        modifier = Modifier.align(Alignment.CenterHorizontally),
+        textAlign = TextAlign.Center,
+        color = Color.White
+        //style = MaterialTheme.typography.h6
+      )
+    }
   }
 }
 
@@ -69,7 +115,12 @@ internal fun ArtistScreen(
 @Composable
 fun FavoritesScreenPreview() {
   ArtistScreen(
-    artistId = -1,
+    artist = Artist.empty,
+    albums = listOf(
+      Album.empty,
+      Album.empty,
+      Album.empty
+    ),
     onBackClick = {}
   )
 }

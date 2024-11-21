@@ -18,6 +18,7 @@ package com.donfreddy.troona.ui
 
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -28,6 +29,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -45,7 +47,9 @@ import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -147,22 +151,15 @@ fun TroonaAppContent(
   }
 
   val startConstraintSet = ConstraintSet {
-    val topBar = createRefFor(TopBarId)
     val content = createRefFor(ContentId)
     val miniPlayer = createRefFor(MiniPlayerId)
     val fullPlayer = createRefFor(FullPlayerId)
     val navigationBar = createRefFor(NavigationBarId)
 
-    constrain(topBar) {
-      top.linkTo(parent.top, statusBarsHeight)
-      start.linkTo(parent.start)
-      end.linkTo(parent.end)
-    }
-
     constrain(content) {
       height = Dimension.fillToConstraints
       width = Dimension.fillToConstraints
-      top.linkTo(topBar.bottom)
+      top.linkTo(parent.top, margin = statusBarsHeight)
       start.linkTo(parent.start)
       end.linkTo(parent.end)
       bottom.linkTo(parent.bottom)
@@ -187,22 +184,15 @@ fun TroonaAppContent(
     }
   }
   val endConstraintSet = ConstraintSet {
-    val topBar = createRefFor(TopBarId)
     val content = createRefFor(ContentId)
     val miniPlayer = createRefFor(MiniPlayerId)
     val fullPlayer = createRefFor(FullPlayerId)
     val navigationBar = createRefFor(NavigationBarId)
 
-    constrain(topBar) {
-      top.linkTo(parent.top, statusBarsHeight)
-      start.linkTo(parent.start)
-      end.linkTo(parent.end)
-    }
-
     constrain(content) {
       height = Dimension.fillToConstraints
       width = Dimension.fillToConstraints
-      top.linkTo(topBar.bottom)
+      top.linkTo(parent.top, margin = statusBarsHeight)
       start.linkTo(parent.start)
       end.linkTo(parent.end)
       bottom.linkTo(navigationBar.top)
@@ -237,9 +227,9 @@ fun TroonaAppContent(
     progress = appState.motionProgress,
   ) {
     // Top bar
-    Box(modifier = Modifier.layoutId(TopBarId)) {
-      TroonaTopBar(modifier = modifier, searchWidgetState = {})
-    }
+    /* Box(modifier = Modifier.layoutId(TopBarId)) {
+       TroonaTopBar(modifier = modifier, searchWidgetState = {})
+     }*/
 
     // Main content
     Box(
@@ -261,6 +251,7 @@ fun TroonaAppContent(
       modifier = Modifier
         .background(MaterialTheme.colors.background)
         .layoutId(MiniPlayerId)
+      //.alpha(1f - appState.motionProgress * 0.5f)
     ) {
       MiniPlayer(
         modifier = Modifier.playerSwipe(
@@ -275,6 +266,7 @@ fun TroonaAppContent(
       modifier = Modifier
         .background(MaterialTheme.colors.background)
         .layoutId(FullPlayerId)
+        .alpha(appState.motionProgress * 10f)
     ) {
       FullPlayer(
         modifier = Modifier.playerSwipe(
@@ -304,7 +296,7 @@ fun TroonaBottomBar(
   destinations: List<TopLevelDestination>,
   currentDestination: NavDestination?,
   onNavigateToDestination: (TopLevelDestination) -> Unit,
-  modifier: Modifier = Modifier,
+  modifier: Modifier = Modifier.systemBarsPadding(),
 ) {
   AnimatedVisibility(
     visible = destinations.any { currentDestination.isTopLevelDestinationInHierarchy(it) },

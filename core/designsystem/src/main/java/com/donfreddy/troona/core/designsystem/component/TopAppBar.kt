@@ -19,7 +19,6 @@ package com.donfreddy.troona.core.designsystem.component
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -27,11 +26,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,26 +39,41 @@ import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 
 @Composable
 fun TroonaTopBar(
+  hasLogo: Boolean = false,
   searchWidgetState: () -> Unit,
+  onBackClick: () -> Unit = {},
+  onMenuClick: () -> Unit = {},
   modifier: Modifier = Modifier
 ) {
   TopAppBar(
-    title = {
-      Row(
-        modifier = modifier.fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Icon(
-          imageVector = TroonaIcons.Star.imageVector,
-          contentDescription = null
-        )
-        Spacer(modifier = modifier.width(4.dp))
-        Text(
-          text = stringResource(id = R.string.core_designsystem_app_name),
-          style = MaterialTheme.typography.h5.copy(
-            fontWeight = FontWeight.W700
+    navigationIcon = if (!hasLogo) {
+      {
+        IconButton(onClick = onBackClick) {
+          Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "Localized description"
           )
-        )
+        }
+      }
+    } else null,
+    title = {
+      if (hasLogo) {
+        Row(
+          modifier = modifier.fillMaxSize(),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Icon(
+            imageVector = TroonaIcons.Star.imageVector,
+            contentDescription = null
+          )
+          Spacer(modifier = modifier.width(4.dp))
+          Text(
+            text = stringResource(id = R.string.core_designsystem_app_name),
+            style = MaterialTheme.typography.h5.copy(
+              fontWeight = FontWeight.W700
+            )
+          )
+        }
       }
     },
     backgroundColor = MaterialTheme.colors.background,
@@ -74,6 +88,17 @@ fun TroonaTopBar(
           imageVector = TroonaIcons.Search.imageVector,
           contentDescription = null
         )
+      }
+      if (!hasLogo) {
+        IconButton(
+          onClick = onMenuClick,
+          modifier = Modifier
+        ) {
+          Icon(
+            painter = painterResource(id = TroonaIcons.MoreHorizontal.resourceId),
+            contentDescription = "More",
+          )
+        }
       }
     },
   )

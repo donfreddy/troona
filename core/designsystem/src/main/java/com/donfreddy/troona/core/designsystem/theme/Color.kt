@@ -44,6 +44,8 @@ object TroonaColor {
   val Black = Color(0xFF101010)
   val Red = Color(0xFFCA2828)
 
+  val Blur = Color(0xFF8D7857).copy(alpha = 0.5f)
+
   object Light {
     val Background = Color(0xFFDBDEE2)
     val LightShadow = Color(0xFFFFFFFF)

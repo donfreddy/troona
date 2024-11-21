@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -110,7 +111,8 @@ internal fun Songs(
         )
       }
 
-      itemsIndexed(items = songs, key = { _, song -> song.id }) { index, song ->
+      itemsIndexed(
+        items = songs, key = { _, song -> song.id }) { index, song ->
         SongItem(modifier = modifier.animateItemPlacement(),
           song = song,
           isPlaying = song.id.toString() == currentPlayingSongId,

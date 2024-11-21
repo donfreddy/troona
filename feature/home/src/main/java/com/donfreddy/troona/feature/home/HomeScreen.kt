@@ -16,24 +16,24 @@
 
 package com.donfreddy.troona.feature.home
 
-import android.content.Context
-import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
+import com.donfreddy.troona.core.designsystem.component.TroonaTopBar
 import com.donfreddy.troona.core.model.enums.AlbumSortBy
 import com.donfreddy.troona.core.model.enums.ArtistSortBy
 import com.donfreddy.troona.core.model.enums.SongSortBy
@@ -107,17 +107,25 @@ internal fun HomeScreen(
   currentPlayingSong: String,
   modifier: Modifier = Modifier,
 ) {
-  MediaPager(
-    songs = uiState.songs,
-    artists = uiState.artists,
-    albums = uiState.albums,
-    sortParams = sortParams,
-    currentPlayingSongId = currentPlayingSong,
-    onSongClick = onSongClick,
-    onArtistClick = onArtistClick,
-    onAlbumClick = onAlbumClick,
-    modifier = modifier,
-  )
+
+  Scaffold(
+    topBar = {
+      TroonaTopBar(hasLogo = true, searchWidgetState = { /*TODO*/ })
+    }
+  ) { innerPadding ->
+    MediaPager(
+      songs = uiState.songs,
+      artists = uiState.artists,
+      albums = uiState.albums,
+      sortParams = sortParams,
+      currentPlayingSongId = currentPlayingSong,
+      onSongClick = onSongClick,
+      onArtistClick = onArtistClick,
+      onAlbumClick = onAlbumClick,
+      modifier = modifier.padding(innerPadding)
+    )
+  }
+
 }
 
 @Preview(showBackground = true)
