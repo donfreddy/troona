@@ -18,6 +18,8 @@ package com.donfreddy.troona.core.ui.util
 
 import android.content.Context
 import com.donfreddy.troona.core.model.data.Artist
+import com.donfreddy.troona.core.common.extensions.toDurationString
+import com.donfreddy.troona.core.model.data.Album
 import com.donfreddy.troona.core.ui.R
 
 object HelpersUtil {
@@ -30,6 +32,26 @@ object HelpersUtil {
       R.plurals.core_ui_number_of_songs, artist.numberOfSongs, artist.numberOfSongs
     )
     return "$totalAlbums • $totalSongs" // 1 album • 10 songs
+  }
+
+  fun getArtistInfoStringWithDuration(context: Context, artist: Artist): String {
+    val totalAlbums = context.resources.getQuantityString(
+      R.plurals.core_ui_number_of_albums, artist.numberOfAlbums, artist.numberOfAlbums
+    )
+    val totalSongs = context.resources.getQuantityString(
+      R.plurals.core_ui_number_of_songs, artist.numberOfSongs, artist.numberOfSongs
+    )
+    val totalDuration = artist.songs.map { it.duration }.toDurationString()
+    return "$totalAlbums • $totalSongs • $totalDuration" // 1 album • 10 songs • 1h 30m
+  }
+
+  fun getAlbumInfoStringWithDuration(context: Context, album: Album): String {
+    val albumYear = album.year.toString()
+    val totalSongs = context.resources.getQuantityString(
+      R.plurals.core_ui_number_of_songs, album.numberOfSongs, album.numberOfSongs
+    )
+    val totalDuration = album.songs.map { it.duration }.toDurationString()
+    return "$albumYear • $totalSongs • $totalDuration" // 2021 • 10 songs • 1h 30m
   }
 
   fun getTotalAlbumsString(context: Context, numberOfAlbums: Int): String {

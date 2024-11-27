@@ -24,13 +24,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideTextStyle
-import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Surface
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -64,7 +64,7 @@ fun TroonaTab(
     modifier = modifier.height(MaterialTheme.spacing.extraLarge),
     enabled = enabled,
     text = {
-      val style = MaterialTheme.typography.button.copy(
+      val style = MaterialTheme.typography.headlineSmall.copy(
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.SemiBold
       )
@@ -95,13 +95,13 @@ fun TroonaScrollableTabRow(
   tabs: @Composable () -> Unit,
 ) {
   Surface(
-     elevation = 10.dp,
+     //elevation = 10.dp,
   ) {
     ScrollableTabRow(
       selectedTabIndex = selectedTabIndex,
       modifier = modifier,
       edgePadding = MaterialTheme.spacing.small,
-      backgroundColor = MaterialTheme.colors.background,
+      //backgroundColor = MaterialTheme.colors.background,
       indicator = { tabPositions ->
         Box(
           modifier = Modifier
@@ -109,7 +109,7 @@ fun TroonaScrollableTabRow(
             .tabIndicatorOffset(tabPositions[selectedTabIndex])
             .height(MaterialTheme.spacing.extraSmall)
             .background(
-              color = MaterialTheme.colors.primary,
+              color = MaterialTheme.colorScheme.primary,
               shape = RoundedCornerShape(MaterialTheme.spacing.small)
             )
 

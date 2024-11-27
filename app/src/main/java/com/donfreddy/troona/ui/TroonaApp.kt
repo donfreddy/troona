@@ -16,41 +16,40 @@
 
 package com.donfreddy.troona.ui
 
-import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.SnackbarResult
 import androidx.compose.material.SwipeableState
-import androidx.compose.material.Text
 import androidx.compose.material.swipeable
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -66,7 +65,6 @@ import androidx.constraintlayout.compose.layoutId
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.donfreddy.troona.core.designsystem.component.TroonaTopBar
 import com.donfreddy.troona.core.permission.PermissionContent
 import com.donfreddy.troona.core.ui.controllers.SnackBarController
 import com.donfreddy.troona.core.ui.events.ObserveAsEvents
@@ -133,7 +131,9 @@ fun TroonaApp(
   }
 }
 
-@OptIn(ExperimentalMotionApi::class, ExperimentalMaterialApi::class)
+@OptIn(
+  ExperimentalMotionApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class
+)
 @UnstableApi
 @Composable
 fun TroonaAppContent(
@@ -142,6 +142,9 @@ fun TroonaAppContent(
   onResetSystemBarsIcons: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val topLevelDestinations = appState.topLevelDestinations
+  val currentDestination = appState.currentDestination
+
 
   val statusBarsHeight: Dp
   val navigationBarsHeight: Dp
@@ -159,7 +162,7 @@ fun TroonaAppContent(
     constrain(content) {
       height = Dimension.fillToConstraints
       width = Dimension.fillToConstraints
-      top.linkTo(parent.top, margin = statusBarsHeight)
+      top.linkTo(parent.top)
       start.linkTo(parent.start)
       end.linkTo(parent.end)
       bottom.linkTo(parent.bottom)
@@ -192,7 +195,7 @@ fun TroonaAppContent(
     constrain(content) {
       height = Dimension.fillToConstraints
       width = Dimension.fillToConstraints
-      top.linkTo(parent.top, margin = statusBarsHeight)
+      top.linkTo(parent.top)
       start.linkTo(parent.start)
       end.linkTo(parent.end)
       bottom.linkTo(navigationBar.top)
@@ -221,20 +224,23 @@ fun TroonaAppContent(
   MotionLayout(
     start = startConstraintSet,
     end = endConstraintSet,
-    modifier = modifier
+    modifier = Modifier
       .fillMaxSize()
-      .background(MaterialTheme.colors.background),
+      .background(MaterialTheme.colorScheme.background)
+      .padding(
+        bottom = if (topLevelDestinations.any {
+            currentDestination.isTopLevelDestinationInHierarchy(
+              it
+            )
+          })  0.dp else if (appState.motionProgress > 0.1f) 0.dp else navigationBarsHeight
+      ),
     progress = appState.motionProgress,
   ) {
-    // Top bar
-    /* Box(modifier = Modifier.layoutId(TopBarId)) {
-       TroonaTopBar(modifier = modifier, searchWidgetState = {})
-     }*/
 
     // Main content
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .layoutId(ContentId)
     ) {
       TroonaNavHost(
@@ -249,9 +255,8 @@ fun TroonaAppContent(
     // Mini player
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .layoutId(MiniPlayerId)
-      //.alpha(1f - appState.motionProgress * 0.5f)
     ) {
       MiniPlayer(
         modifier = Modifier.playerSwipe(
@@ -264,7 +269,7 @@ fun TroonaAppContent(
     // Full player
     Box(
       modifier = Modifier
-        .background(MaterialTheme.colors.background)
+        .background(MaterialTheme.colorScheme.background)
         .layoutId(FullPlayerId)
         .alpha(appState.motionProgress * 10f)
     ) {
@@ -282,10 +287,9 @@ fun TroonaAppContent(
     // Bottom navigation
     Box(modifier = Modifier.layoutId(NavigationBarId)) {
       TroonaBottomBar(
-        destinations = appState.topLevelDestinations,
-        currentDestination = appState.currentDestination,
+        destinations = topLevelDestinations,
+        currentDestination = currentDestination,
         onNavigateToDestination = appState::navigateToTopLevelDestination,
-        modifier = Modifier.padding(bottom = navigationBarsHeight)
       )
     }
   }
@@ -302,34 +306,38 @@ fun TroonaBottomBar(
     visible = destinations.any { currentDestination.isTopLevelDestinationInHierarchy(it) },
     enter = slideInVertically(initialOffsetY = { it }),
     exit = slideOutVertically(targetOffsetY = { it }),
-    //modifier = modifier
   ) {
-    BottomNavigation(
-      backgroundColor = MaterialTheme.colors.background,
-      contentColor = Color.Red,
-      elevation = 0.dp, // Todo: add elevation if mini player is not visible
+    NavigationBar(
+      containerColor = MaterialTheme.colorScheme.background,
+      contentColor = Color.White,
+      //tonalElevation = 0.dp, // Todo: add elevation if mini player is not visible
     ) {
       destinations.forEach { destination ->
         val isSelected = currentDestination.isTopLevelDestinationInHierarchy(destination)
-        BottomNavigationItem(icon = {
+        NavigationBarItem(icon = {
           Icon(
             painter = painterResource(id = if (isSelected) destination.selectedIcon.resourceId else destination.unselectedIcon.resourceId),
             contentDescription = stringResource(id = destination.titleResource)
           )
-        },
-          label = {
-            Text(
-              text = stringResource(id = destination.titleResource),
-              fontSize = 14.sp,
-              fontWeight = FontWeight.SemiBold,
-              softWrap = false
-            )
-          },
-          selectedContentColor = MaterialTheme.colors.primary,
-          unselectedContentColor = MaterialTheme.colors.onBackground,
-          alwaysShowLabel = false,
+        }, label = {
+          Text(
+            text = stringResource(id = destination.titleResource),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            softWrap = false
+          )
+        }, colors = NavigationBarItemColors(
+          selectedIconColor = MaterialTheme.colorScheme.primary,
+          selectedTextColor = MaterialTheme.colorScheme.primary,
+          selectedIndicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+          unselectedIconColor = MaterialTheme.colorScheme.onSurface,
+          unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+          disabledIconColor = MaterialTheme.colorScheme.onSurface,
+          disabledTextColor = MaterialTheme.colorScheme.onSurface,
+        ),
+          //alwaysShowLabel = false,
           selected = isSelected,
-          modifier = modifier,
+          //modifier = modifier,
           onClick = { onNavigateToDestination(destination) })
       }
     }
@@ -355,7 +363,6 @@ fun Modifier.playerSwipe(
     }),
 )
 
-private const val TopBarId = "topBar"
 private const val ContentId = "content"
 private const val MiniPlayerId = "miniPlayer"
 private const val FullPlayerId = "fullPlayer"

@@ -22,13 +22,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -60,6 +59,7 @@ fun TroonaButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+  background: Color = MaterialTheme.colorScheme.onBackground,
   content: @Composable RowScope.() -> Unit,
 ) {
   Button(
@@ -67,7 +67,7 @@ fun TroonaButton(
     modifier = modifier,
     enabled = enabled,
     colors = ButtonDefaults.buttonColors(
-      contentColor = MaterialTheme.colors.onBackground
+      contentColor = background
     ),
     contentPadding = contentPadding,
     content = content,
@@ -106,14 +106,14 @@ fun TroonaOutlinedButton(
     modifier = modifier,
     enabled = enabled,
     colors = ButtonDefaults.outlinedButtonColors(
-      contentColor = MaterialTheme.colors.onBackground,
+      contentColor = MaterialTheme.colorScheme.onBackground,
     ),
     border = BorderStroke(
       width = TroonaButtonDefaults.OutlinedButtonBorderWidth,
       color = if (enabled) {
-        MaterialTheme.colors.onSecondary
+        MaterialTheme.colorScheme.onSecondary
       } else {
-        MaterialTheme.colors.onSurface.copy(
+        MaterialTheme.colorScheme.onSurface.copy(
           alpha = TroonaButtonDefaults.DISABLED_OUTLINED_BUTTON_BORDER_ALPHA,
         )
       },
@@ -160,12 +160,12 @@ fun TroonaIconButton(
         enabled = enabled,
         role = Role.Button,
         onClick = onClick,
-        interactionSource = interactionSource,
-        indication = rememberRipple(
+        //interactionSource = interactionSource,
+      /*  indication = rememberRipple(
           bounded = false,
           radius = rippleRadius,
           color = rippleColor
-        ),
+        ),*/
       ),
     contentAlignment = Alignment.Center
   ) {
@@ -176,7 +176,7 @@ fun TroonaIconButton(
 
 @Preview
 @Composable
-fun NiaButtonPreview() {
+fun TroonaButtonPreview() {
   TroonaTheme {
     TroonaIconButton(
       onClick =  {  },

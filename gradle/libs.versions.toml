@@ -8,12 +8,11 @@ androidGradlePlugin = "8.2.2"
 kotlin = "1.9.22"
 coreKtx = "1.12.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-androidxLifecycle = "2.7.0"
-activityCompose = "1.8.2"
-composeBom = "2024.02.01"
-material = "1.12.0"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+androidxLifecycle = "2.8.7"
+activityCompose = "1.9.3"
+composeBom = "2024.11.00"
 composeCompiler = "1.5.10"
 hilt = "2.50"
 hilt-nav-compose = "1.2.0"
@@ -63,9 +62,8 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
-#androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material" }
-google-android-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-nav-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-nav-compose" }
@@ -116,6 +114,7 @@ androidx-compose = [
     "androidx-ui-graphics",
     "androidx-ui-tooling-preview",
     "androidx-compose-material",
+    "androidx-material3",
     "androidx-compose-animation-graphics",
 ]
 androidx-room = ["room-ktx", "room-runtime"]

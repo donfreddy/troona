@@ -21,15 +21,19 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import com.donfreddy.troona.ui.MainActivityUiState.Loading
+import com.donfreddy.troona.ui.MainActivityUiState.Success
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -55,7 +59,7 @@ class MainActivity : ComponentActivity() {
 
     super.onCreate(savedInstanceState)
 
-    var uiState: MainActivityUiState by mutableStateOf(MainActivityUiState.Loading)
+    var uiState: MainActivityUiState by mutableStateOf(Loading)
 
     // Update the uiState
     lifecycleScope.launch {
@@ -67,18 +71,28 @@ class MainActivity : ComponentActivity() {
     // Keep the splash screen on-screen until the UI state is loaded. This condition is
     // evaluated each time the app needs to be redrawn so it should be fast to avoid blocking
     // the UI.
-    splashScreen.setKeepOnScreenCondition { uiState == MainActivityUiState.Loading }
+    splashScreen.setKeepOnScreenCondition { uiState == Loading }
 
     WindowCompat.setDecorFitsSystemWindows(window, false)
 
     @RequiresApi(Build.VERSION_CODES.Q)
     window.isNavigationBarContrastEnforced = false
 
+    enableEdgeToEdge()
+
     setContent {
       val isDarkTheme = shouldUseDarkTheme(uiState)
       val systemUiController = WindowInsetsControllerCompat(window, window.decorView)
 
-      TroonaTheme(isDarkTheme = isDarkTheme) {
+      LaunchedEffect(systemUiController, isDarkTheme) {
+        systemUiController.isAppearanceLightStatusBars = !isDarkTheme
+        systemUiController.isAppearanceLightNavigationBars = !isDarkTheme
+      }
+
+      TroonaTheme(
+       // useDynamicColor = shouldUseDynamicColor(uiState),
+        isDarkTheme = isDarkTheme
+      ) {
         TroonaApp(
           onSetSystemBarsLightIcons = {
             if (!isDarkTheme) {
@@ -97,26 +111,39 @@ class MainActivity : ComponentActivity() {
     }
   }
 
-  override fun onNewIntent(intent: Intent?) {
+  override fun onNewIntent(intent: Intent) {
     super.onNewIntent(intent)
     handleIntent(intent)
   }
 
-  private fun handleIntent(intent: Intent?) {
-    intent?.let {
-      val shortcutId = it.getStringExtra("shortcut_id")
+  private fun handleIntent(intent: Intent) {
+    val shortcutId = intent.getStringExtra("shortcut_id")
 
-      if (shortcutId != null) {
-        Timber.tag("MainActivity").d("Shortcut clicked: $shortcutId")
-      }
+    if (shortcutId != null) {
+      Timber.tag("MainActivity").d("Shortcut clicked: $shortcutId")
     }
   }
 }
 
+/**
+ * Returns `true` if the dynamic color is used, as a function of the [uiState].
+ */
+@Composable
+private fun shouldUseDynamicColor(
+  uiState: MainActivityUiState,
+): Boolean = when (uiState) {
+  Loading -> false
+  is Success -> !uiState.userData.useDynamicColor
+}
+
+/**
+ * Returns `true` if dark theme should be used, as a function of the [uiState] and the
+ * current system context.
+ */
 @Composable
 private fun shouldUseDarkTheme(uiState: MainActivityUiState) = when (uiState) {
-  MainActivityUiState.Loading -> isSystemInDarkTheme()
-  is MainActivityUiState.Success -> when (uiState.userData.darkThemeConfig) {
+  Loading -> isSystemInDarkTheme()
+  is Success -> when (uiState.userData.darkThemeConfig) {
     DarkThemeConfig.SystemDefault -> isSystemInDarkTheme()
     DarkThemeConfig.Light -> false
     DarkThemeConfig.Dark -> true

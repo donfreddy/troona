@@ -27,14 +27,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -72,7 +72,7 @@ internal fun MediaHeader(
   Column(
     modifier = modifier
       .fillMaxWidth()
-      .padding(MaterialTheme.spacing.medium)
+     .padding(MaterialTheme.spacing.medium)
   ) {
     Row(
       modifier = modifier.fillMaxWidth(),
@@ -81,7 +81,7 @@ internal fun MediaHeader(
     ) {
       Text(
         text = itemCountString,
-        style = MaterialTheme.typography.subtitle1.copy(
+        style = MaterialTheme.typography.bodySmall.copy(
           fontWeight = FontWeight.Bold,
         ),
       )
@@ -97,8 +97,8 @@ internal fun MediaHeader(
             verticalAlignment = Alignment.CenterVertically
           ) {
             Text(
-              text = "Date Added", style = MaterialTheme.typography.subtitle2.copy(
-                color = MaterialTheme.colors.primary
+              text = "Date Added", style = MaterialTheme.typography.bodySmall.copy(
+                color = MaterialTheme.colorScheme.primary
               )
             )
             Spacer(modifier = modifier.width(5.dp))
@@ -116,31 +116,33 @@ internal fun MediaHeader(
           offset = DpOffset((-8).dp, 4.dp)
         ) {
           dropdownItems.forEachIndexed { index, item ->
-            DropdownMenuItem(onClick = {
+            DropdownMenuItem(
+              text = {
+                Column {
+                  Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                  ) {
+                    Text(
+                      text = item.text,
+                      style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    RadioButton(selected = item.selected, colors = RadioButtonDefaults.colors(
+                      selectedColor = MaterialTheme.colorScheme.primary,
+                      unselectedColor = MaterialTheme.colorScheme.primary
+                    ), onClick = {
+                      expanded = false
+                      // onItemClick(item)
+                    })
+                  }
+                  if (index < dropdownItems.size - 1) TroonaDivider()
+                }
+              },
+              onClick = {
               expanded = false
               // onItemClick(item)
-            }) {
-              Column {
-                Row(
-                  modifier = modifier.fillMaxWidth(),
-                  horizontalArrangement = Arrangement.SpaceBetween,
-                  verticalAlignment = Alignment.CenterVertically,
-                ) {
-                  Text(
-                    text = item.text,
-                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold)
-                  )
-                  RadioButton(selected = item.selected, colors = RadioButtonDefaults.colors(
-                    selectedColor = MaterialTheme.colors.primary,
-                    unselectedColor = MaterialTheme.colors.primary
-                  ), onClick = {
-                    expanded = false
-                    // onItemClick(item)
-                  })
-                }
-                if (index < dropdownItems.size - 1) TroonaDivider()
-              }
-            }
+            })
           }
         }
       }

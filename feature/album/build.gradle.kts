@@ -24,5 +24,6 @@ android {
 }
 
 dependencies {
+  implementation(projects.core.media)
   implementation(libs.kotlinx.serialization.json)
 }

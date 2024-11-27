@@ -29,11 +29,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -49,7 +50,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionContent(
   permissionState: PermissionState,
@@ -64,13 +65,13 @@ fun PermissionContent(
       title = {
         Text(
           text = stringResource(id = R.string.core_permission_app_name),
-          style = MaterialTheme.typography.h5,
-          color = MaterialTheme.colors.onPrimary,
+          style = MaterialTheme.typography.headlineMedium,
+          color = MaterialTheme.colorScheme.onPrimary,
           fontWeight = FontWeight.SemiBold,
           textAlign = TextAlign.Center
         )
       },
-      backgroundColor = MaterialTheme.colors.primary,
+     // backgroundColor = MaterialTheme.colorScheme.primary,
     )
   }) { innerPadding ->
     Column(
@@ -83,17 +84,17 @@ fun PermissionContent(
     ) {
       Text(
         text = stringResource(id = R.string.core_permission_storage_access),
-        style = MaterialTheme.typography.h5,
+        style = MaterialTheme.typography.headlineSmall,
       )
 
-      Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+     Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
 
       Text(
         text = stringResource(id = if (isPermissionDenied) R.string.core_permission_storage_settings_permission_text else R.string.core_permission_storage_access_permission_text),
-        style = MaterialTheme.typography.body2,
+        style = MaterialTheme.typography.bodySmall,
       )
 
-      Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+     Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
 
       if (isPermissionDenied) {
         Button(

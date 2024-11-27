@@ -16,6 +16,9 @@
 
 package com.donfreddy.troona.feature.home.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -33,6 +36,8 @@ fun NavGraphBuilder.homeScreen(
   onArtistClick: (artistId: Long) -> Unit,
   onAlbumClick: (albumId: Long) -> Unit,
 ) {
+  // To animate the transition between screens, we use the AnimatedContent composable
+  // See: https://tomasrepcik.dev/blog/2023/2023-10-29-android-compose-animations
   composable<HomeRoute> {
     HomeScreen(onArtistClick, onAlbumClick)
   }

@@ -27,7 +27,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,15 +41,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ShoppingCart
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -90,7 +87,6 @@ import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 import com.donfreddy.troona.core.designsystem.images.TroonaArtwork
 import com.donfreddy.troona.core.designsystem.theme.TroonaColor
 import com.donfreddy.troona.core.designsystem.theme.TroonaTheme
-import com.donfreddy.troona.core.designsystem.theme.dimens
 import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.media.AudioState
 import com.donfreddy.troona.core.model.data.Song
@@ -106,7 +102,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Duration
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class,
+  ExperimentalMaterial3Api::class
+)
 @UnstableApi
 @Composable
 fun FullPlayer(
@@ -139,8 +137,9 @@ fun FullPlayer(
   // State to track the current type of bottom sheet being displayed.
   var currentBottomSheet: BottomSheetType? by remember { mutableStateOf(null) }
 
-  val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,
-    confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded })
+  val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true,
+    //confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded })
+  )
   val scope = rememberCoroutineScope()
 
   // Callback to close the bottom sheet.
@@ -160,9 +159,9 @@ fun FullPlayer(
         )
       }
     },
-    sheetState = sheetState,
+   // sheetState = sheetState,
     scrimColor = Color.Transparent,
-    sheetBackgroundColor = MaterialTheme.colors.background,
+    sheetBackgroundColor = MaterialTheme.colorScheme.background,
     //sheetShape = MaterialTheme.shapes.large,
     //sheetElevation = 0.dp,
     //modifier = modifier,
@@ -466,7 +465,7 @@ fun PlayerSlider(
     ) {
       Text(
         text = currentPosition.asFormattedString(),
-        style = MaterialTheme.typography.body2.copy(
+        style = MaterialTheme.typography.bodyMedium.copy(
           fontWeight = FontWeight.W700,
           fontSize = 11.sp,
           color = TroonaColor.WhiteAlpha04,
@@ -474,7 +473,7 @@ fun PlayerSlider(
       )
       Text(
         text = "−${(duration - currentPosition).asFormattedString()}",
-        style = MaterialTheme.typography.body2.copy(
+        style = MaterialTheme.typography.bodySmall.copy(
           fontWeight = FontWeight.W700,
           fontSize = 11.sp,
           color = TroonaColor.WhiteAlpha04,
@@ -597,7 +596,7 @@ private fun BottomActions(
   }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MoreModalBottomSheet(
   onDismiss: () -> Unit,
@@ -605,7 +604,7 @@ private fun MoreModalBottomSheet(
 ) {
   ModalBottomSheetLayout(
     sheetContent = {},
-    sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden),
+    //sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden),
     sheetShape = MaterialTheme.shapes.large,
     sheetElevation = 0.dp,
     modifier = modifier,

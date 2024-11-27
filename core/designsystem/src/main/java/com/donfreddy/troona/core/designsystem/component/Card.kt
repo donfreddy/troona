@@ -24,10 +24,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -45,11 +46,11 @@ fun TroonaCard(
   enabled: Boolean = true,
   shapeSize: Dp = CardShapeSize,
   clickedShapeSize: Dp = CardClickedShapeSize,
-  containerColor: Color = MaterialTheme.colors.surface,
+  containerColor: Color = MaterialTheme.colorScheme.surface,
   elevation: Dp = 0.dp,
   border: BorderStroke? = null,
   interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-  content: @Composable () -> Unit
+  content: @Composable ColumnScope.() -> Unit
 ) {
   val isPressed by interactionSource.collectIsPressedAsState()
   val scale by animateFloatAsState(
@@ -74,8 +75,8 @@ fun TroonaCard(
       .indication(interactionSource = interactionSource, indication = null)
       .clip(MaterialTheme.shapes.large)
       .clickable(onClick = onClick),
-    elevation = elevation,
-    backgroundColor = containerColor,
+    //elevation = elevation,
+    //backgroundColor = containerColor,
     content = content
   )
 }

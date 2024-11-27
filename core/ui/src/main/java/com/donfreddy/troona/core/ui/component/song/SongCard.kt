@@ -23,18 +23,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.donfreddy.troona.core.common.extensions.toDurationString
 import com.donfreddy.troona.core.designsystem.component.SingleLineText
 import com.donfreddy.troona.core.designsystem.icon.TroonaIcons
 import com.donfreddy.troona.core.designsystem.images.TroonaArtwork
@@ -56,11 +56,11 @@ fun SongCard(
   Card(
     modifier = modifier
       .fillMaxWidth()
-      .padding(horizontal = MaterialTheme.spacing.small)
+     .padding(horizontal = MaterialTheme.spacing.small)
       .clip(MaterialTheme.shapes.medium)
       .clickable(onClick = onClick),
     shape = MaterialTheme.shapes.medium,
-    elevation = 0.dp,
+   // elevation = 0.dp,
   ) {
     Row(
       modifier = Modifier.fillMaxWidth(),
@@ -82,10 +82,10 @@ fun SongCard(
             text = song.title,
             shouldUseMarquee = isPlaying,
             fontSize = 15.sp,
-            color = if (isPlaying) MaterialTheme.colors.primary else Color.Unspecified
+            color = if (isPlaying) MaterialTheme.colorScheme.primary else Color.Unspecified
           )
           SingleLineText(
-            text = "${song.artistName} • ${song.duration.asDuration()}",
+            text = "${song.artistName} • ${song.duration.toDurationString()}",
             shouldUseMarquee = isPlaying,
             fontSize = 12.sp,
             color = TroonaColor.Grey
@@ -102,15 +102,3 @@ fun SongCard(
   }
 }
 
-fun Long.asDuration(): String {
-  val hours = this / (1000 * 60 * 60)
-  val minutes = (this % (1000 * 60 * 60)) / (1000 * 60)
-  val seconds = (this % (1000 * 60)) / 1000
-
-  return if (hours > 0) {
-    String.format(locale = null, format = "%d:%02d:%02d", hours, minutes, seconds)
-  } else {
-    // String.format(locale = null, format = "%02d:%02d", minutes, seconds) // 03:10
-    String.format(locale = null, format = "%d:%02d", minutes, seconds) // 3:10
-  }
-}

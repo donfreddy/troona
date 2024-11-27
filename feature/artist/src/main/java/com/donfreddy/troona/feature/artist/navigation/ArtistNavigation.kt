@@ -16,7 +16,9 @@
 
 package com.donfreddy.troona.feature.artist.navigation
 
+import androidx.annotation.OptIn
 import androidx.lifecycle.SavedStateHandle
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -25,20 +27,25 @@ import androidx.navigation.toRoute
 import com.donfreddy.troona.feature.artist.ArtistScreen
 import kotlinx.serialization.Serializable
 
+private const val ARTIST_ID = "artistId"
 
 @Serializable
 data class ArtistRoute(val artistId: Long)
 
-fun NavController.navigateToArtist(artistId: Long, navOptions: NavOptions) =
-  navigate(ArtistRoute(artistId), navOptions)
+internal fun SavedStateHandle.getArtistId(): Long = checkNotNull(this[ARTIST_ID])
 
+fun NavController.navigateToArtist(artistId: Long, navOptions: NavOptions) {
+  navigate(ArtistRoute(artistId), navOptions)
+}
+
+@OptIn(UnstableApi::class)
 fun NavGraphBuilder.artistScreen(
   onBackClick: () -> Unit,
-  savedStateHandle: SavedStateHandle?
+  onAlbumClick: (albumId: Long) -> Unit,
 ) {
   composable<ArtistRoute> { backStackEntry ->
     val args = backStackEntry.toRoute<ArtistRoute>()
-    savedStateHandle?.set("artistId", args.artistId)
-    ArtistScreen(onBackClick = onBackClick)
+    SavedStateHandle()[ARTIST_ID] = args.artistId
+    ArtistScreen(onBackClick = onBackClick, onAlbumClick = onAlbumClick)
   }
 }

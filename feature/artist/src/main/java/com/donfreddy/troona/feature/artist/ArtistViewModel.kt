@@ -19,12 +19,14 @@ package com.donfreddy.troona.feature.artist
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.donfreddy.troona.core.domain.usecase.albums.GetAlbumsByArtistIdUseCase
+import androidx.media3.common.util.UnstableApi
 import com.donfreddy.troona.core.domain.usecase.artists.GetArtistByIdUseCase
 import com.donfreddy.troona.core.domain.usecase.settings.GetUserDataUseCase
-import com.donfreddy.troona.core.model.data.Album
+import com.donfreddy.troona.core.media.AudioServiceConnection
 import com.donfreddy.troona.core.model.data.Artist
+import com.donfreddy.troona.core.model.data.Song
 import com.donfreddy.troona.core.model.enums.ArtistSortBy
+import com.donfreddy.troona.feature.artist.navigation.getArtistId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,26 +34,23 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+@UnstableApi
 @HiltViewModel
 class ArtistViewModel @Inject constructor(
-  //private val audioServiceConnection: AudioServiceConnection,
+  private val audioServiceConnection: AudioServiceConnection,
   getArtistByIdUseCase: GetArtistByIdUseCase,
-  getAlbumsByArtistIdUseCase: GetAlbumsByArtistIdUseCase,
   getUserDataUseCase: GetUserDataUseCase,
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-
-  private val artistId: Long = checkNotNull(savedStateHandle["artistId"])
+  val audioState = audioServiceConnection.audioState
 
   val uiState: StateFlow<ArtistUiState> =
     combine(
-      getArtistByIdUseCase(artistId),
-      getAlbumsByArtistIdUseCase(artistId),
+      getArtistByIdUseCase(savedStateHandle.getArtistId()),
       getUserDataUseCase()
-    ) { artist, albums, userData ->
+    ) { artist, userData ->
       ArtistUiState.Success(
         artist = artist,
-        albums = albums,
         artistSortBy = userData.artistSortBy
       )
     }.stateIn(
@@ -60,6 +59,10 @@ class ArtistViewModel @Inject constructor(
       initialValue = ArtistUiState.Loading
     )
 
+  fun play(songs: List<Song>, startIndex: Int = 0) {
+    audioServiceConnection.play(songs, startIndex)
+  }
+
 }
 
 sealed interface ArtistUiState {
@@ -67,7 +70,6 @@ sealed interface ArtistUiState {
 
   data class Success(
     val artist: Artist,
-    val albums: List<Album>,
     val artistSortBy: ArtistSortBy
   ) : ArtistUiState
 }
