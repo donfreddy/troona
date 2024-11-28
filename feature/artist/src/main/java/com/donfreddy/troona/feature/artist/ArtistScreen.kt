@@ -17,6 +17,9 @@
 package com.donfreddy.troona.feature.artist
 
 import android.content.Context
+import android.view.Gravity
+import android.widget.TextView
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +43,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,14 +52,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import com.donfreddy.troona.core.designsystem.component.TroonaTopBar
@@ -64,11 +77,16 @@ import com.donfreddy.troona.core.designsystem.theme.spacing
 import com.donfreddy.troona.core.model.data.Album
 import com.donfreddy.troona.core.model.data.Artist
 import com.donfreddy.troona.core.model.data.Song
+import com.donfreddy.troona.core.network.ApiResponse
+import com.donfreddy.troona.core.network.models.LastFmArtist
 import com.donfreddy.troona.core.ui.common.SongCoverSize
 import com.donfreddy.troona.core.ui.component.PlayOrShuffleButtons
 import com.donfreddy.troona.core.ui.component.SongItem
 import com.donfreddy.troona.core.ui.component.TroonaDivider
+import com.donfreddy.troona.core.ui.util.HelpersUtil
 import com.donfreddy.troona.core.ui.util.HelpersUtil.getArtistInfoStringWithDuration
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @UnstableApi
 @Composable
@@ -85,6 +103,9 @@ internal fun ArtistScreen(
     ArtistUiState.Loading -> Unit
 
     is ArtistUiState.Success -> {
+      // Collect artist info separately
+      val artistInfo by viewModel.getArtistInfo(uiState.artist.name).collectAsState(initial = null)
+
       ArtistScreen(
         artist = uiState.artist,
         onBackClick = onBackClick,
@@ -92,6 +113,7 @@ internal fun ArtistScreen(
           (viewModel::play)(uiState.artist.songs, startIndex)
         },
         onAlbumClick = onAlbumClick,
+        artistInfo = artistInfo,
         currentPlayingSongId = audioState.currentMediaId,
         modifier = modifier
       )
@@ -106,6 +128,7 @@ private fun ArtistScreen(
   onBackClick: () -> Unit,
   onSongClick: (Int) -> Unit,
   onAlbumClick: (Long) -> Unit,
+  artistInfo: LastFmArtist?,
   currentPlayingSongId: String,
   modifier: Modifier = Modifier,
 ) {
@@ -144,15 +167,67 @@ private fun ArtistScreen(
 
       TroonaDivider()
 
-      ArtistSongsSection(
-        songs = artist.songs,
+      ArtistSongsSection(songs = artist.songs,
         currentPlayingSongId = currentPlayingSongId,
         onSongClick = onSongClick,
-        onMoreClick = { /*TODO*/ }
-      )
+        onMoreClick = { /*TODO*/ })
 
       ArtistAlbumsSection(albums = artist.albums, onAlbumClick = onAlbumClick)
 
+      artistInfo?.let { artistInfo ->
+        if (artistInfo.artist.bio == null) return@let
+        val bioContent = artistInfo.artist.bio!!.content
+
+        if (bioContent != null && bioContent.trim { it <= ' ' }.isNotEmpty()) {
+          Column(
+            modifier = Modifier
+              .padding(horizontal = MaterialTheme.spacing.medium),
+          ) {
+            Text(
+              text = "Biographie de ${artist.name}",
+              style = MaterialTheme.typography.headlineSmall.copy(
+                fontWeight = FontWeight.W700, fontFamily = Nunito
+              ),
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+            ExpandableText("${artistInfo.artist.bio?.content}")
+            if (artistInfo.artist.stats?.listeners?.isNotEmpty() == true) {
+              Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+              Row {
+                Column {
+                  Text(
+                    text = "Auditors",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                      fontWeight = FontWeight.W600, fontFamily = Nunito
+                    ),
+                  )
+                  Text(
+                    text = HelpersUtil.formatValue(artistInfo.artist.stats!!.listeners!!.toFloat()),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                      fontWeight = FontWeight.W400, fontFamily = Nunito
+                    ),
+                  )
+                }
+                Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
+                Column {
+                  Text(
+                    text = "Scrobble",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                      fontWeight = FontWeight.W600, fontFamily = Nunito
+                    ),
+                  )
+                  Text(
+                    text = HelpersUtil.formatValue(artistInfo.artist.stats!!.playCount!!.toFloat()),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                      fontWeight = FontWeight.W400, fontFamily = Nunito
+                    ),
+                  )
+                }
+              }
+            }
+          }
+        }
+      }
       Spacer(modifier = Modifier.height(100.dp))
     }
   }
@@ -160,8 +235,7 @@ private fun ArtistScreen(
 
 @Composable
 fun ArtistHeaderSection(
-  artist: Artist,
-  context: Context = LocalContext.current
+  artist: Artist, context: Context = LocalContext.current
 ) {
   TroonaArtwork(
     modifier = Modifier
@@ -245,8 +319,7 @@ fun ArtistSongsSection(
 
 @Composable
 fun ArtistAlbumsSection(
-  albums: List<Album>,
-  onAlbumClick: (Long) -> Unit
+  albums: List<Album>, onAlbumClick: (Long) -> Unit
 ) {
   Column(
     modifier = Modifier.fillMaxWidth()
@@ -274,8 +347,7 @@ fun ArtistAlbumsSection(
               end = if (isLast) MaterialTheme.spacing.medium else MaterialTheme.spacing.small,
               top = MaterialTheme.spacing.medium,
             )
-            .clickable(
-              onClick = { onAlbumClick(album.id) })
+            .clickable(onClick = { onAlbumClick(album.id) })
         ) {
           TroonaArtwork(
             modifier = Modifier.size(SongCoverSize.LARGE.value / 2),
@@ -299,6 +371,71 @@ fun ArtistAlbumsSection(
   }
 }
 
+@Composable
+fun HtmlContentTextView(html: String) {
+  AndroidView(factory = { context ->
+    TextView(context).apply {
+      text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
+      textSize = 16f // Text size in SP
+      setTextColor(ContextCompat.getColor(context, android.R.color.white)) // Text color
+      setTypeface(
+        ResourcesCompat.getFont(
+          context, com.donfreddy.troona.core.designsystem.R.font.nunito_medium
+        )
+      )
+      // setPadding(16, 16, 16, 16) // Padding in pixels
+      //gravity = Gravity.START // Align text to start
+    }
+  }, update = { textView ->
+    textView.text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
+  })
+}
+
+@Composable
+fun ExpandableText(
+  text: String,
+  modifier: Modifier = Modifier,
+  minimizedMaxLines: Int = 3,
+) {
+  var isExpanded by remember { mutableStateOf(false) }
+  val textLayoutResultState = remember { mutableStateOf<TextLayoutResult?>(null) }
+  var isClickable by remember { mutableStateOf(false) }
+  var finalText by remember { mutableStateOf(text) }
+
+  val textLayoutResult = textLayoutResultState.value
+  LaunchedEffect(textLayoutResult) {
+    if (textLayoutResult == null) return@LaunchedEffect
+
+    when {
+      isExpanded -> {
+        finalText = "$text Show Less"
+      }
+
+      !isExpanded && textLayoutResult.hasVisualOverflow -> {
+        val lastCharIndex = textLayoutResult.getLineEnd(minimizedMaxLines - 1)
+        val showMoreString = "... Show More"
+        val adjustedText =
+          text.substring(startIndex = 0, endIndex = lastCharIndex).dropLast(showMoreString.length)
+            .dropLastWhile { it == ' ' || it == '.' }
+
+        finalText = "$adjustedText$showMoreString"
+
+        isClickable = true
+      }
+    }
+  }
+
+  Text(
+    text = finalText,
+    maxLines = if (isExpanded) Int.MAX_VALUE else minimizedMaxLines,
+    onTextLayout = { textLayoutResultState.value = it },
+    style = MaterialTheme.typography.bodyLarge.copy(fontFamily = Nunito),
+    modifier = modifier
+      .clickable(enabled = isClickable) { isExpanded = !isExpanded }
+      .animateContentSize(),
+  )
+}
+
 @Preview(showBackground = true, name = "Artist screen")
 @Composable
 fun FavoritesScreenPreview() {
@@ -307,6 +444,7 @@ fun FavoritesScreenPreview() {
     onBackClick = {},
     onSongClick = {},
     onAlbumClick = {},
+    artistInfo = null,
     currentPlayingSongId = "",
   )
 }

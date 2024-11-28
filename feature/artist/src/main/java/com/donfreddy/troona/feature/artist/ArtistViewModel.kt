@@ -16,22 +16,37 @@
 
 package com.donfreddy.troona.feature.artist
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
 import com.donfreddy.troona.core.domain.usecase.artists.GetArtistByIdUseCase
+import com.donfreddy.troona.core.domain.usecase.artists.GetArtistInfoUseCase
 import com.donfreddy.troona.core.domain.usecase.settings.GetUserDataUseCase
 import com.donfreddy.troona.core.media.AudioServiceConnection
 import com.donfreddy.troona.core.model.data.Artist
 import com.donfreddy.troona.core.model.data.Song
 import com.donfreddy.troona.core.model.enums.ArtistSortBy
+import com.donfreddy.troona.core.network.ApiResponse
+import com.donfreddy.troona.core.network.models.LastFmArtist
 import com.donfreddy.troona.feature.artist.navigation.getArtistId
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @UnstableApi
@@ -39,10 +54,12 @@ import javax.inject.Inject
 class ArtistViewModel @Inject constructor(
   private val audioServiceConnection: AudioServiceConnection,
   getArtistByIdUseCase: GetArtistByIdUseCase,
+  private val getArtistInfoUseCase: GetArtistInfoUseCase,
   getUserDataUseCase: GetUserDataUseCase,
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
   val audioState = audioServiceConnection.audioState
+
 
   val uiState: StateFlow<ArtistUiState> =
     combine(
@@ -58,6 +75,18 @@ class ArtistViewModel @Inject constructor(
       started = SharingStarted.Eagerly,
       initialValue = ArtistUiState.Loading
     )
+
+  fun getArtistInfo(
+    artist: String,
+    long: String? = Locale.getDefault().language,
+  ): Flow<LastFmArtist?> = flow {
+    val info = try {
+      getArtistInfoUseCase(artist, long, null)
+    } catch (e: Exception) {
+      null
+    }
+    emit(if (info is ApiResponse.Success) info.data else null)
+  }.flowOn(IO)
 
   fun play(songs: List<Song>, startIndex: Int = 0) {
     audioServiceConnection.play(songs, startIndex)

@@ -28,6 +28,7 @@ dependencies {
   implementation(project.projects.core.mediastore)
   implementation(project.projects.core.domain)
   implementation(project.projects.core.model)
+  implementation(project.projects.core.network)
 
   implementation(libs.kotlinx.coroutines.core)
 }

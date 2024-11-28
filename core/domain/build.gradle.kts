@@ -25,6 +25,7 @@ android {
 dependencies {
   implementation(project.projects.core.datastore)
   implementation(project.projects.core.model)
+  implementation(project.projects.core.network)
 
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.javax.inject)

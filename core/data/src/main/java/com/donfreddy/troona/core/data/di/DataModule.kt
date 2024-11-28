@@ -18,6 +18,7 @@ package com.donfreddy.troona.core.data.di
 
 import com.donfreddy.troona.core.data.repository.SettingsRepositoryImpl
 import com.donfreddy.troona.core.data.repository.SongRepositoryImpl
+import com.donfreddy.troona.core.network.NetworkRepository
 import com.donfreddy.troona.core.domain.repository.SettingsRepository
 import com.donfreddy.troona.core.domain.repository.SongRepository
 import dagger.Binds

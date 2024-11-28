@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package com.donfreddy.troona.core.domain.repository
+plugins {
+  alias(libs.plugins.troona.android.library)
+  alias(libs.plugins.troona.android.hilt)
+}
 
-import com.donfreddy.troona.core.model.data.Album
-import com.donfreddy.troona.core.model.data.Artist
-import com.donfreddy.troona.core.model.data.Song
-import kotlinx.coroutines.flow.Flow
+android {
+  namespace = "com.donfreddy.troona.core.network"
+}
 
-interface SongRepository {
-  val songs: Flow<List<Song>>
-  val artists: Flow<List<Artist>>
-  val albums: Flow<List<Album>>
+dependencies {
+
+  implementation(libs.retrofit)
+  implementation(libs.retrofit.converter.gson)
+  implementation(libs.okhttp3.logging.interceptor)
+  implementation(libs.kotlinx.coroutines.core)
 }

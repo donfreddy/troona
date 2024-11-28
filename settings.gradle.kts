@@ -54,6 +54,7 @@ include(":core:mediastore")
 include(":core:designsystem")
 include(":core:permission")
 include(":core:data")
+include(":core:network")
 include(":core:media")
 include(":core:ui")
 

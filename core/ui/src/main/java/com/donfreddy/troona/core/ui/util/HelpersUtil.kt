@@ -17,10 +17,14 @@
 package com.donfreddy.troona.core.ui.util
 
 import android.content.Context
+import android.content.res.Configuration
+import android.graphics.Point
 import com.donfreddy.troona.core.model.data.Artist
 import com.donfreddy.troona.core.common.extensions.toDurationString
 import com.donfreddy.troona.core.model.data.Album
 import com.donfreddy.troona.core.ui.R
+import java.security.AccessController.getContext
+import java.text.DecimalFormat
 
 object HelpersUtil {
 
@@ -64,5 +68,23 @@ object HelpersUtil {
     return context.resources.getQuantityString(
       R.plurals.core_ui_number_of_songs, numberOfSongs, numberOfSongs
     )
+  }
+
+  fun formatValue(numValue: Float): String {
+    var value = numValue
+    val arr = arrayOf("", "K", "M", "B", "T", "P", "E")
+    var index = 0
+    while (value / 1000 >= 1) {
+      value /= 1000
+      index++
+    }
+    val decimalFormat = DecimalFormat("#.##")
+    return String.format("%s %s", decimalFormat.format(value.toDouble()), arr[index])
+  }
+
+  fun getScreenSize(context: Context): Point {
+    val x: Int = context.resources.displayMetrics.widthPixels
+    val y: Int = context.resources.displayMetrics.heightPixels
+    return Point(x, y)
   }
 }

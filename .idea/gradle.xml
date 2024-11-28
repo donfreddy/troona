@@ -36,6 +36,7 @@
             <option value="$PROJECT_DIR$/core/media" />
             <option value="$PROJECT_DIR$/core/mediastore" />
             <option value="$PROJECT_DIR$/core/model" />
+            <option value="$PROJECT_DIR$/core/network" />
             <option value="$PROJECT_DIR$/core/permission" />
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/feature" />

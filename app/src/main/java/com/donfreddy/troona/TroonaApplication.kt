@@ -31,4 +31,12 @@ class TroonaApplication : Application() {
     // Add Timber to the debug build only.
     Timber.plant(Timber.DebugTree())
   }
+
+  companion object {
+    private var instance: TroonaApplication? = null
+
+    fun getContext(): TroonaApplication {
+      return instance!!
+    }
+  }
 }
