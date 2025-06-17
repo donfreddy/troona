@@ -18,7 +18,7 @@ plugins {
   alias(libs.plugins.troona.android.application)
   alias(libs.plugins.troona.android.application.compose)
   alias(libs.plugins.troona.android.hilt)
-  alias(libs.plugins.troona.android.application.firebase)
+  /*alias(libs.plugins.troona.android.application.firebase)*/
   alias(libs.plugins.kotlin.serialization)
 }
 
